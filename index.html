@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PT Prima Anugerah Makmur - V1.4.1</title>
+<title>PT Prima Anugerah Makmur - V1.5</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -176,7 +176,7 @@ tr:last-child td{border-bottom:none}
 <div id="loginScreen" class="login-overlay">
   <div class="login-box">
     <h2>PT Prima Anugerah Makmur</h2>
-    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V1.4.1</p>
+    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V1.5</p>
     <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
     <input type="password" id="loginPass" placeholder="Password">
     <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
@@ -188,7 +188,7 @@ tr:last-child td{border-bottom:none}
   <div class="header">
     <div class="header-left">
       <h1>PT Prima Anugerah Makmur</h1>
-      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V1.4.1</div>
+      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V1.5</div>
     </div>
     <div class="header-right">
       <span class="badge local" id="modeBadge"><span class="dot"></span> <span id="modeText">LOKAL</span></span>
@@ -225,7 +225,8 @@ tr:last-child td{border-bottom:none}
 
   <div id="view-coa" class="view">
     <div class="card">
-      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account</div>
+      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account (COA)</div>
+      <div class="info-box" style="margin-bottom:16px">ℹ️ Akun standar TBM & TM sudah tersedia. Anda dapat <strong>Menambah</strong>, <strong>Mengedit</strong>, atau <strong>Menghapus</strong> akun. Perubahan nama/kode akan otomatis diperbarui di semua jurnal.</div>
       <div class="form-grid">
         <div class="form-group"><label class="form-label">Kode Akun</label><input type="text" class="form-input" id="coaKode" placeholder="1-1001"></div>
         <div class="form-group"><label class="form-label">Nama Akun</label><input type="text" class="form-input" id="coaNama" placeholder="Kas"></div>
@@ -237,8 +238,9 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
       <div class="btn-group">
-        <button class="btn primary" onclick="simpanCoa()">💾 Simpan Akun</button>
-        <button class="btn danger" onclick="initDefaultCoa()">↻ Reset Default</button>
+        <button class="btn primary" id="btnSaveCoa" onclick="simpanCoa()">💾 Simpan Akun</button>
+        <button class="btn" onclick="batalEditCoa()">↻ Batal</button>
+        <button class="btn danger" onclick="initDefaultCoa()">↻ Reset ke Default</button>
       </div>
     </div>
     <div class="card" style="margin-top:20px">
@@ -480,12 +482,11 @@ tr:last-child td{border-bottom:none}
       <div class="section-title" style="color:var(--red)">⚠️ ZONA BAHAYA</div>
       <div class="btn-group" style="margin-top:0">
         <button class="btn danger" onclick="resetSemuaData()">🗑 Hapus Semua Data</button>
-        <button class="btn success" onclick="loadDataDummy()">🎭 Load Data Demo</button>
       </div>
     </div>
   </div>
 
-  <div class="footer">PT Prima Anugerah Makmur — V1.4.1 &nbsp;|&nbsp; Data: <span id="footerMode">LocalStorage</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
+  <div class="footer">PT Prima Anugerah Makmur — V1.5 &nbsp;|&nbsp; Data: <span id="footerMode">LocalStorage</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
@@ -590,6 +591,7 @@ let currentReportType = 'lr';
 let editingJournalId = null;
 let journalLines = [];
 let isSaving = false;
+let editingCoaId = null; // ✅ Untuk fitur Edit COA
 
 const fmt = n => 'Rp ' + (n || 0).toLocaleString('id-ID');
 const fmtDate = d => d ? new Date(d).toLocaleDateString('id-ID') : '-';
@@ -674,6 +676,7 @@ document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', (
   document.getElementById('view-' + b.dataset.view).classList.add('active');
 }));
 
+// ✅ COA DEFAULT DENGAN STANDAR TBM & TM
 const defaultCoa = [
   {id:genId(),kode:'1-1001',nama:'Kas',tipe:'ASET'}, {id:genId(),kode:'1-1002',nama:'Bank',tipe:'ASET'},
   {id:genId(),kode:'1-1003',nama:'Piutang Usaha',tipe:'ASET'}, {id:genId(),kode:'1-1100',nama:'Persediaan Pupuk',tipe:'ASET'},
@@ -685,28 +688,99 @@ const defaultCoa = [
   {id:genId(),kode:'4-1001',nama:'Penjualan TBS',tipe:'PENDAPATAN'}, {id:genId(),kode:'4-1002',nama:'Penjualan CPO',tipe:'PENDAPATAN'},
   {id:genId(),kode:'5-5001',nama:'Biaya Pupuk',tipe:'BIAYA'}, {id:genId(),kode:'5-5002',nama:'Biaya Tenaga Kerja',tipe:'BIAYA'},
   {id:genId(),kode:'5-5003',nama:'Biaya Transport',tipe:'BIAYA'}, {id:genId(),kode:'5-5004',nama:'Biaya Pemeliharaan',tipe:'BIAYA'},
+  {id:genId(),kode:'5-5005',nama:'Biaya Pemeliharaan TBM',tipe:'BIAYA'}, // ✅ Standar TBM
+  {id:genId(),kode:'5-5006',nama:'Biaya Panen TM',tipe:'BIAYA'},         // ✅ Standar TM
   {id:genId(),kode:'6-6001',nama:'Rounding',tipe:'BIAYA'}
 ];
 
 function renderCoa(){
   const tb = document.getElementById('tbodyCoa'); tb.innerHTML = '';
   S.coa.sort((a,b) => a.kode.localeCompare(b.kode)).forEach(a => {
-    tb.innerHTML += `<tr><td><strong>${a.kode}</strong></td><td>${a.nama}</td><td><span class="badge local" style="font-size:11px">${a.tipe}</span></td><td><button class="btn danger sm" onclick="hapusCoa('${a.id}')">Hapus</button></td></tr>`;
+    tb.innerHTML += `<tr><td><strong>${a.kode}</strong></td><td>${a.nama}</td><td><span class="badge local" style="font-size:11px">${a.tipe}</span></td>
+    <td>
+      <button class="btn sm" onclick="editCoa('${a.id}')" title="Edit">✏️</button>
+      <button class="btn danger sm" onclick="hapusCoa('${a.id}')" title="Hapus">🗑</button>
+    </td></tr>`;
   });
   updateJournalLineDropdowns();
   updateUI();
 }
-window.simpanCoa = async () => {
-  const kode = document.getElementById('coaKode').value.trim(), nama = document.getElementById('coaNama').value.trim(), tipe = document.getElementById('coaTipe').value;
-  if(!kode || !nama) return log('Kode dan nama wajib diisi','err');
-  await storage.add('coa', {id:genId(), kode, nama, tipe}); log('Akun '+kode+' ditambahkan','ok');
-  document.getElementById('coaKode').value = ''; document.getElementById('coaNama').value = '';
+
+// ✅ FITUR EDIT COA
+window.editCoa = function(id) {
+  const coa = S.coa.find(c => c.id === id);
+  if (!coa) return;
+  editingCoaId = id;
+  document.getElementById('coaKode').value = coa.kode;
+  document.getElementById('coaNama').value = coa.nama;
+  document.getElementById('coaTipe').value = coa.tipe;
+  document.getElementById('btnSaveCoa').textContent = '💾 Update Akun';
+  document.getElementById('coaKode').focus();
 };
-window.hapusCoa = async id => { if(!await showModal('Hapus Akun','Yakin hapus?')) return; await storage.delete('coa', id); log('Akun dihapus','ok') };
+
+window.batalEditCoa = function() {
+  editingCoaId = null;
+  document.getElementById('coaKode').value = '';
+  document.getElementById('coaNama').value = '';
+  document.getElementById('btnSaveCoa').textContent = '💾 Simpan Akun';
+};
+
+window.simpanCoa = async () => {
+  const kode = document.getElementById('coaKode').value.trim();
+  const nama = document.getElementById('coaNama').value.trim();
+  const tipe = document.getElementById('coaTipe').value;
+  if(!kode || !nama) return log('Kode dan nama wajib diisi','err');
+
+  if (editingCoaId) {
+    // UPDATE & CASCADE
+    const oldCoa = S.coa.find(c => c.id === editingCoaId);
+    const newCoa = { id: editingCoaId, kode, nama, tipe };
+    
+    // 1. Update COA
+    await storage.update('coa', editingCoaId, newCoa);
+    
+    // 2. CASCADE UPDATE: Update semua jurnal yang menggunakan akun ini
+    for (const jurnal of S.jurnal) {
+      let needsUpdate = false;
+      const newLines = jurnal.lines.map(line => {
+        if (line.akun_id === editingCoaId) {
+          needsUpdate = true;
+          return { ...line, kode: newCoa.kode, nama: newCoa.nama };
+        }
+        return line;
+      });
+      
+      if (needsUpdate) {
+        await storage.update('jurnal', jurnal.id, { ...jurnal, lines: newLines });
+      }
+    }
+    
+    editingCoaId = null;
+    document.getElementById('btnSaveCoa').textContent = '💾 Simpan Akun';
+    log(`Akun ${kode} diupdate dan semua jurnal terkait diperbarui`, 'ok');
+    showToast(`Akun ${kode} berhasil diupdate`, 'success');
+  } else {
+    // ADD NEW
+    await storage.add('coa', {id:genId(), kode, nama, tipe});
+    log('Akun '+kode+' ditambahkan','ok');
+    showToast(`Akun ${kode} berhasil ditambahkan`, 'success');
+  }
+  
+  document.getElementById('coaKode').value = '';
+  document.getElementById('coaNama').value = '';
+};
+
+window.hapusCoa = async id => { 
+  if(!await showModal('Hapus Akun','Yakin hapus akun ini? Semua jurnal yang merujuk ke akun ini akan kehilangan referensi nama/kode.')) return; 
+  await storage.delete('coa', id); 
+  log('Akun dihapus','ok'); 
+};
+
 window.initDefaultCoa = async () => {
-  if(!await showModal('Reset COA','Hapus semua & gunakan default?')) return;
+  if(!await showModal('Reset COA','Hapus semua akun & gunakan standar default (termasuk TBM/TM)?')) return;
   storage.clearCollection('coa');
-  for(const a of defaultCoa) await storage.add('coa', a); log('COA direset','ok');
+  for(const a of defaultCoa) await storage.add('coa', a); 
+  log('COA direset ke default','ok');
 };
 
 function getNextJournalNumber(tipe) {
@@ -769,7 +843,7 @@ function renderJournalLines() {
           <option value="K" ${line.dk === 'K' ? 'selected' : ''}>K</option>
         </select>
       </td>
-      <td><input type="text" class="form-input" value="${nominalFormatted}" placeholder="0" oninput="formatNominalInput(this)" onblur="updateLineNominal(${idx}, this.value)" style="text-align:right"></td>
+      <td><input type="text" class="form-input" value="${nominalFormatted}" placeholder="0" oninput="formatNominalInput(this)" onblur="updateLineNominal(${idx}, this.value, this)" style="text-align:right"></td>
       <td><input type="text" class="form-input" value="${line.ket || ''}" placeholder="Ket. baris" onchange="updateLineValue(${idx}, 'ket', this.value)"></td>
       <td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris">🗑</button></td>
     `;
@@ -794,10 +868,12 @@ window.updateLineDK = function(index, dk) {
   updateBalanceIndicator();
 };
 
-// FIX 1: Tidak memanggil renderJournalLines() agar fokus tidak hilang saat blur
-window.updateLineNominal = function(index, value) {
+window.updateLineNominal = function(index, value, inputEl) {
   const parsed = parseNominal(value);
   journalLines[index].nominal = parsed;
+  if (inputEl) {
+    inputEl.value = parsed > 0 ? formatNominal(parsed) : '';
+  }
   updateBalanceIndicator();
 };
 
@@ -897,6 +973,13 @@ window.simpanJurnal = async () => {
   
   try {
     if (editingJournalId) {
+      const existing = S.jurnal.find(j => j.id === editingJournalId);
+      if (!existing) {
+        log('Jurnal yang diedit sudah tidak ada', 'err');
+        showToast('Jurnal sudah dihapus. Form akan direset.', 'error');
+        resetJournalForm();
+        return;
+      }
       await storage.update('jurnal', editingJournalId, journalData);
       editingJournalId = null;
       showToast(`Jurnal ${nomorBukti} berhasil diupdate!`, 'success');
@@ -938,7 +1021,7 @@ window.editJurnal = function(id) {
   const jurnal = S.jurnal.find(j => j.id === id);
   if (!jurnal) return;
   if (jurnal.tipe === 'closing') {
-    log('Jurnal penutup tidak dapat diedit. Hapus dan buat ulang jika perlu.', 'warn');
+    log('Jurnal penutup tidak dapat diedit.', 'warn');
     return;
   }
   editingJournalId = id;
@@ -988,6 +1071,13 @@ window.hapusJurnal = async function(id) {
   if (!await showModal('Hapus Jurnal', `Yakin hapus jurnal ${jurnal.nomor_bukti}?\n\n"${jurnal.keterangan}"\n\nData tidak dapat dikembalikan.`)) return;
   await storage.delete('jurnal', id);
   log('Jurnal ' + jurnal.nomor_bukti + ' dihapus', 'ok');
+  
+  // ✅ FIX: Reset form jika jurnal yang dihapus sedang diedit
+  if (editingJournalId === id) {
+    log('Form edit direset karena jurnal yang diedit telah dihapus', 'warn');
+    showToast('Jurnal yang sedang diedit telah dihapus', 'warn');
+    resetJournalForm();
+  }
 };
 
 window.toggleJournalLines = function(id) {
@@ -995,7 +1085,6 @@ window.toggleJournalLines = function(id) {
   if (el) el.classList.toggle('show');
 };
 
-// FIX 2: Ditambahkan window. agar bisa dipanggil dari oninput di HTML
 window.renderDaftarTransaksi = function() {
   const container = document.getElementById('daftarContainer');
   const countEl = document.getElementById('daftarCount');
@@ -1189,7 +1278,7 @@ window.generateClosingJournal = async function() {
   }
   
   if (S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(year)))) {
-    if (!await showModal('⚠️ Duplikasi', `Sudah ada jurnal penutup untuk tahun ${year}!\nYakin tetap membuat? (Akan menyebabkan double closing)`)) return;
+    if (!await showModal('⚠️ Duplikasi', `Sudah ada jurnal penutup untuk tahun ${year}!\nYakin tetap membuat?`)) return;
   }
   
   const labaDitahanAcc = S.coa.find(a => a.kode === '3-3002' || a.nama.toLowerCase().includes('laba ditahan'));
@@ -1326,7 +1415,6 @@ function formatYoYLine(name, currentVal, prevVal, indent = 0) {
   return `${'  '.repeat(indent)}${name.padEnd(35)}${fmt(currentVal).padStart(18)}  ${fmt(prevVal).padStart(18)}  ${fmt(Math.abs(diff)).padStart(14)}  ${pctStr.padStart(8)}\n`;
 }
 
-// FIX 3: Menambahkan parameter evt untuk menangani event secara eksplisit
 window.setReportType = function(type, evt) {
   currentReportType = type;
   document.querySelectorAll('.report-tabs .btn').forEach(b => b.classList.remove('primary'));
@@ -1567,7 +1655,6 @@ window.importFromExcel = async function(e) {
           const accId = kodeToIdMap[kodeAkun];
           if(!accId) { log('Warning: Akun ' + kodeAkun + ' tidak ditemukan di COA, skip baris', 'warn'); continue; }
           const acc = importedData.coa.find(a => a.id === accId);
-          // FIX 4: Menambahkan .toUpperCase() agar 'd' atau 'k' tetap terbaca dengan benar
           const dk = (row['D/K'] || 'D').toString().toUpperCase(); 
           const nominal = Number(row['Nominal']) || 0;
           
@@ -1602,9 +1689,17 @@ window.importFromExcel = async function(e) {
         }
       }
       if(wb.Sheets['Saldo Awal']) {
+        const seenCodes = new Set(), duplicateCodes = new Set();
         for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal'])) {
+          const kode = row['Kode Akun']; if(!kode) continue;
+          if(seenCodes.has(kode)) { duplicateCodes.add(kode); continue; }
+          seenCodes.add(kode);
           let tgl = row['Tanggal']; if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0];
-          importedData.saldo_awal.push({ id: genId(), tanggal: tgl || new Date().toISOString().split('T')[0], akunKode: row['Kode Akun'], akunNama: row['Nama Akun'], tipe: row['Tipe'], debet: Number(row['Debet']) || 0, kredit: Number(row['Kredit']) || 0 });
+          importedData.saldo_awal.push({ id: genId(), tanggal: tgl || new Date().toISOString().split('T')[0], akunKode: kode, akunNama: row['Nama Akun'], tipe: row['Tipe'], debet: Number(row['Debet']) || 0, kredit: Number(row['Kredit']) || 0 });
+        }
+        if(duplicateCodes.size > 0) {
+          showModal('Import Gagal', `Kode akun berikut muncul LEBIH DARI 1x:\n${Array.from(duplicateCodes).join('\n')}`);
+          e.target.value = ''; return;
         }
       }
       storage.importAll(importedData);
@@ -1676,8 +1771,12 @@ window.importSaldoAwal = async function(e) {
       if(raw.length === 0) { log('Tidak ada data', 'warn'); e.target.value = ''; return; }
       const kodeMap = {}; S.coa.forEach(a => kodeMap[a.kode] = a);
       let totalDebet = 0, totalKredit = 0; const validRows = [], missingCodes = new Set();
+      const seenCodes = new Set(), duplicateCodes = new Set();
+      
       for(const row of raw) {
         const kode = row['Kode Akun']; if(!kode) continue;
+        if(seenCodes.has(kode)) { duplicateCodes.add(kode); continue; }
+        seenCodes.add(kode);
         if(!kodeMap[kode]) { missingCodes.add(kode); continue; }
         const acc = kodeMap[kode];
         const debet = Number(row['Debet']) || 0, kredit = Number(row['Kredit']) || 0;
@@ -1685,6 +1784,11 @@ window.importSaldoAwal = async function(e) {
         else if(typeof tgl !== 'string') tgl = new Date().toISOString().split('T')[0];
         totalDebet += debet; totalKredit += kredit;
         validRows.push({ id: genId(), tanggal: tgl, akunKode: kode, akunNama: acc.nama, tipe: acc.tipe, debet, kredit });
+      }
+      
+      if(duplicateCodes.size > 0) {
+        await showModal('Import Gagal', `Kode akun berikut muncul LEBIH DARI 1x:\n\n${Array.from(duplicateCodes).join('\n')}\n\nSetiap kode akun hanya boleh muncul 1x.`);
+        e.target.value = ''; return;
       }
       if(missingCodes.size > 0) {
         await showModal('Import Gagal', `Kode akun berikut tidak ada di COA:\n\n${Array.from(missingCodes).join('\n')}`);
@@ -1733,28 +1837,6 @@ window.resetSemuaData = async function() {
   log('Semua data dihapus', 'ok');
 };
 
-window.loadDataDummy = async function() {
-  if(!await showModal('Data Demo', 'Tambahkan data contoh?')) return;
-  await storage.add('blok', {id:genId(), kode:'A01', nama:'Blok A Utara', luas:10, status:'TM', tahun:2018});
-  await storage.add('blok', {id:genId(), kode:'A02', nama:'Blok A Selatan', luas:8, status:'TM', tahun:2019});
-  setTimeout(async () => {
-    const b1 = S.blok.find(b=>b.kode==='A01');
-    const today = new Date().toISOString().split('T')[0];
-    if(b1) {
-      await storage.add('panen', {id:genId(), tanggal:today, blokId:b1.id, blokKode:'A01', blokNama:'Blok A Utara', berat:2500, petugas:'Pak Joko'});
-      await storage.add('panen', {id:genId(), tanggal:today, blokId:b1.id, blokKode:'A01', blokNama:'Blok A Utara', berat:1800, petugas:'Pak Budi'});
-    }
-    const kas = S.coa.find(a=>a.kode==='1-1001'), modal = S.coa.find(a=>a.kode==='3-3001'), jual = S.coa.find(a=>a.kode==='4-1001');
-    const ppn = S.coa.find(a=>a.kode==='2-1003'), pupuk = S.coa.find(a=>a.kode==='5-5001'), rounding = S.coa.find(a=>a.kode==='6-6001'), labaDitahan = S.coa.find(a=>a.kode==='3-3002');
-    
-    if(kas && modal) await storage.add('jurnal', { id: genId(), nomor_bukti: 'JU1-00001', tanggal: '2024-01-05', keterangan: 'Setoran modal awal', pihak: 'Pemilik', lines: [{id:genId(), akun_id:kas.id, kode:kas.kode, nama:kas.nama, debet:100000000, kredit:0, ket:''}, {id:genId(), akun_id:modal.id, kode:modal.kode, nama:modal.nama, debet:0, kredit:100000000, ket:''}], total_debet: 100000000, total_kredit: 100000000, tipe: 'jurnal' });
-    if(kas && jual && ppn) await storage.add('jurnal', { id: genId(), nomor_bukti: 'JU1-00002', tanggal: '2024-12-20', keterangan: 'Penjualan TBS 11 ton ke SLUM', pihak: 'SLUM', lines: [{id:genId(), akun_id:kas.id, kode:kas.kode, nama:kas.nama, debet:1000000, kredit:0, ket:''}, {id:genId(), akun_id:jual.id, kode:jual.kode, nama:jual.nama, debet:0, kredit:909091, ket:'TBS 11 ton'}, {id:genId(), akun_id:ppn.id, kode:ppn.kode, nama:ppn.nama, debet:0, kredit:90909, ket:'PPN 10%'}], total_debet: 1000000, total_kredit: 1000000, tipe: 'jurnal' });
-    if(kas && pupuk && rounding) await storage.add('jurnal', { id: genId(), nomor_bukti: 'JU1-00003', tanggal: '2024-12-25', keterangan: 'Pembelian pupuk dengan rounding', pihak: 'Toko Tani', lines: [{id:genId(), akun_id:pupuk.id, kode:pupuk.kode, nama:pupuk.nama, debet:3500001, kredit:0, ket:''}, {id:genId(), akun_id:kas.id, kode:kas.kode, nama:kas.nama, debet:0, kredit:3500000, ket:''}, {id:genId(), akun_id:rounding.id, kode:rounding.kode, nama:rounding.nama, debet:0, kredit:1, ket:'Selisih'}], total_debet: 3500001, total_kredit: 3500001, tipe: 'jurnal' });
-    if(jual && pupuk && labaDitahan) await storage.add('jurnal', { id: genId(), nomor_bukti: 'JU2-00001', tanggal: '2023-12-31', keterangan: 'Jurnal Penutup Tahun Buku 2023', pihak: '', lines: [{id:genId(), akun_id:jual.id, kode:jual.kode, nama:jual.nama, debet:500000, kredit:0, ket:'Nol-kan Penjualan TBS th 2023'}, {id:genId(), akun_id:pupuk.id, kode:pupuk.kode, nama:pupuk.nama, debet:0, kredit:200000, ket:'Nol-kan Biaya Pupuk th 2023'}, {id:genId(), akun_id:labaDitahan.id, kode:labaDitahan.kode, nama:labaDitahan.nama, debet:0, kredit:300000, ket:'Laba bersih th 2023'}], total_debet: 500000, total_kredit: 500000, tipe: 'closing', tahun_ditutup: 2023 });
-    log('Data demo ditambahkan', 'ok');
-  }, 500);
-};
-
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 const cd = document.getElementById('closingDate'); if (cd) cd.value = new Date().toISOString().split('T')[0];
 populateReportYears();
@@ -1781,15 +1863,15 @@ async function boot(){
     }
   }
   if(S.coa.length === 0){
-    log('Memuat COA default...','info');
+    log('Memuat COA default (termasuk TBM/TM)...','info');
     for(const a of defaultCoa) await storage.add('coa', a);
   }
   resetJournalForm();
   populateClosingYearSelect();
   renderDaftarTransaksi();
   updateUI();
-  log('PT Prima Anugerah Makmur V1.4.1 siap','ok');
-  log('Mode: ' + storage.mode + ' | Semua tombol aktif','info');
+  log('PT Prima Anugerah Makmur V1.5 siap','ok');
+  log('Mode: ' + storage.mode + ' | Semua fitur aktif','info');
 }
 
 if(sessionStorage.getItem('pam_auth') === 'true') {
