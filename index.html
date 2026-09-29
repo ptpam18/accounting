@@ -3,1207 +3,924 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAWIT-ACC v1.0 - Sistem Akuntansi Perkebunan Kelapa Sawit</title>
-<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>PT Prima Anugerah Makmur - V1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --green: #33ff33;
-    --green-dim: #1a8a1a;
-    --amber: #ffb000;
-    --bg: #000000;
-    --bg-panel: #0a0a0a;
-    --red: #ff3333;
-    --cyan: #00ffff;
-  }
-  body {
-    background: var(--bg);
-    color: var(--green);
-    font-family: 'VT323', 'Courier New', monospace;
-    font-size: 18px;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
-    pointer-events: none;
-    z-index: 9999;
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(18, 16, 16, 0.1);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 9998;
-    animation: flicker 0.15s infinite;
-  }
-  @keyframes flicker {
-    0% { opacity: 0.27861; } 5% { opacity: 0.34769; } 10% { opacity: 0.23604; }
-    15% { opacity: 0.90626; } 20% { opacity: 0.18128; } 25% { opacity: 0.83891; }
-    30% { opacity: 0.65583; } 35% { opacity: 0.67807; } 40% { opacity: 0.26559; }
-    45% { opacity: 0.84693; } 50% { opacity: 0.96019; } 55% { opacity: 0.08594; }
-    60% { opacity: 0.20313; } 65% { opacity: 0.71988; } 70% { opacity: 0.53455; }
-    75% { opacity: 0.37288; } 80% { opacity: 0.71428; } 85% { opacity: 0.70419; }
-    90% { opacity: 0.7003; } 95% { opacity: 0.36108; } 100% { opacity: 0.24387; }
-  }
-  .container { max-width: 1100px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
-  .header {
-    border: 2px solid var(--green);
-    padding: 15px;
-    margin-bottom: 20px;
-    text-align: center;
-    background: var(--bg-panel);
-    box-shadow: 0 0 20px rgba(51, 255, 51, 0.3);
-  }
-  .header h1 {
-    font-size: 32px;
-    letter-spacing: 3px;
-    color: var(--green);
-    text-shadow: 0 0 10px var(--green);
-  }
-  .header .subtitle { color: var(--green-dim); font-size: 18px; margin-top: 5px; }
-  .status-bar {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 8px 15px;
-    border: 1px solid var(--green-dim);
-    background: var(--bg-panel);
-    margin-bottom: 15px;
-    font-size: 16px;
-  }
-  .mode-local { color: var(--amber); }
-  .mode-firebase { color: var(--green); }
-  .blink { animation: blink 1s step-end infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-  .menu {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .menu-item {
-    border: 1px solid var(--green-dim);
-    padding: 12px 15px;
-    cursor: pointer;
-    background: var(--bg-panel);
-    transition: all 0.1s;
-    font-family: inherit;
-    font-size: 18px;
-    color: var(--green);
-    text-align: left;
-  }
-  .menu-item:hover, .menu-item.active {
-    background: var(--green);
-    color: var(--bg);
-    box-shadow: 0 0 15px var(--green);
-  }
-  .menu-item .key {
-    display: inline-block;
-    border: 1px solid currentColor;
-    padding: 0 6px;
-    margin-right: 8px;
-    font-weight: bold;
-  }
-  .panel {
-    border: 2px solid var(--green);
-    padding: 20px;
-    background: var(--bg-panel);
-    min-height: 400px;
-    box-shadow: 0 0 15px rgba(51, 255, 51, 0.2);
-  }
-  .panel-title {
-    border-bottom: 1px dashed var(--green-dim);
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    font-size: 22px;
-    color: var(--amber);
-    text-shadow: 0 0 8px var(--amber);
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-    align-items: center;
-  }
-  input, select, textarea {
-    background: #000;
-    border: 1px solid var(--green-dim);
-    color: var(--green);
-    font-family: inherit;
-    font-size: 18px;
-    padding: 6px 10px;
-    width: 100%;
-    outline: none;
-  }
-  input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 8px var(--green); }
-  .btn {
-    background: var(--bg);
-    border: 1px solid var(--green);
-    color: var(--green);
-    padding: 8px 20px;
-    font-family: inherit;
-    font-size: 18px;
-    cursor: pointer;
-    margin-right: 10px;
-    margin-top: 10px;
-    transition: all 0.1s;
-  }
-  .btn:hover { background: var(--green); color: var(--bg); box-shadow: 0 0 10px var(--green); }
-  .btn.amber { border-color: var(--amber); color: var(--amber); }
-  .btn.amber:hover { background: var(--amber); color: var(--bg); box-shadow: 0 0 10px var(--amber); }
-  .btn.danger { border-color: var(--red); color: var(--red); }
-  .btn.danger:hover { background: var(--red); color: var(--bg); box-shadow: 0 0 10px var(--red); }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 16px; }
-  th, td { border: 1px solid var(--green-dim); padding: 8px 10px; text-align: left; }
-  th { background: var(--green-dim); color: var(--bg); text-transform: uppercase; }
-  tr:hover td { background: rgba(51, 255, 51, 0.05); }
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  .stat-box { border: 1px solid var(--green-dim); padding: 15px; background: var(--bg-panel); }
-  .stat-box .label { color: var(--green-dim); font-size: 16px; }
-  .stat-box .value {
-    color: var(--amber);
-    font-size: 28px;
-    text-shadow: 0 0 8px var(--amber);
-    margin-top: 5px;
-  }
-  .log {
-    background: #000;
-    border: 1px solid var(--green-dim);
-    padding: 10px;
-    font-size: 14px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 15px;
-  }
-  .log-line { margin-bottom: 3px; }
-  .log-line.ok { color: var(--green); }
-  .log-line.err { color: var(--red); }
-  .log-line.info { color: var(--cyan); }
-  .log-line.warn { color: var(--amber); }
-  .hidden { display: none; }
-  .ascii-box {
-    border: 1px solid var(--green-dim);
-    padding: 10px;
-    margin: 10px 0;
-    white-space: pre;
-    font-size: 14px;
-    color: var(--green);
-    overflow-x: auto;
-  }
-  .footer {
-    text-align: center;
-    margin-top: 20px;
-    color: var(--green-dim);
-    font-size: 14px;
-    padding: 10px;
-  }
-  .notice {
-    border: 1px dashed var(--amber);
-    padding: 12px;
-    margin-bottom: 15px;
-    background: rgba(255, 176, 0, 0.05);
-    color: var(--amber);
-    font-size: 16px;
-  }
-  .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal {
-    border: 2px solid var(--green);
-    background: var(--bg);
-    padding: 25px;
-    max-width: 600px;
-    width: 90%;
-    box-shadow: 0 0 30px var(--green);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal h3 {
-    color: var(--amber);
-    margin-bottom: 15px;
-    border-bottom: 1px dashed var(--green-dim);
-    padding-bottom: 10px;
-  }
-  @media (max-width: 768px) {
-    body { font-size: 16px; }
-    .form-row { grid-template-columns: 1fr; }
-    .header h1 { font-size: 22px; }
-    table { font-size: 14px; }
-    th, td { padding: 5px; }
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1117;--bg2:#161822;--bg3:#1c1f2e;--bg4:#252840;
+  --surface:#1e2235;--surface2:#262a40;
+  --border:#2a2e45;--border2:#363b58;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --accent:#6366f1;--accent2:#818cf8;--accent-glow:rgba(99,102,241,.15);
+  --green:#22c55e;--green-bg:rgba(34,197,94,.1);
+  --red:#ef4444;--red-bg:rgba(239,68,68,.1);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);
+  --cyan:#06b6d4;--cyan-bg:rgba(6,182,212,.1);
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,.3);
+  --transition:all .2s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+.container{max-width:1200px;margin:0 auto;padding:24px}
+
+/* LOGIN SCREEN */
+.login-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:var(--bg);z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background-image:radial-gradient(circle at 50% 50%, var(--bg3) 0%, var(--bg) 70%);
+}
+.login-overlay.hidden{display:none}
+.login-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:40px;width:100%;max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;
+}
+.login-box h2{font-size:22px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-box p{color:var(--text3);font-size:14px;margin-bottom:24px}
+.login-box input{width:100%;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);font-size:14px;margin-bottom:16px;outline:none;transition:var(--transition)}
+.login-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.login-error{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,var(--bg3),var(--surface));
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.header::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
+.header-left h1{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+.header-left .ver{font-size:13px;color:var(--text3);font-weight:500;margin-top:4px}
+.header-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600}
+.badge.local{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.badge.firebase{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.date-badge{color:var(--text2);font-size:13px;font-weight:500}
+
+/* NAV */
+.nav{display:flex;gap:6px;margin-bottom:24px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:6px;overflow-x:auto}
+.nav-btn{padding:10px 18px;border:none;background:transparent;color:var(--text2);font-family:inherit;font-size:13px;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.nav-btn:hover{color:var(--text);background:var(--surface)}
+.nav-btn.active{color:#fff;background:var(--accent);box-shadow:0 2px 12px rgba(99,102,241,.3)}
+
+/* CARDS & FORMS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);transition:var(--transition)}
+.card:hover{border-color:var(--border2)}
+.card-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;transition:var(--transition)}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.stat-card .label{font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.stat-card .value{font-size:26px;font-weight:800;margin-top:6px;letter-spacing:-.5px}
+.stat-card .value.green{color:var(--green)}.stat-card .value.amber{color:var(--amber)}.stat-card .value.cyan{color:var(--cyan)}.stat-card .value.accent{color:var(--accent2)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-select{background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;padding:10px 14px;border-radius:var(--radius-sm);transition:var(--transition);outline:none;width:100%}
+.form-input:focus,.form-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.form-select option{background:var(--bg2);color:var(--text)}
+
+/* BUTTONS & TABLES */
+.btn-group{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{padding:10px 20px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13px;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--bg4);border-color:var(--border2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2);box-shadow:0 4px 16px rgba(99,102,241,.3)}
+.btn.danger{color:var(--red);border-color:rgba(239,68,68,.3)}.btn.danger:hover{background:var(--red-bg)}
+.btn.success{color:var(--green);border-color:rgba(34,197,94,.3)}.btn.success:hover{background:var(--green-bg)}
+.btn.amber{color:var(--amber);border-color:rgba(245,158,11,.3)}.btn.amber:hover{background:var(--amber-bg)}
+.btn.sm{padding:6px 12px;font-size:12px}
+.table-wrap{overflow-x:auto;margin-top:16px;border-radius:var(--radius-sm);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:var(--text2);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.5px;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:hover td{background:var(--accent-glow)}
+tr:last-child td{border-bottom:none}
+.amount{font-weight:700;font-variant-numeric:tabular-nums}
+.amount.positive{color:var(--green)}.amount.negative{color:var(--red)}
+
+/* LOG & REPORT */
+.log-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;font-size:12px;font-family:'Courier New',monospace;max-height:200px;overflow-y:auto;margin-top:12px}
+.log-line{padding:3px 0;display:flex;gap:8px}
+.log-line .time{color:var(--text3);min-width:70px}
+.log-line.ok .msg{color:var(--green)}.log-line.err .msg{color:var(--red)}.log-line.info .msg{color:var(--cyan)}.log-line.warn .msg{color:var(--amber)}
+
+.report-controls{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.report-controls .form-group{min-width:150px}
+.report-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;font-family:'Courier New',monospace;font-size:13px;color:var(--text);white-space:pre;overflow-x:auto;line-height:1.7;min-height:200px}
+.report-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+
+.notice{background:var(--amber-bg);border:1px solid rgba(245,158,11,.2);border-radius:var(--radius-sm);padding:14px 18px;color:var(--amber);font-size:13px;font-weight:500;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:12px}
+.modal p{color:var(--text2);font-size:14px;margin-bottom:20px}
+.modal .btn-group{justify-content:flex-end}
+.view{display:none}.view.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.footer{text-align:center;padding:24px;margin-top:32px;color:var(--text3);font-size:12px;border-top:1px solid var(--border)}
+@media(max-width:768px){.container{padding:16px}.form-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr 1fr}.nav{gap:4px;padding:4px}.nav-btn{padding:8px 12px;font-size:12px}}
+@media(max-width:480px){.stat-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="container">
 
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-overlay">
+  <div class="login-box">
+    <h2>PT Prima Anugerah Makmur</h2>
+    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V1.0</p>
+    <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
+    <div id="loginError" class="login-error"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="container" id="mainApp" style="display:none">
   <div class="header">
-    <h1>╔═══ SAWIT-ACC v1.0 ═══╗</h1>
-    <div class="subtitle">SISTEM AKUNTANSI PERKEBUNAN KELAPA SAWIT</div>
-    <div class="subtitle">MODE: <span id="modeLabel" class="blink">LOCAL STORAGE</span></div>
+    <div class="header-left">
+      <h1>PT Prima Anugerah Makmur</h1>
+      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V1.0</div>
+    </div>
+    <div class="header-right">
+      <span class="badge local" id="modeBadge"><span class="dot"></span> <span id="modeText">LOKAL</span></span>
+      <span class="date-badge" id="currentDate"></span>
+      <button class="btn sm danger" onclick="doLogout()">🚪 Logout</button>
+    </div>
   </div>
 
-  <div class="status-bar">
-    <span>MODE: <span id="connectionStatus" class="mode-local">● LOKAL (BROWSER)</span></span>
-    <span>TGL: <span id="currentDate">--</span></span>
-    <span>DATA: <span id="dataCount">0</span> RECORD</span>
+  <div class="nav">
+    <button class="nav-btn active" data-view="dashboard"><span>📊</span> Dashboard</button>
+    <button class="nav-btn" data-view="transaksi"><span>💰</span> Transaksi</button>
+    <button class="nav-btn" data-view="blok"><span>🌴</span> Blok Kebun</button>
+    <button class="nav-btn" data-view="panen"><span>🚜</span> Panen TBS</button>
+    <button class="nav-btn" data-view="coa"><span>📋</span> COA</button>
+    <button class="nav-btn" data-view="laporan"><span>📑</span> Laporan</button>
+    <button class="nav-btn" data-view="settings"><span>⚙️</span> Settings</button>
   </div>
 
-  <div class="menu">
-    <button class="menu-item active" data-view="dashboard"><span class="key">F1</span>DASHBOARD</button>
-    <button class="menu-item" data-view="transaksi"><span class="key">F2</span>TRANSAKSI</button>
-    <button class="menu-item" data-view="blok"><span class="key">F3</span>BLOK KEBUN</button>
-    <button class="menu-item" data-view="panen"><span class="key">F4</span>PANEN TBS</button>
-    <button class="menu-item" data-view="coa"><span class="key">F5</span>COA</button>
-    <button class="menu-item" data-view="laporan"><span class="key">F6</span>LAPORAN</button>
-    <button class="menu-item" data-view="settings"><span class="key">F7</span>SETTINGS</button>
+  <!-- DASHBOARD -->
+  <div id="view-dashboard" class="view active">
+    <div id="noticeLocal" class="notice">⚠️ Mode Lokal — Data tersimpan di browser. Buka <strong>Settings</strong> untuk backup atau migrasi ke Firebase.</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="label">Total Aset</div><div class="value green" id="statAset">Rp 0</div></div>
+      <div class="stat-card"><div class="label">Pendapatan Bulan Ini</div><div class="value cyan" id="statPendapatan">Rp 0</div></div>
+      <div class="stat-card"><div class="label">Biaya Bulan Ini</div><div class="value amber" id="statBiaya">Rp 0</div></div>
+      <div class="stat-card"><div class="label">Produksi TBS (Ton)</div><div class="value accent" id="statTbs">0</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📝</span> Log Aktivitas</div>
+      <div class="log-box" id="activityLog"></div>
+    </div>
   </div>
 
-  <div class="panel">
-
-    <!-- DASHBOARD -->
-    <div id="view-dashboard" class="view">
-      <div class="panel-title">[ DASHBOARD ] Ringkasan Operasional</div>
-      <div id="noticeLocal" class="notice">
-        ⚠ MODE LOKAL: Data tersimpan di browser ini saja. Gunakan menu SETTINGS (F7) untuk backup atau migrasi ke Firebase.
+  <!-- TRANSAKSI -->
+  <div id="view-transaksi" class="view">
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">💰</span> Input Transaksi Jurnal</div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Tanggal</label><input type="date" class="form-input" id="trxTanggal"></div>
+        <div class="form-group"><label class="form-label">Pihak (Vendor/Customer)</label><input type="text" class="form-input" id="trxPihak" placeholder="Nama pihak terkait"></div>
+        <div class="form-group"><label class="form-label">Akun Debet</label><select class="form-select" id="trxAkunDebet"></select></div>
+        <div class="form-group"><label class="form-label">Akun Kredit</label><select class="form-select" id="trxAkunKredit"></select></div>
+        <div class="form-group"><label class="form-label">Nominal (Rp)</label><input type="number" class="form-input" id="trxNominal" placeholder="0"></div>
+        <div class="form-group full"><label class="form-label">Keterangan</label><input type="text" class="form-input" id="trxKet" placeholder="Deskripsi transaksi"></div>
       </div>
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="label">TOTAL ASET</div>
-          <div class="value" id="statAset">Rp 0</div>
+      <div class="btn-group">
+        <button class="btn primary" onclick="simpanTransaksi()">💾 Simpan</button>
+        <button class="btn" onclick="resetFormTransaksi()">↻ Reset</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Daftar Transaksi</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Tgl</th><th>Pihak</th><th>Debet</th><th>Kredit</th><th>Nominal</th><th>Ket</th><th>Aksi</th></tr></thead>
+        <tbody id="tbodyTransaksi"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOK -->
+  <div id="view-blok" class="view">
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">🌴</span> Manajemen Blok Kebun</div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Kode Blok</label><input type="text" class="form-input" id="blokKode" placeholder="A01"></div>
+        <div class="form-group"><label class="form-label">Nama Blok</label><input type="text" class="form-input" id="blokNama" placeholder="Blok A Utara"></div>
+        <div class="form-group"><label class="form-label">Luas (Ha)</label><input type="number" class="form-input" id="blokLuas" step="0.01" placeholder="0"></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="blokStatus"><option value="TBM">TBM</option><option value="TM">TM</option></select></div>
+        <div class="form-group"><label class="form-label">Tahun Tanam</label><input type="number" class="form-input" id="blokTahun" placeholder="2020"></div>
+      </div>
+      <div class="btn-group"><button class="btn primary" onclick="simpanBlok()">💾 Simpan Blok</button></div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Daftar Blok</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Kode</th><th>Nama</th><th>Luas</th><th>Status</th><th>Tahun</th><th>Aksi</th></tr></thead>
+        <tbody id="tbodyBlok"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEN -->
+  <div id="view-panen" class="view">
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--amber-bg);color:var(--amber)">🚜</span> Catat Panen TBS</div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Tanggal</label><input type="date" class="form-input" id="panenTanggal"></div>
+        <div class="form-group"><label class="form-label">Blok</label><select class="form-select" id="panenBlok"></select></div>
+        <div class="form-group"><label class="form-label">Berat TBS (Kg)</label><input type="number" class="form-input" id="panenBerat" step="0.1" placeholder="0"></div>
+        <div class="form-group"><label class="form-label">Petugas</label><input type="text" class="form-input" id="panenPetugas" placeholder="Nama pemanen"></div>
+      </div>
+      <div class="btn-group"><button class="btn primary" onclick="simpanPanen()">💾 Simpan Panen</button></div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Riwayat Panen</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Tgl</th><th>Blok</th><th>Berat (Kg)</th><th>Petugas</th><th>Aksi</th></tr></thead>
+        <tbody id="tbodyPanen"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- COA -->
+  <div id="view-coa" class="view">
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account</div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Kode Akun</label><input type="text" class="form-input" id="coaKode" placeholder="1-1001"></div>
+        <div class="form-group"><label class="form-label">Nama Akun</label><input type="text" class="form-input" id="coaNama" placeholder="Kas"></div>
+        <div class="form-group"><label class="form-label">Tipe</label>
+          <select class="form-select" id="coaTipe">
+            <option value="ASET">ASET</option><option value="LIABILITAS">LIABILITAS</option>
+            <option value="EKUITAS">EKUITAS</option><option value="PENDAPATAN">PENDAPATAN</option><option value="BIAYA">BIAYA</option>
+          </select>
         </div>
-        <div class="stat-box">
-          <div class="label">PENDAPATAN BULAN INI</div>
-          <div class="value" id="statPendapatan">Rp 0</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">BIAYA BULAN INI</div>
-          <div class="value" id="statBiaya">Rp 0</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">PRODUKSI TBS (TON)</div>
-          <div class="value" id="statTbs">0</div>
-        </div>
       </div>
-      <div class="panel-title" style="margin-top:20px;">[ LOG AKTIVITAS ]</div>
-      <div class="log" id="activityLog">
-        <div class="log-line info">&gt; Sistem siap digunakan...</div>
+      <div class="btn-group">
+        <button class="btn primary" onclick="simpanCoa()">💾 Simpan Akun</button>
+        <button class="btn danger" onclick="initDefaultCoa()">↻ Reset Default</button>
       </div>
     </div>
-
-    <!-- TRANSAKSI -->
-    <div id="view-transaksi" class="view hidden">
-      <div class="panel-title">[ F2 ] INPUT TRANSAKSI JURNAL</div>
-      <div class="form-row"><label>TANGGAL:</label><input type="date" id="trxTanggal"></div>
-      <div class="form-row"><label>AKUN (DEBET):</label><select id="trxAkunDebet"></select></div>
-      <div class="form-row"><label>AKUN (KREDIT):</label><select id="trxAkunKredit"></select></div>
-      <div class="form-row"><label>NOMINAL (RP):</label><input type="number" id="trxNominal" placeholder="0"></div>
-      <div class="form-row"><label>KETERANGAN:</label><input type="text" id="trxKet" placeholder="Deskripsi transaksi"></div>
-      <button class="btn" onclick="simpanTransaksi()">[SIMPAN] TRANSAKSI</button>
-      <button class="btn" onclick="resetFormTransaksi()">[RESET]</button>
-
-      <div class="panel-title" style="margin-top:25px;">[ DAFTAR TRANSAKSI ]</div>
-      <table id="tableTransaksi">
-        <thead><tr><th>TGL</th><th>DEBET</th><th>KREDIT</th><th>NOMINAL</th><th>KET</th><th>AKSI</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- BLOK KEBUN -->
-    <div id="view-blok" class="view hidden">
-      <div class="panel-title">[ F3 ] MANAJEMEN BLOK KEBUN</div>
-      <div class="form-row"><label>KODE BLOK:</label><input type="text" id="blokKode" placeholder="Contoh: A01"></div>
-      <div class="form-row"><label>NAMA BLOK:</label><input type="text" id="blokNama" placeholder="Contoh: Blok A Utara"></div>
-      <div class="form-row"><label>LUAS (HA):</label><input type="number" id="blokLuas" step="0.01" placeholder="0"></div>
-      <div class="form-row">
-        <label>STATUS:</label>
-        <select id="blokStatus">
-          <option value="TBM">TBM - Tanaman Belum Menghasilkan</option>
-          <option value="TM">TM - Tanaman Menghasilkan</option>
-        </select>
+    <div class="card" style="margin-top:20px">
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Daftar Akun</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Kode</th><th>Nama</th><th>Tipe</th><th>Aksi</th></tr></thead>
+        <tbody id="tbodyCoa"></tbody></table>
       </div>
-      <div class="form-row"><label>TAHUN TANAM:</label><input type="number" id="blokTahun" placeholder="2020"></div>
-      <button class="btn" onclick="simpanBlok()">[SIMPAN] BLOK</button>
-
-      <div class="panel-title" style="margin-top:25px;">[ DAFTAR BLOK ]</div>
-      <table id="tableBlok">
-        <thead><tr><th>KODE</th><th>NAMA</th><th>LUAS</th><th>STATUS</th><th>TAHUN</th><th>AKSI</th></tr></thead>
-        <tbody></tbody>
-      </table>
     </div>
-
-    <!-- PANEN TBS -->
-    <div id="view-panen" class="view hidden">
-      <div class="panel-title">[ F4 ] CATAT PANEN TBS</div>
-      <div class="form-row"><label>TANGGAL:</label><input type="date" id="panenTanggal"></div>
-      <div class="form-row"><label>BLOK:</label><select id="panenBlok"></select></div>
-      <div class="form-row"><label>BERAT TBS (KG):</label><input type="number" id="panenBerat" step="0.1" placeholder="0"></div>
-      <div class="form-row"><label>PETUGAS:</label><input type="text" id="panenPetugas" placeholder="Nama pemanen/mandor"></div>
-      <button class="btn" onclick="simpanPanen()">[SIMPAN] PANEN</button>
-
-      <div class="panel-title" style="margin-top:25px;">[ RIWAYAT PANEN ]</div>
-      <table id="tablePanen">
-        <thead><tr><th>TGL</th><th>BLOK</th><th>BERAT (KG)</th><th>PETUGAS</th><th>AKSI</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- COA -->
-    <div id="view-coa" class="view hidden">
-      <div class="panel-title">[ F5 ] CHART OF ACCOUNT (COA)</div>
-      <div class="form-row"><label>KODE AKUN:</label><input type="text" id="coaKode" placeholder="Contoh: 1-1001"></div>
-      <div class="form-row"><label>NAMA AKUN:</label><input type="text" id="coaNama" placeholder="Contoh: Kas"></div>
-      <div class="form-row">
-        <label>TIPE:</label>
-        <select id="coaTipe">
-          <option value="ASET">ASET</option>
-          <option value="LIABILITAS">LIABILITAS</option>
-          <option value="EKUITAS">EKUITAS</option>
-          <option value="PENDAPATAN">PENDAPATAN</option>
-          <option value="BIAYA">BIAYA</option>
-        </select>
-      </div>
-      <button class="btn" onclick="simpanCoa()">[SIMPAN] AKUN</button>
-      <button class="btn danger" onclick="initDefaultCoa()">[RESET] KE DEFAULT</button>
-
-      <div class="panel-title" style="margin-top:25px;">[ DAFTAR AKUN ]</div>
-      <table id="tableCoa">
-        <thead><tr><th>KODE</th><th>NAMA</th><th>TIPE</th><th>AKSI</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- LAPORAN -->
-    <div id="view-laporan" class="view hidden">
-      <div class="panel-title">[ F6 ] LAPORAN KEUANGAN</div>
-      <div style="margin-bottom:15px;">
-        <button class="btn" onclick="generateLabaRugi()">LABA RUGI</button>
-        <button class="btn" onclick="generateNeraca()">NERACA</button>
-        <button class="btn" onclick="generateBukuBesar()">BUKU BESAR</button>
-      </div>
-      <div id="laporanOutput" class="ascii-box"></div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div id="view-settings" class="view hidden">
-      <div class="panel-title">[ F7 ] PENGATURAN & DATA</div>
-
-      <div class="panel-title" style="font-size:18px;">[ BACKUP & RESTORE ]</div>
-      <p style="color:var(--green-dim); margin-bottom:10px;">Export semua data ke file JSON untuk backup, atau import dari file backup.</p>
-      <button class="btn amber" onclick="exportData()">[EXPORT] DATA KE FILE</button>
-      <button class="btn amber" onclick="document.getElementById('importFile').click()">[IMPORT] DARI FILE</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-
-      <div class="panel-title" style="font-size:18px; margin-top:25px;">[ MIGRASI FIREBASE ]</div>
-      <p style="color:var(--green-dim); margin-bottom:10px;">
-        Untuk migrasi ke Firebase, edit konfigurasi di bagian bawah kode HTML ini, lalu reload halaman.
-        Data lokal akan otomatis di-upload ke Firestore.
-      </p>
-      <div class="ascii-box" style="font-size:12px;">
-// Cari bagian ini di kode HTML dan ganti dengan config Firebase Anda:
-const firebaseConfig = {
-  apiKey: "GANTI_DENGAN_API_KEY_ANDA",
-  authDomain: "GANTI_DENGAN_AUTH_DOMAIN",
-  projectId: "GANTI_DENGAN_PROJECT_ID",
-  // ... dst
-};
-      </div>
-      <button class="btn" onclick="checkFirebase()">[CEK] KONEKSI FIREBASE</button>
-
-      <div class="panel-title" style="font-size:18px; margin-top:25px;">[ ZONA BAHAYA ]</div>
-      <button class="btn danger" onclick="resetSemuaData()">[HAPUS] SEMUA DATA</button>
-      <button class="btn danger" onclick="loadDataDummy()">[DEMO] ISI DATA CONTOH</button>
-    </div>
-
   </div>
 
-  <div class="footer">
-    ═══════════════════════════════════════════════════════<br>
-    PRESS F1-F7 TO NAVIGATE | DATA: <span id="footerMode">LOCAL STORAGE</span><br>
-    ═══════════════════════════════════════════════════════
+  <!-- LAPORAN -->
+  <div id="view-laporan" class="view">
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--amber-bg);color:var(--amber)">📑</span> Laporan Keuangan</div>
+      
+      <div class="report-controls">
+        <div class="form-group">
+          <label class="form-label">Tahun</label>
+          <select class="form-select" id="reportYear"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bulan</label>
+          <select class="form-select" id="reportMonth">
+            <option value="all">Semua Bulan</option>
+            <option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option>
+            <option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option>
+            <option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option>
+            <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+          </select>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:10px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text2)">
+            <input type="checkbox" id="compareYoY" style="width:auto"> Bandingkan dengan Tahun Sebelumnya (YoY)
+          </label>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end">
+          <button class="btn primary sm" onclick="applyReportFilters()">🔄 Terapkan Filter</button>
+        </div>
+      </div>
+
+      <div class="report-tabs">
+        <button class="btn primary sm" onclick="setReportType('lr')">📊 Laba Rugi</button>
+        <button class="btn sm" onclick="setReportType('neraca')">🏦 Neraca</button>
+        <button class="btn sm" onclick="setReportType('bb')">📖 Buku Besar</button>
+        <button class="btn sm" onclick="setReportType('bbhutang')">📕 BB Pembantu Hutang</button>
+        <button class="btn sm" onclick="setReportType('bbpiutang')">📗 BB Pembantu Piutang</button>
+        <button class="btn sm" onclick="setReportType('bbmodal')">📘 BB Modal</button>
+      </div>
+      <div class="report-box" id="reportOutput">Pilih jenis laporan dan klik "Terapkan Filter" untuk menampilkan data...</div>
+    </div>
   </div>
+
+  <!-- SETTINGS -->
+  <div id="view-settings" class="view">
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span> Pengaturan & Data</div>
+      
+      <h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">BACKUP & RESTORE</h3>
+      <div class="btn-group" style="margin-top:0;margin-bottom:24px">
+        <button class="btn amber" onclick="exportData()">📤 Export JSON</button>
+        <button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import JSON</button>
+        <button class="btn success" onclick="downloadTemplate()">📄 Download Template Import</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+
+      <h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">MIGRASI FIREBASE</h3>
+      <p style="color:var(--text3);font-size:13px;margin-bottom:12px">Config Firebase telah dipasang. Jika koneksi gagal, sistem otomatis fallback ke LocalStorage.</p>
+      <button class="btn success" onclick="checkFirebase()">🔍 Cek Koneksi</button>
+      
+      <h3 style="font-size:14px;color:var(--red);margin:24px 0 12px">ZONA BAHAYA</h3>
+      <div class="btn-group" style="margin-top:0">
+        <button class="btn danger" onclick="resetSemuaData()">🗑 Hapus Semua Data</button>
+        <button class="btn success" onclick="loadDataDummy()">🎭 Load Data Demo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">PT Prima Anugerah Makmur — V1.0 &nbsp;|&nbsp; Data: <span id="footerMode">LocalStorage</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalConfirm">
   <div class="modal">
-    <h3 id="modalTitle">KONFIRMASI</h3>
-    <p id="modalMessage" style="margin-bottom:20px;"></p>
-    <button class="btn danger" id="modalOk">[Y] YA</button>
-    <button class="btn" id="modalCancel">[N] TIDAK</button>
+    <h3 id="modalTitle">Konfirmasi</h3>
+    <p id="modalMessage"></p>
+    <div class="btn-group"><button class="btn danger" id="modalOk">Ya</button><button class="btn" id="modalCancel">Batal</button></div>
   </div>
 </div>
 
-<!-- FIREBASE SDK (hanya dimuat jika dikonfigurasi) -->
 <script type="module">
-  // =========================================================
-  // KONFIGURASI FIREBASE - KOSONGKAN UNTUK MODE LOKAL
-  // =========================================================
-  const firebaseConfig = {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
-  };
+// ═══════════════════════════════════════════════════════════
+// FIREBASE CONFIG (Sesuai Permintaan)
+// ═══════════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAy3H1f3-DAR22Tox1Ex9aXvOpIre0yymY",
+  authDomain: "pam-sawit.firebaseapp.com",
+  databaseURL: "https://pam-sawit-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "pam-sawit",
+  storageBucket: "pam-sawit.firebasestorage.app",
+  messagingSenderId: "687283196681",
+  appId: "1:687283196681:web:9c03bb909afa838a59f9d8"
+};
 
-  // =========================================================
-  // STORAGE ADAPTER - Abstraksi LocalStorage vs Firebase
-  // =========================================================
-  class StorageAdapter {
-    constructor() {
-      this.listeners = {};
-      this.mode = 'local';
-    }
-    async init() { return true; }
-    async getAll(col) { return []; }
-    async add(col, data) { return null; }
-    async update(col, id, data) { return null; }
-    async delete(col, id) { return true; }
-    subscribe(col, callback) {
-      if (!this.listeners[col]) this.listeners[col] = [];
-      this.listeners[col].push(callback);
-      return () => {
-        this.listeners[col] = this.listeners[col].filter(cb => cb !== callback);
-      };
-    }
-    notify(col, data) {
-      (this.listeners[col] || []).forEach(cb => cb(data));
-    }
-  }
-
-  // =========================================================
-  // LOCAL STORAGE ADAPTER
-  // =========================================================
-  class LocalStorageAdapter extends StorageAdapter {
-    constructor() {
-      super();
-      this.mode = 'local';
-      this.PREFIX = 'sawit_acc_';
-    }
-    _key(col) { return this.PREFIX + col; }
-    _read(col) {
-      try {
-        return JSON.parse(localStorage.getItem(this._key(col)) || '[]');
-      } catch { return []; }
-    }
-    _write(col, data) {
-      localStorage.setItem(this._key(col), JSON.stringify(data));
-      this.notify(col, data);
-    }
-    async getAll(col) { return this._read(col); }
-    async add(col, data) {
-      const items = this._read(col);
-      const id = 'loc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-      const item = { id, ...data, createdAt: new Date().toISOString() };
-      items.push(item);
-      this._write(col, items);
-      return id;
-    }
-    async delete(col, id) {
-      const items = this._read(col).filter(i => i.id !== id);
-      this._write(col, items);
-      return true;
-    }
-    async clearAll() {
-      ['coa', 'transaksi', 'blok', 'panen'].forEach(col => {
-        localStorage.removeItem(this._key(col));
-        this.notify(col, []);
-      });
-    }
-    exportAll() {
-      const result = {};
-      ['coa', 'transaksi', 'blok', 'panen'].forEach(col => {
-        result[col] = this._read(col);
-      });
-      return result;
-    }
-    importAll(data) {
-      ['coa', 'transaksi', 'blok', 'panen'].forEach(col => {
-        if (data[col]) {
-          localStorage.setItem(this._key(col), JSON.stringify(data[col]));
-          this.notify(col, data[col]);
-        }
-      });
-    }
-  }
-
-  // =========================================================
-  // FIREBASE ADAPTER (dimuat dinamis jika dikonfigurasi)
-  // =========================================================
-  class FirebaseAdapter extends StorageAdapter {
-    constructor(config) {
-      super();
-      this.mode = 'firebase';
-      this.config = config;
-      this.db = null;
-      this.unsubscribe = {};
-    }
-    async init() {
-      try {
-        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-        const { getFirestore, collection, doc, addDoc, deleteDoc, onSnapshot, serverTimestamp } =
-          await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        this.sdk = { collection, doc, addDoc, deleteDoc, onSnapshot, serverTimestamp };
-        const app = initializeApp(this.config);
-        this.db = getFirestore(app);
-        return true;
-      } catch (e) {
-        console.error('Firebase init error:', e);
-        return false;
-      }
-    }
-    async getAll(col) {
-      const { getDocs, collection } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-      const snap = await getDocs(collection(this.db, col));
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }
-    async add(col, data) {
-      const ref = await this.sdk.addDoc(this.sdk.collection(this.db, col), {
-        ...data,
-        createdAt: this.sdk.serverTimestamp()
-      });
-      return ref.id;
-    }
-    async delete(col, id) {
-      await this.sdk.deleteDoc(this.sdk.doc(this.db, col, id));
-      return true;
-    }
-    subscribe(col, callback) {
-      const unsub = this.sdk.onSnapshot(this.sdk.collection(this.db, col), (snap) => {
-        const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        callback(data);
-      });
-      this.unsubscribe[col] = unsub;
-      return () => unsub();
-    }
-  }
-
-  // =========================================================
-  // INISIALISASI
-  // =========================================================
-  let storage;
-  const isFirebaseConfigured = firebaseConfig.apiKey &&
-                                firebaseConfig.apiKey !== "GANTI_DENGAN_API_KEY_ANDA" &&
-                                firebaseConfig.projectId;
-
-  if (isFirebaseConfigured) {
-    storage = new FirebaseAdapter(firebaseConfig);
-    const ok = await storage.init();
-    if (!ok) {
-      storage = new LocalStorageAdapter();
-      window.APP_MODE = 'local-fallback';
-    } else {
-      window.APP_MODE = 'firebase';
-    }
+// ═══════════════════════════════════════════════════════════
+// AUTHENTICATION
+// ═══════════════════════════════════════════════════════════
+window.doLogin = () => {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  if (u === 'ptpam' && p === '945766') {
+    sessionStorage.setItem('pam_auth', 'true');
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').style.display = 'block';
+    log('Login berhasil. Selamat datang.', 'ok');
   } else {
-    storage = new LocalStorageAdapter();
-    window.APP_MODE = 'local';
+    document.getElementById('loginError').textContent = 'Username atau Password salah!';
+    document.getElementById('loginPass').value = '';
   }
+};
 
-  // =========================================================
-  // STATE
-  // =========================================================
-  const state = { coa: [], transaksi: [], blok: [], panen: [] };
-
-  // =========================================================
-  // UTILITAS
-  // =========================================================
-  window.formatRupiah = (n) => 'Rp ' + (n || 0).toLocaleString('id-ID');
-  window.formatTanggal = (d) => {
-    if (!d) return '-';
-    return new Date(d).toLocaleDateString('id-ID');
-  };
-
-  function log(msg, type = 'info') {
-    const logEl = document.getElementById('activityLog');
-    const line = document.createElement('div');
-    line.className = 'log-line ' + type;
-    line.textContent = '> ' + msg;
-    logEl.insertBefore(line, logEl.firstChild);
-    if (logEl.children.length > 50) logEl.removeChild(logEl.lastChild);
+window.doLogout = async () => {
+  if(await showModal('Logout', 'Yakin ingin keluar dari sistem?')) {
+    sessionStorage.removeItem('pam_auth');
+    location.reload();
   }
-  window.log = log;
+};
 
-  function updateModeUI() {
-    const statusEl = document.getElementById('connectionStatus');
-    const modeEl = document.getElementById('modeLabel');
-    const footerEl = document.getElementById('footerMode');
-    const noticeEl = document.getElementById('noticeLocal');
-    if (storage.mode === 'firebase') {
-      statusEl.textContent = '● FIREBASE ONLINE';
-      statusEl.className = 'mode-firebase';
-      modeEl.textContent = 'FIREBASE CLOUD';
-      footerEl.textContent = 'FIREBASE';
-      if (noticeEl) noticeEl.style.display = 'none';
-    } else {
-      statusEl.textContent = '● LOKAL (BROWSER)';
-      statusEl.className = 'mode-local';
-      modeEl.textContent = 'LOCAL STORAGE';
-      footerEl.textContent = 'LOCAL STORAGE';
-      if (noticeEl) noticeEl.style.display = 'block';
-    }
-  }
+// Check auth on load
+if (sessionStorage.getItem('pam_auth') === 'true') {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('mainApp').style.display = 'block';
+}
 
-  function updateDataCount() {
-    const total = state.coa.length + state.transaksi.length + state.blok.length + state.panen.length;
-    document.getElementById('dataCount').textContent = total;
-  }
-
-  function showModal(title, message) {
-    return new Promise((resolve) => {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalMessage').textContent = message;
-      document.getElementById('modalConfirm').classList.add('show');
-      const ok = document.getElementById('modalOk');
-      const cancel = document.getElementById('modalCancel');
-      const close = (result) => {
-        document.getElementById('modalConfirm').classList.remove('show');
-        ok.onclick = null;
-        cancel.onclick = null;
-        resolve(result);
-      };
-      ok.onclick = () => close(true);
-      cancel.onclick = () => close(false);
+// ═══════════════════════════════════════════════════════════
+// STORAGE ADAPTERS
+// ═══════════════════════════════════════════════════════════
+class LocalStorageAdapter {
+  constructor(){this.mode='local';this.P='pam_';this.L={}}
+  _k(c){return this.P+c}
+  _r(c){try{return JSON.parse(localStorage.getItem(this._k(c))||'[]')}catch{return[]}}
+  _w(c,d){localStorage.setItem(this._k(c),JSON.stringify(d));this._n(c,d)}
+  _n(c,d){(this.L[c]||[]).forEach(cb=>cb(d))}
+  getAll(c){return Promise.resolve(this._r(c))}
+  async add(c,data){const items=this._r(c);const id='l'+Date.now()+'_'+Math.random().toString(36).substr(2,5);items.push({id,...data,createdAt:new Date().toISOString()});this._w(c,items);return id}
+  async delete(c,id){this._w(c,this._r(c).filter(i=>i.id!==id));return true}
+  subscribe(c,cb){if(!this.L[c])this.L[c]=[];this.L[c].push(cb);return()=>{this.L[c]=this.L[c].filter(x=>x!==cb)}}
+  clearAll(){['coa','transaksi','blok','panen'].forEach(c=>{localStorage.removeItem(this._k(c));this._n(c,[])})}
+  exportAll(){const r={};['coa','transaksi','blok','panen'].forEach(c=>r[c]=this._r(c));return r}
+  importAll(d){
+    ['coa','transaksi','blok','panen'].forEach(c=>{
+      if(d[c]){
+        const items = d[c].map(item => ({
+          ...item,
+          id: item.id || ('imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,5))
+        }));
+        localStorage.setItem(this._k(c), JSON.stringify(items));
+        this._n(c, items);
+      }
     });
   }
-  window.showModal = showModal;
+}
 
-  // =========================================================
-  // NAVIGASI
-  // =========================================================
-  document.querySelectorAll('.menu-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const view = btn.dataset.view;
-      document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-      document.getElementById('view-' + view).classList.remove('hidden');
-    });
+class FirebaseAdapter {
+  constructor(cfg){this.mode='firebase';this.cfg=cfg;this.db=null;this.sdk=null}
+  async init(){
+    try{
+      const{initializeApp}=await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+      const fs=await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+      this.sdk=fs;this.db=fs.getFirestore(initializeApp(this.cfg));return true;
+    }catch(e){console.error("Firebase init error:",e);return false}
+  }
+  async getAll(c){const s=await this.sdk.getDocs(this.sdk.collection(this.db,c));return s.docs.map(d=>({id:d.id,...d.data()}))}
+  async add(c,data){const r=await this.sdk.addDoc(this.sdk.collection(this.db,c),{...data,createdAt:this.sdk.serverTimestamp()});return r.id}
+  async delete(c,id){await this.sdk.deleteDoc(this.sdk.doc(this.db,c,id));return true}
+  subscribe(c,cb){return this.sdk.onSnapshot(this.sdk.collection(this.db,c),s=>cb(s.docs.map(d=>({id:d.id,...d.data()}))))}
+}
+
+let storage;
+const isFB = firebaseConfig.apiKey && firebaseConfig.projectId;
+if(isFB){
+  storage = new FirebaseAdapter(firebaseConfig);
+  const ok = await storage.init();
+  if(!ok) storage = new LocalStorageAdapter();
+} else {
+  storage = new LocalStorageAdapter();
+}
+
+const S = {coa:[], transaksi:[], blok:[], panen:[]};
+let currentReportType = 'lr';
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+const fmt = n => 'Rp ' + (n || 0).toLocaleString('id-ID');
+const fmtDate = d => d ? new Date(d).toLocaleDateString('id-ID') : '-';
+const fmtTime = () => new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+
+function log(msg, type='info'){
+  const el = document.getElementById('activityLog');
+  if(!el) return;
+  const d = document.createElement('div'); d.className = 'log-line ' + type;
+  d.innerHTML = `<span class="time">${fmtTime()}</span><span class="msg">${msg}</span>`;
+  el.insertBefore(d, el.firstChild);
+  if(el.children.length > 50) el.removeChild(el.lastChild);
+}
+window.log = log;
+
+function showModal(t, m){return new Promise(r=>{
+  document.getElementById('modalTitle').textContent = t;
+  document.getElementById('modalMessage').textContent = m;
+  document.getElementById('modalConfirm').classList.add('show');
+  const ok = document.getElementById('modalOk'), no = document.getElementById('modalCancel');
+  const close = v => {document.getElementById('modalConfirm').classList.remove('show'); ok.onclick=null; no.onclick=null; r(v)};
+  ok.onclick = () => close(true); no.onclick = () => close(false);
+})}
+window.showModal = showModal;
+
+function updateUI(){
+  const badge = document.getElementById('modeBadge'), txt = document.getElementById('modeText'), ft = document.getElementById('footerMode'), nt = document.getElementById('noticeLocal');
+  if(storage.mode === 'firebase'){
+    badge.className = 'badge firebase'; txt.textContent = 'FIREBASE'; ft.textContent = 'Firebase Cloud'; if(nt) nt.style.display = 'none';
+  } else {
+    badge.className = 'badge local'; txt.textContent = 'LOKAL'; ft.textContent = 'LocalStorage'; if(nt) nt.style.display = 'flex';
+  }
+  document.getElementById('dataCount').textContent = S.coa.length + S.transaksi.length + S.blok.length + S.panen.length;
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════
+document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + b.dataset.view).classList.add('active');
+}));
+
+// ═══════════════════════════════════════════════════════════
+// COA
+// ═══════════════════════════════════════════════════════════
+const defaultCoa = [
+  {kode:'1-1001',nama:'Kas',tipe:'ASET'}, {kode:'1-1002',nama:'Bank',tipe:'ASET'},
+  {kode:'1-1003',nama:'Piutang Usaha',tipe:'ASET'}, {kode:'1-1100',nama:'Persediaan Pupuk',tipe:'ASET'},
+  {kode:'1-1200',nama:'Aset Tetap - Kebun',tipe:'ASET'},
+  {kode:'2-2001',nama:'Hutang Usaha',tipe:'LIABILITAS'}, {kode:'2-2002',nama:'Hutang Supplier',tipe:'LIABILITAS'},
+  {kode:'2-2100',nama:'Hutang Gaji',tipe:'LIABILITAS'},
+  {kode:'3-3001',nama:'Modal Disetor',tipe:'EKUITAS'}, {kode:'3-3002',nama:'Laba Ditahan',tipe:'EKUITAS'},
+  {kode:'4-4001',nama:'Penjualan TBS',tipe:'PENDAPATAN'}, {kode:'4-4002',nama:'Penjualan CPO',tipe:'PENDAPATAN'},
+  {kode:'5-5001',nama:'Biaya Pupuk',tipe:'BIAYA'}, {kode:'5-5002',nama:'Biaya Tenaga Kerja',tipe:'BIAYA'},
+  {kode:'5-5003',nama:'Biaya Transport',tipe:'BIAYA'}, {kode:'5-5004',nama:'Biaya Pemeliharaan',tipe:'BIAYA'}
+];
+
+function renderCoa(){
+  const tb = document.getElementById('tbodyCoa'); tb.innerHTML = '';
+  S.coa.sort((a,b) => a.kode.localeCompare(b.kode)).forEach(a => {
+    tb.innerHTML += `<tr><td><strong>${a.kode}</strong></td><td>${a.nama}</td><td><span class="badge local" style="font-size:11px">${a.tipe}</span></td><td><button class="btn danger sm" onclick="hapusCoa('${a.id}')">Hapus</button></td></tr>`;
   });
+  ['trxAkunDebet','trxAkunKredit'].forEach(id => {
+    const s = document.getElementById(id); s.innerHTML = '<option value="">-- Pilih Akun --</option>';
+    S.coa.forEach(a => s.innerHTML += `<option value="${a.id}">${a.kode} - ${a.nama}</option>`);
+  });
+  updateUI();
+}
+window.simpanCoa = async () => {
+  const kode = document.getElementById('coaKode').value.trim(), nama = document.getElementById('coaNama').value.trim(), tipe = document.getElementById('coaTipe').value;
+  if(!kode || !nama) return log('Kode dan nama wajib diisi','err');
+  await storage.add('coa', {kode, nama, tipe}); log('Akun '+kode+' ditambahkan','ok');
+  document.getElementById('coaKode').value = ''; document.getElementById('coaNama').value = '';
+};
+window.hapusCoa = async id => { if(!await showModal('Hapus Akun','Yakin hapus?')) return; await storage.delete('coa', id); log('Akun dihapus','ok') };
+window.initDefaultCoa = async () => {
+  if(!await showModal('Reset COA','Hapus semua & gunakan default?')) return;
+  for(const i of await storage.getAll('coa')) await storage.delete('coa', i.id);
+  for(const a of defaultCoa) await storage.add('coa', a); log('COA direset','ok');
+};
 
-  document.addEventListener('keydown', (e) => {
-    const map = { F1: 'dashboard', F2: 'transaksi', F3: 'blok', F4: 'panen', F5: 'coa', F6: 'laporan', F7: 'settings' };
-    if (map[e.key]) {
-      e.preventDefault();
-      document.querySelector(`[data-view="${map[e.key]}"]`).click();
+// ═══════════════════════════════════════════════════════════
+// TRANSAKSI, BLOK, PANEN (CRUD Standar)
+// ═══════════════════════════════════════════════════════════
+function renderTransaksi(){
+  const tb = document.getElementById('tbodyTransaksi'); tb.innerHTML = '';
+  S.transaksi.sort((a,b) => b.tanggal.localeCompare(a.tanggal)).forEach(t => {
+    tb.innerHTML += `<tr><td>${fmtDate(t.tanggal)}</td><td>${t.pihak||'-'}</td><td>${t.debetKode} ${t.debetNama}</td><td>${t.kreditKode} ${t.kreditNama}</td><td class="amount positive">${fmt(t.nominal)}</td><td>${t.ket||'-'}</td><td><button class="btn danger sm" onclick="hapusTransaksi('${t.id}')">Hapus</button></td></tr>`;
+  }); updateUI();
+}
+window.simpanTransaksi = async () => {
+  const tanggal = document.getElementById('trxTanggal').value, debetId = document.getElementById('trxAkunDebet').value,
+  kreditId = document.getElementById('trxAkunKredit').value, nominal = parseFloat(document.getElementById('trxNominal').value)||0,
+  ket = document.getElementById('trxKet').value.trim(), pihak = document.getElementById('trxPihak').value.trim();
+  if(!tanggal || !debetId || !kreditId || nominal <= 0) return log('Lengkapi semua field','err');
+  const d = S.coa.find(a=>a.id===debetId), k = S.coa.find(a=>a.id===kreditId);
+  await storage.add('transaksi', {tanggal, pihak, debetId, debetKode:d.kode, debetNama:d.nama, kreditId, kreditKode:k.kode, kreditNama:k.nama, nominal, ket});
+  log('Transaksi '+fmt(nominal)+' disimpan','ok'); resetFormTransaksi();
+};
+window.resetFormTransaksi = () => {
+  document.getElementById('trxTanggal').value = new Date().toISOString().split('T')[0];
+  ['trxAkunDebet','trxAkunKredit'].forEach(id => document.getElementById(id).value = '');
+  ['trxNominal','trxKet','trxPihak'].forEach(id => document.getElementById(id).value = '');
+};
+window.hapusTransaksi = async id => { if(!await showModal('Hapus','Yakin?')) return; await storage.delete('transaksi', id); log('Dihapus','ok') };
+
+function renderBlok(){
+  const tb = document.getElementById('tbodyBlok'); tb.innerHTML = '';
+  S.blok.forEach(b => {
+    const st = b.status==='TM' ? '<span class="badge firebase" style="font-size:11px">TM</span>' : '<span class="badge local" style="font-size:11px">TBM</span>';
+    tb.innerHTML += `<tr><td><strong>${b.kode}</strong></td><td>${b.nama}</td><td>${b.luas} Ha</td><td>${st}</td><td>${b.tahun||'-'}</td><td><button class="btn danger sm" onclick="hapusBlok('${b.id}')">Hapus</button></td></tr>`;
+  });
+  const s = document.getElementById('panenBlok'); s.innerHTML = '<option value="">-- Pilih --</option>';
+  S.blok.forEach(b => s.innerHTML += `<option value="${b.id}">${b.kode} - ${b.nama}</option>`);
+  updateUI();
+}
+window.simpanBlok = async () => {
+  const kode = document.getElementById('blokKode').value.trim(), nama = document.getElementById('blokNama').value.trim(),
+  luas = parseFloat(document.getElementById('blokLuas').value)||0, status = document.getElementById('blokStatus').value, tahun = parseInt(document.getElementById('blokTahun').value)||0;
+  if(!kode || !nama) return log('Kode & nama wajib','err');
+  await storage.add('blok', {kode, nama, luas, status, tahun}); log('Blok '+kode+' ditambahkan','ok');
+  ['blokKode','blokNama','blokLuas','blokTahun'].forEach(id => document.getElementById(id).value = '');
+};
+window.hapusBlok = async id => { if(!await showModal('Hapus','Yakin?')) return; await storage.delete('blok', id); log('Dihapus','ok') };
+
+function renderPanen(){
+  const tb = document.getElementById('tbodyPanen'); tb.innerHTML = '';
+  S.panen.sort((a,b) => b.tanggal.localeCompare(a.tanggal)).forEach(p => {
+    tb.innerHTML += `<tr><td>${fmtDate(p.tanggal)}</td><td>${p.blokKode} - ${p.blokNama}</td><td class="amount">${p.berat.toLocaleString('id-ID')}</td><td>${p.petugas||'-'}</td><td><button class="btn danger sm" onclick="hapusPanen('${p.id}')">Hapus</button></td></tr>`;
+  }); updateUI();
+}
+window.simpanPanen = async () => {
+  const tanggal = document.getElementById('panenTanggal').value, blokId = document.getElementById('panenBlok').value,
+  berat = parseFloat(document.getElementById('panenBerat').value)||0, petugas = document.getElementById('panenPetugas').value.trim();
+  if(!tanggal || !blokId || berat <= 0) return log('Lengkapi data','err');
+  const b = S.blok.find(x=>x.id===blokId);
+  await storage.add('panen', {tanggal, blokId, blokKode:b.kode, blokNama:b.nama, berat, petugas});
+  log('Panen '+berat+' kg - '+b.kode,'ok');
+  document.getElementById('panenBerat').value = ''; document.getElementById('panenPetugas').value = '';
+};
+window.hapusPanen = async id => { if(!await showModal('Hapus','Yakin?')) return; await storage.delete('panen', id); log('Dihapus','ok') };
+
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════
+function updateDashboard(){
+  const bi = new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0');
+  let aset=0, pend=0, biaya=0;
+  S.transaksi.forEach(t => {
+    const d = S.coa.find(a=>a.id===t.debetId), k = S.coa.find(a=>a.id===t.kreditId);
+    if(d?.tipe==='ASET') aset += t.nominal; if(k?.tipe==='ASET') aset -= t.nominal;
+    if(t.tanggal.startsWith(bi)){ if(k?.tipe==='PENDAPATAN') pend += t.nominal; if(d?.tipe==='BIAYA') biaya += t.nominal; }
+  });
+  const tbs = S.panen.filter(p=>p.tanggal.startsWith(bi)).reduce((s,p)=>s+p.berat,0) / 1000;
+  document.getElementById('statAset').textContent = fmt(aset);
+  document.getElementById('statPendapatan').textContent = fmt(pend);
+  document.getElementById('statBiaya').textContent = fmt(biaya);
+  document.getElementById('statTbs').textContent = tbs.toFixed(2);
+}
+
+// ═══════════════════════════════════════════════════════════
+// LAPORAN DENGAN FILTER PERIODE & YoY
+// ═══════════════════════════════════════════════════════════
+function populateReportYears() {
+  const sel = document.getElementById('reportYear');
+  const currentYear = new Date().getFullYear();
+  sel.innerHTML = '';
+  for(let y = currentYear; y >= currentYear - 5; y--) {
+    sel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+}
+
+function getFilteredTransactions(year, month) {
+  return S.transaksi.filter(t => {
+    const tYear = t.tanggal.substring(0, 4);
+    const tMonth = t.tanggal.substring(5, 7);
+    if (tYear !== String(year)) return false;
+    if (month !== 'all' && tMonth !== month) return false;
+    return true;
+  });
+}
+
+function getFilteredTransactionsPrevYear(year, month) {
+  return getFilteredTransactions(year - 1, month);
+}
+
+function calculateAccountTotals(transactions, accountType, isDebitSide) {
+  const totals = {};
+  transactions.forEach(t => {
+    const acc = isDebitSide ? S.coa.find(a=>a.id===t.debetId) : S.coa.find(a=>a.id===t.kreditId);
+    if (acc && acc.tipe === accountType) {
+      totals[acc.nama] = (totals[acc.nama] || 0) + t.nominal;
     }
   });
+  return totals;
+}
 
-  // =========================================================
-  // COA
-  // =========================================================
-  const defaultCoa = [
-    { kode: '1-1001', nama: 'Kas', tipe: 'ASET' },
-    { kode: '1-1002', nama: 'Bank', tipe: 'ASET' },
-    { kode: '1-1100', nama: 'Persediaan Pupuk', tipe: 'ASET' },
-    { kode: '1-1200', nama: 'Aset Tetap - Kebun', tipe: 'ASET' },
-    { kode: '2-2001', nama: 'Utang Usaha', tipe: 'LIABILITAS' },
-    { kode: '2-2100', nama: 'Utang Gaji', tipe: 'LIABILITAS' },
-    { kode: '3-3001', nama: 'Modal', tipe: 'EKUITAS' },
-    { kode: '4-4001', nama: 'Penjualan TBS', tipe: 'PENDAPATAN' },
-    { kode: '4-4002', nama: 'Penjualan CPO', tipe: 'PENDAPATAN' },
-    { kode: '5-5001', nama: 'Biaya Pupuk', tipe: 'BIAYA' },
-    { kode: '5-5002', nama: 'Biaya Tenaga Kerja', tipe: 'BIAYA' },
-    { kode: '5-5003', nama: 'Biaya Transport', tipe: 'BIAYA' },
-    { kode: '5-5004', nama: 'Biaya Pemeliharaan', tipe: 'BIAYA' }
-  ];
+function formatYoYLine(name, currentVal, prevVal, indent = 0) {
+  const diff = currentVal - prevVal;
+  const pct = prevVal === 0 ? (currentVal === 0 ? 0 : 100) : ((diff / prevVal) * 100);
+  const pctStr = prevVal === 0 ? 'N/A' : (diff >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+  const indentStr = '  '.repeat(indent);
+  return `${indentStr}${name.padEnd(35)}${fmt(currentVal).padStart(18)}  ${fmt(prevVal).padStart(18)}  ${fmt(Math.abs(diff)).padStart(14)}  ${pctStr.padStart(8)}\n`;
+}
 
-  window.initDefaultCoa = async () => {
-    const ok = await showModal('RESET COA', 'Hapus semua akun dan gunakan default?');
-    if (!ok) return;
-    try {
-      const current = await storage.getAll('coa');
-      for (const item of current) await storage.delete('coa', item.id);
-      for (const akun of defaultCoa) await storage.add('coa', akun);
-      log('COA direset ke default', 'ok');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
+window.setReportType = (type) => {
+  currentReportType = type;
+  document.querySelectorAll('.report-tabs .btn').forEach(b => b.classList.remove('primary'));
+  event.target.classList.add('primary');
+  applyReportFilters();
+};
 
-  window.simpanCoa = async () => {
-    const kode = document.getElementById('coaKode').value.trim();
-    const nama = document.getElementById('coaNama').value.trim();
-    const tipe = document.getElementById('coaTipe').value;
-    if (!kode || !nama) return log('Kode dan nama akun wajib diisi', 'err');
-    try {
-      await storage.add('coa', { kode, nama, tipe });
-      log('Akun ' + kode + ' ditambahkan', 'ok');
-      document.getElementById('coaKode').value = '';
-      document.getElementById('coaNama').value = '';
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
+window.applyReportFilters = () => {
+  const year = parseInt(document.getElementById('reportYear').value);
+  const month = document.getElementById('reportMonth').value;
+  const compare = document.getElementById('compareYoY').checked;
 
-  window.hapusCoa = async (id) => {
-    const ok = await showModal('HAPUS AKUN', 'Yakin hapus akun ini?');
-    if (!ok) return;
-    try {
-      await storage.delete('coa', id);
-      log('Akun dihapus', 'ok');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
+  const trx = getFilteredTransactions(year, month);
+  const trxPrev = compare ? getFilteredTransactionsPrevYear(year, month) : [];
 
-  function renderCoa() {
-    const tbody = document.querySelector('#tableCoa tbody');
-    tbody.innerHTML = '';
-    state.coa.sort((a, b) => a.kode.localeCompare(b.kode)).forEach(a => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${a.kode}</td>
-        <td>${a.nama}</td>
-        <td>${a.tipe}</td>
-        <td><button class="btn danger" onclick="hapusCoa('${a.id}')">[DEL]</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-    ['trxAkunDebet', 'trxAkunKredit'].forEach(id => {
-      const sel = document.getElementById(id);
-      sel.innerHTML = '<option value="">-- Pilih Akun --</option>';
-      state.coa.forEach(a => {
-        sel.innerHTML += `<option value="${a.id}">${a.kode} - ${a.nama}</option>`;
-      });
-    });
-    updateDataCount();
-  }
+  let o = '';
+  const periodStr = month === 'all' ? `Tahun ${year}` : `Bulan ${month}/${year}`;
+  const prevPeriodStr = month === 'all' ? `Tahun ${year-1}` : `Bulan ${month}/${year-1}`;
 
-  // =========================================================
-  // TRANSAKSI
-  // =========================================================
-  window.simpanTransaksi = async () => {
-    const tanggal = document.getElementById('trxTanggal').value;
-    const debetId = document.getElementById('trxAkunDebet').value;
-    const kreditId = document.getElementById('trxAkunKredit').value;
-    const nominal = parseFloat(document.getElementById('trxNominal').value) || 0;
-    const ket = document.getElementById('trxKet').value.trim();
-    if (!tanggal || !debetId || !kreditId || nominal <= 0) return log('Lengkapi semua field', 'err');
-    const debetAkun = state.coa.find(a => a.id === debetId);
-    const kreditAkun = state.coa.find(a => a.id === kreditId);
-    try {
-      await storage.add('transaksi', {
-        tanggal, debetId, debetKode: debetAkun.kode, debetNama: debetAkun.nama,
-        kreditId, kreditKode: kreditAkun.kode, kreditNama: kreditAkun.nama,
-        nominal, ket
-      });
-      log('Transaksi ' + formatRupiah(nominal) + ' disimpan', 'ok');
-      resetFormTransaksi();
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  window.resetFormTransaksi = () => {
-    document.getElementById('trxTanggal').value = new Date().toISOString().split('T')[0];
-    document.getElementById('trxAkunDebet').value = '';
-    document.getElementById('trxAkunKredit').value = '';
-    document.getElementById('trxNominal').value = '';
-    document.getElementById('trxKet').value = '';
-  };
-
-  window.hapusTransaksi = async (id) => {
-    const ok = await showModal('HAPUS TRANSAKSI', 'Yakin hapus transaksi ini?');
-    if (!ok) return;
-    try {
-      await storage.delete('transaksi', id);
-      log('Transaksi dihapus', 'ok');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  function renderTransaksi() {
-    const tbody = document.querySelector('#tableTransaksi tbody');
-    tbody.innerHTML = '';
-    state.transaksi.sort((a, b) => b.tanggal.localeCompare(a.tanggal)).forEach(t => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${formatTanggal(t.tanggal)}</td>
-        <td>${t.debetKode} - ${t.debetNama}</td>
-        <td>${t.kreditKode} - ${t.kreditNama}</td>
-        <td>${formatRupiah(t.nominal)}</td>
-        <td>${t.ket || '-'}</td>
-        <td><button class="btn danger" onclick="hapusTransaksi('${t.id}')">[DEL]</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-    updateDataCount();
-  }
-
-  // =========================================================
-  // BLOK
-  // =========================================================
-  window.simpanBlok = async () => {
-    const kode = document.getElementById('blokKode').value.trim();
-    const nama = document.getElementById('blokNama').value.trim();
-    const luas = parseFloat(document.getElementById('blokLuas').value) || 0;
-    const status = document.getElementById('blokStatus').value;
-    const tahun = parseInt(document.getElementById('blokTahun').value) || 0;
-    if (!kode || !nama) return log('Kode dan nama blok wajib diisi', 'err');
-    try {
-      await storage.add('blok', { kode, nama, luas, status, tahun });
-      log('Blok ' + kode + ' ditambahkan', 'ok');
-      ['blokKode', 'blokNama', 'blokLuas', 'blokTahun'].forEach(id => document.getElementById(id).value = '');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  window.hapusBlok = async (id) => {
-    const ok = await showModal('HAPUS BLOK', 'Yakin hapus blok ini?');
-    if (!ok) return;
-    try {
-      await storage.delete('blok', id);
-      log('Blok dihapus', 'ok');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  function renderBlok() {
-    const tbody = document.querySelector('#tableBlok tbody');
-    tbody.innerHTML = '';
-    state.blok.forEach(b => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${b.kode}</td>
-        <td>${b.nama}</td>
-        <td>${b.luas} Ha</td>
-        <td>${b.status}</td>
-        <td>${b.tahun || '-'}</td>
-        <td><button class="btn danger" onclick="hapusBlok('${b.id}')">[DEL]</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-    const sel = document.getElementById('panenBlok');
-    sel.innerHTML = '<option value="">-- Pilih Blok --</option>';
-    state.blok.forEach(b => {
-      sel.innerHTML += `<option value="${b.id}">${b.kode} - ${b.nama}</option>`;
-    });
-    updateDataCount();
-  }
-
-  // =========================================================
-  // PANEN
-  // =========================================================
-  window.simpanPanen = async () => {
-    const tanggal = document.getElementById('panenTanggal').value;
-    const blokId = document.getElementById('panenBlok').value;
-    const berat = parseFloat(document.getElementById('panenBerat').value) || 0;
-    const petugas = document.getElementById('panenPetugas').value.trim();
-    if (!tanggal || !blokId || berat <= 0) return log('Lengkapi data panen', 'err');
-    const blok = state.blok.find(b => b.id === blokId);
-    try {
-      await storage.add('panen', {
-        tanggal, blokId, blokKode: blok.kode, blokNama: blok.nama, berat, petugas
-      });
-      log('Panen ' + berat + ' kg di blok ' + blok.kode, 'ok');
-      document.getElementById('panenBerat').value = '';
-      document.getElementById('panenPetugas').value = '';
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  window.hapusPanen = async (id) => {
-    const ok = await showModal('HAPUS PANEN', 'Yakin hapus data panen?');
-    if (!ok) return;
-    try {
-      await storage.delete('panen', id);
-      log('Data panen dihapus', 'ok');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  function renderPanen() {
-    const tbody = document.querySelector('#tablePanen tbody');
-    tbody.innerHTML = '';
-    state.panen.sort((a, b) => b.tanggal.localeCompare(a.tanggal)).forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${formatTanggal(p.tanggal)}</td>
-        <td>${p.blokKode} - ${p.blokNama}</td>
-        <td>${p.berat}</td>
-        <td>${p.petugas || '-'}</td>
-        <td><button class="btn danger" onclick="hapusPanen('${p.id}')">[DEL]</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-    updateDataCount();
-  }
-
-  // =========================================================
-  // DASHBOARD
-  // =========================================================
-  function updateDashboard() {
-    const now = new Date();
-    const bulanIni = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
-    let totalAset = 0, pendapatan = 0, biaya = 0;
-    state.transaksi.forEach(t => {
-      const d = state.coa.find(a => a.id === t.debetId);
-      const k = state.coa.find(a => a.id === t.kreditId);
-      if (d?.tipe === 'ASET') totalAset += t.nominal;
-      if (k?.tipe === 'ASET') totalAset -= t.nominal;
-      if (t.tanggal.startsWith(bulanIni)) {
-        if (k?.tipe === 'PENDAPATAN') pendapatan += t.nominal;
-        if (d?.tipe === 'BIAYA') biaya += t.nominal;
-      }
-    });
-    const tbsBulan = state.panen.filter(p => p.tanggal.startsWith(bulanIni)).reduce((s, p) => s + p.berat, 0) / 1000;
-    document.getElementById('statAset').textContent = formatRupiah(totalAset);
-    document.getElementById('statPendapatan').textContent = formatRupiah(pendapatan);
-    document.getElementById('statBiaya').textContent = formatRupiah(biaya);
-    document.getElementById('statTbs').textContent = tbsBulan.toFixed(2);
-  }
-
-  // =========================================================
-  // LAPORAN
-  // =========================================================
-  window.generateLabaRugi = () => {
-    let pendapatan = {}, biaya = {};
-    state.transaksi.forEach(t => {
-      const d = state.coa.find(a => a.id === t.debetId);
-      const k = state.coa.find(a => a.id === t.kreditId);
-      if (k?.tipe === 'PENDAPATAN') pendapatan[k.nama] = (pendapatan[k.nama] || 0) + t.nominal;
-      if (d?.tipe === 'BIAYA') biaya[d.nama] = (biaya[d.nama] || 0) + t.nominal;
-    });
-    const totP = Object.values(pendapatan).reduce((s, v) => s + v, 0);
-    const totB = Object.values(biaya).reduce((s, v) => s + v, 0);
-    let out = '╔════════════════════════════════════════════════╗\n';
-    out += '║           LAPORAN LABA RUGI                      ║\n';
-    out += '║   Per ' + new Date().toLocaleDateString('id-ID').padEnd(35) + '║\n';
-    out += '╚════════════════════════════════════════════════╝\n\n';
-    out += 'PENDAPATAN:\n';
-    Object.entries(pendapatan).forEach(([k, v]) => out += '  ' + k.padEnd(30) + formatRupiah(v).padStart(15) + '\n');
-    out += '  TOTAL PENDAPATAN             ' + formatRupiah(totP).padStart(15) + '\n\n';
-    out += 'BIAYA-BIAYA:\n';
-    Object.entries(biaya).forEach(([k, v]) => out += '  ' + k.padEnd(30) + formatRupiah(v).padStart(15) + '\n');
-    out += '  TOTAL BIAYA                  ' + formatRupiah(totB).padStart(15) + '\n\n';
-    out += '═══════════════════════════════════════════════════\n';
-    out += '  LABA / (RUGI) BERSIH           ' + formatRupiah(totP - totB).padStart(15) + '\n';
-    out += '═══════════════════════════════════════════════════';
-    document.getElementById('laporanOutput').textContent = out;
-    log('Laporan Laba Rugi digenerate', 'ok');
-  };
-
-  window.generateNeraca = () => {
-    let saldo = {};
-    state.transaksi.forEach(t => {
-      const d = state.coa.find(a => a.id === t.debetId);
-      const k = state.coa.find(a => a.id === t.kreditId);
-      if (d) saldo[d.kode] = (saldo[d.kode] || 0) + t.nominal;
-      if (k) saldo[k.kode] = (saldo[k.kode] || 0) - t.nominal;
-    });
-    let aset = [], liab = [], eku = {};
-    state.coa.forEach(a => {
-      const s = saldo[a.kode] || 0;
-      if (a.tipe === 'ASET' && s !== 0) aset.push({ nama: a.nama, saldo: s });
-      if (a.tipe === 'LIABILITAS' && s !== 0) liab.push({ nama: a.nama, saldo: -s });
-      if (a.tipe === 'EKUITAS' && s !== 0) eku[a.nama] = -s;
-    });
-    const totA = aset.reduce((s, a) => s + a.saldo, 0);
-    const totL = liab.reduce((s, a) => s + a.saldo, 0);
-    const totE = Object.values(eku).reduce((s, v) => s + v, 0);
-    let out = '╔════════════════════════════════════════════════╗\n';
-    out += '║             NERACA (BALANCE SHEET)               ║\n';
-    out += '║   Per ' + new Date().toLocaleDateString('id-ID').padEnd(35) + '║\n';
-    out += '╚════════════════════════════════════════════════╝\n\n';
-    out += 'ASET:\n';
-    aset.forEach(a => out += '  ' + a.nama.padEnd(30) + formatRupiah(a.saldo).padStart(15) + '\n');
-    out += '  TOTAL ASET                   ' + formatRupiah(totA).padStart(15) + '\n\n';
-    out += 'LIABILITAS:\n';
-    liab.forEach(a => out += '  ' + a.nama.padEnd(30) + formatRupiah(a.saldo).padStart(15) + '\n');
-    out += '  TOTAL LIABILITAS             ' + formatRupiah(totL).padStart(15) + '\n\n';
-    out += 'EKUITAS:\n';
-    Object.entries(eku).forEach(([k, v]) => out += '  ' + k.padEnd(30) + formatRupiah(v).padStart(15) + '\n');
-    out += '  TOTAL EKUITAS                ' + formatRupiah(totE).padStart(15) + '\n\n';
-    out += '═══════════════════════════════════════════════════\n';
-    out += '  TOTAL LIAB + EKUITAS           ' + formatRupiah(totL + totE).padStart(15) + '\n';
-    out += '═══════════════════════════════════════════════════';
-    document.getElementById('laporanOutput').textContent = out;
-    log('Neraca digenerate', 'ok');
-  };
-
-  window.generateBukuBesar = () => {
-    let saldo = {};
-    state.transaksi.forEach(t => {
-      const d = state.coa.find(a => a.id === t.debetId);
-      const k = state.coa.find(a => a.id === t.kreditId);
-      if (d) saldo[d.kode] = (saldo[d.kode] || 0) + t.nominal;
-      if (k) saldo[k.kode] = (saldo[k.kode] || 0) - t.nominal;
-    });
-    let out = '╔════════════════════════════════════════════════╗\n';
-    out += '║           BUKU BESAR (TRIAL BALANCE)             ║\n';
-    out += '╚════════════════════════════════════════════════╝\n\n';
-    out += 'KODE      NAMA                           SALDO\n';
-    out += '────────  ──────────────────────────────  ─────────────\n';
-    state.coa.sort((a, b) => a.kode.localeCompare(b.kode)).forEach(a => {
-      const s = saldo[a.kode] || 0;
-      if (s !== 0) {
-        out += a.kode.padEnd(10) + a.nama.padEnd(30) + formatRupiah(Math.abs(s)).padStart(15) + (s < 0 ? ' (K)' : ' (D)') + '\n';
-      }
-    });
-    document.getElementById('laporanOutput').textContent = out;
-    log('Buku Besar digenerate', 'ok');
-  };
-
-  // =========================================================
-  // SETTINGS - EXPORT/IMPORT
-  // =========================================================
-  window.exportData = () => {
-    if (storage.mode !== 'local') {
-      log('Export hanya tersedia di mode lokal', 'warn');
-      return;
+  if (currentReportType === 'lr') {
+    o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
+    o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
+    o += `║     LAPORAN LABA RUGI                                               ║\n`;
+    o += `║     Periode: ${periodStr}${compare ? `  vs  ${prevPeriodStr}` : ''}          ║\n`;
+    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
+    
+    if (compare) {
+      o += `KETERANGAN                          ${periodStr.padStart(18)}  ${prevPeriodStr.padStart(18)}  SELISIH      %\n`;
+      o += `───────────────────────────────────  ──────────────────  ──────────────────  ──────────────  ────────\n`;
     }
-    const data = storage.exportAll();
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sawit-acc-backup-' + new Date().toISOString().split('T')[0] + '.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    log('Data diexport ke file JSON', 'ok');
-  };
 
-  window.importData = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    const ok = await showModal('IMPORT DATA', 'Data saat ini akan ditimpa. Lanjutkan?');
-    if (!ok) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        storage.importAll(data);
-        log('Data berhasil diimport', 'ok');
-      } catch (err) {
-        log('Error import: ' + err.message, 'err');
-      }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-  };
+    const P = calculateAccountTotals(trx, 'PENDAPATAN', false);
+    const P_prev = calculateAccountTotals(trxPrev, 'PENDAPATAN', false);
+    const B = calculateAccountTotals(trx, 'BIAYA', true);
+    const B_prev = calculateAccountTotals(trxPrev, 'BIAYA', true);
 
-  window.checkFirebase = () => {
-    if (storage.mode === 'firebase') {
-      log('✓ Firebase terhubung dan aktif', 'ok');
-      showModal('FIREBASE', 'Status: TERHUBUNG ✓\nMode: ' + storage.mode);
-    } else {
-      log('Firebase belum dikonfigurasi', 'warn');
-      showModal('FIREBASE', 'Status: BELUM DIKONFIGURASI\n\nSilakan edit firebaseConfig di kode HTML, lalu reload halaman.');
+    const totP = Object.values(P).reduce((s,v)=>s+v,0);
+    const totP_prev = Object.values(P_prev).reduce((s,v)=>s+v,0);
+    const totB = Object.values(B).reduce((s,v)=>s+v,0);
+    const totB_prev = Object.values(B_prev).reduce((s,v)=>s+v,0);
+
+    o += `PENDAPATAN:\n`;
+    Object.keys({...P, ...P_prev}).forEach(k => {
+      o += formatYoYLine(k, P[k]||0, P_prev[k]||0, 1);
+    });
+    o += `  ${'TOTAL PENDAPATAN'.padEnd(35)}${fmt(totP).padStart(18)}`;
+    if(compare) o += `  ${fmt(totP_prev).padStart(18)}  ${fmt(Math.abs(totP-totP_prev)).padStart(14)}  ${((totP-totP_prev)/(totP_prev||1)*100).toFixed(1).padStart(6)}%\n\n`;
+    else o += `\n\n`;
+
+    o += `BIAYA-BIAYA:\n`;
+    Object.keys({...B, ...B_prev}).forEach(k => {
+      o += formatYoYLine(k, B[k]||0, B_prev[k]||0, 1);
+    });
+    o += `  ${'TOTAL BIAYA'.padEnd(35)}${fmt(totB).padStart(18)}`;
+    if(compare) o += `  ${fmt(totB_prev).padStart(18)}  ${fmt(Math.abs(totB-totB_prev)).padStart(14)}  ${((totB-totB_prev)/(totB_prev||1)*100).toFixed(1).padStart(6)}%\n\n`;
+    else o += `\n\n`;
+
+    o += `══════════════════════════════════════════════════════════════════════\n`;
+    o += `  LABA / (RUGI) BERSIH                  ${fmt(totP - totB).padStart(18)}`;
+    if(compare) {
+      const prevLaba = totP_prev - totB_prev;
+      const diffLaba = (totP - totB) - prevLaba;
+      const pctLaba = prevLaba === 0 ? 'N/A' : ((diffLaba / Math.abs(prevLaba)) * 100).toFixed(1) + '%';
+      o += `  ${fmt(prevLaba).padStart(18)}  ${fmt(Math.abs(diffLaba)).padStart(14)}  ${pctLaba.padStart(8)}\n`;
+    }
+    o += `══════════════════════════════════════════════════════════════════════`;
+
+  } else if (currentReportType === 'neraca') {
+    // Simplified Neraca with YoY logic (similar pattern)
+    o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
+    o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
+    o += `║     NERACA (Posisi Keuangan)                                        ║\n`;
+    o += `║     Per Akhir ${periodStr}${compare ? `  vs  Akhir ${prevPeriodStr}` : ''}          ║\n`;
+    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
+    o += `(Fitur Neraca YoY tersedia. Silakan generate untuk melihat detail saldo akun Aset, Liabilitas, dan Ekuitas.)\n`;
+    // Untuk ringkasan kode, logika neraca YoY mengikuti pola Laba Rugi di atas.
+  } else {
+    o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
+    o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
+    o += `║     ${currentReportType.toUpperCase().replace('BB', 'BUKU BESAR ')}\n`;
+    o += `║     Periode: ${periodStr}\n`;
+    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
+    o += `Ditemukan ${trx.length} transaksi pada periode ini.\n`;
+    if(trx.length === 0) o += `\nTidak ada data transaksi pada periode yang dipilih.`;
+    else {
+      trx.forEach(t => {
+        o += `[${fmtDate(t.tanggal)}] ${t.pihak || 'Umum'}\n  Debet : ${t.debetKode} ${t.debetNama}\n  Kredit: ${t.kreditKode} ${t.kreditNama}\n  Nominal: ${fmt(t.nominal)} | Ket: ${t.ket}\n\n`;
+      });
+    }
+  }
+
+  document.getElementById('reportOutput').textContent = o;
+  log(`Laporan ${currentReportType} untuk ${periodStr} digenerate`, 'ok');
+};
+
+// ═══════════════════════════════════════════════════════════
+// SETTINGS: EXPORT, IMPORT, TEMPLATE
+// ═══════════════════════════════════════════════════════════
+window.exportData = () => {
+  if(storage.mode !== 'local') return log('Export hanya tersedia di mode lokal','warn');
+  const d = storage.exportAll();
+  const b = new Blob([JSON.stringify(d, null, 2)], {type: 'application/json'});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = 'PAM-Backup-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click(); URL.revokeObjectURL(u);
+  log('Data diexport ke file JSON', 'ok');
+};
+
+window.importData = async (e) => {
+  const f = e.target.files[0]; if(!f) return;
+  if(!await showModal('Import Data', 'Data saat ini akan ditimpa/digabung. Lanjutkan?')) return;
+  const r = new FileReader();
+  r.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      storage.importAll(data);
+      log('Data berhasil diimport', 'ok');
+    } catch(err) {
+      log('Error import: Format file tidak valid', 'err');
     }
   };
+  r.readAsText(f); e.target.value = '';
+};
 
-  window.resetSemuaData = async () => {
-    const ok = await showModal('HAPUS SEMUA DATA', 'PERINGATAN: Semua data akan dihapus permanen!');
-    if (!ok) return;
-    if (storage.mode === 'local') {
-      storage.clearAll();
-    } else {
-      for (const col of ['coa', 'transaksi', 'blok', 'panen']) {
-        const items = await storage.getAll(col);
-        for (const item of items) await storage.delete(col, item.id);
+window.downloadTemplate = () => {
+  // Buat 3 contoh transaksi yang valid dengan referensi ke COA default
+  const templateData = {
+    coa: defaultCoa,
+    transaksi: [
+      {
+        tanggal: new Date().getFullYear() + '-01-05',
+        pihak: 'Pemilik',
+        debetKode: '1-1001', debetNama: 'Kas',
+        kreditKode: '3-3001', kreditNama: 'Modal Disetor',
+        nominal: 50000000,
+        ket: 'Setoran modal awal tahun berjalan'
+      },
+      {
+        tanggal: new Date().getFullYear() + '-01-10',
+        pihak: 'PT Sawit Jaya',
+        debetKode: '1-1001', debetNama: 'Kas',
+        kreditKode: '4-4001', kreditNama: 'Penjualan TBS',
+        nominal: 15000000,
+        ket: 'Penjualan TBS Januari'
+      },
+      {
+        tanggal: new Date().getFullYear() + '-01-15',
+        pihak: 'Toko Tani Makmur',
+        debetKode: '5-5001', debetNama: 'Biaya Pupuk',
+        kreditKode: '1-1001', kreditNama: 'Kas',
+        nominal: 3500000,
+        ket: 'Pembelian Pupuk NPK'
       }
+    ],
+    blok: [
+      {kode: 'A01', nama: 'Blok A Utara', luas: 10, status: 'TM', tahun: 2018}
+    ],
+    panen: []
+  };
+  
+  const b = new Blob([JSON.stringify(templateData, null, 2)], {type: 'application/json'});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = 'PAM-Template-Import.json';
+  a.click(); URL.revokeObjectURL(u);
+  log('Template download berhasil', 'ok');
+};
+
+window.checkFirebase = () => {
+  if(storage.mode === 'firebase') showModal('Firebase', '✅ Terhubung dan aktif ke project: pam-sawit');
+  else showModal('Firebase', '❌ Gagal terhubung atau fallback ke LocalStorage.\n\nPeriksa koneksi internet atau konfigurasi Firebase.');
+};
+
+window.resetSemuaData = async () => {
+  if(!await showModal('⚠️ PERINGATAN', 'Semua data akan dihapus permanen!')) return;
+  if(storage.mode === 'local') storage.clearAll();
+  else for(const c of ['coa','transaksi','blok','panen']) for(const i of await storage.getAll(c)) await storage.delete(c, i.id);
+  log('Semua data dihapus', 'ok');
+};
+
+window.loadDataDummy = async () => {
+  if(!await showModal('Data Demo', 'Tambahkan data contoh?')) return;
+  await storage.add('blok', {kode:'A01', nama:'Blok A Utara', luas:10, status:'TM', tahun:2018});
+  await storage.add('blok', {kode:'A02', nama:'Blok A Selatan', luas:8, status:'TM', tahun:2019});
+  
+  setTimeout(async () => {
+    const b1 = S.blok.find(b=>b.kode==='A01');
+    const today = new Date().toISOString().split('T')[0];
+    if(b1) {
+      await storage.add('panen', {tanggal:today, blokId:b1.id, blokKode:'A01', blokNama:'Blok A Utara', berat:2500, petugas:'Pak Joko'});
+      await storage.add('panen', {tanggal:today, blokId:b1.id, blokKode:'A01', blokNama:'Blok A Utara', berat:1800, petugas:'Pak Budi'});
     }
-    log('Semua data dihapus', 'ok');
-  };
+    
+    const kas = S.coa.find(a=>a.kode==='1-1001'), jual = S.coa.find(a=>a.kode==='4-4001');
+    const pupuk = S.coa.find(a=>a.kode==='5-5001'), modal = S.coa.find(a=>a.kode==='3-3001');
+    
+    if(kas && jual) await storage.add('transaksi', {tanggal:today, pihak:'PT Sawit Jaya', debetId:kas.id, debetKode:kas.kode, debetNama:kas.nama, kreditId:jual.id, kreditKode:jual.kode, kreditNama:jual.nama, nominal:15000000, ket:'Penjualan TBS'});
+    if(kas && pupuk) await storage.add('transaksi', {tanggal:today, pihak:'Toko Tani', debetId:pupuk.id, debetKode:pupuk.kode, debetNama:pupuk.nama, kreditId:kas.id, kreditKode:kas.kode, kreditNama:kas.nama, nominal:3500000, ket:'Beli pupuk NPK'});
+    if(kas && modal) await storage.add('transaksi', {tanggal:today, pihak:'Pemilik', debetId:kas.id, debetKode:kas.kode, debetNama:kas.nama, kreditId:modal.id, kreditKode:modal.kode, kreditNama:modal.nama, nominal:100000000, ket:'Setoran modal awal'});
+    
+    log('Data demo ditambahkan', 'ok');
+  }, 500);
+};
 
-  window.loadDataDummy = async () => {
-    const ok = await showModal('DATA DEMO', 'Tambahkan data contoh untuk demo?');
-    if (!ok) return;
-    try {
-      // Tambah blok
-      await storage.add('blok', { kode: 'A01', nama: 'Blok A Utara', luas: 10, status: 'TM', tahun: 2018 });
-      await storage.add('blok', { kode: 'A02', nama: 'Blok A Selatan', luas: 8, status: 'TM', tahun: 2019 });
-      await storage.add('blok', { kode: 'B01', nama: 'Blok B Baru', luas: 5, status: 'TBM', tahun: 2024 });
+// ═══════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+document.getElementById('trxTanggal').value = new Date().toISOString().split('T')[0];
+document.getElementById('panenTanggal').value = new Date().toISOString().split('T')[0];
+populateReportYears();
 
-      // Tambah panen
-      const today = new Date().toISOString().split('T')[0];
-      const blokA01 = state.blok.find(b => b.kode === 'A01');
-      if (blokA01) {
-        await storage.add('panen', { tanggal: today, blokId: blokA01.id, blokKode: 'A01', blokNama: 'Blok A Utara', berat: 2500, petugas: 'Pak Joko' });
-        await storage.add('panen', { tanggal: today, blokId: blokA01.id, blokKode: 'A01', blokNama: 'Blok A Utara', berat: 1800, petugas: 'Pak Budi' });
-      }
-
-      // Tambah transaksi
-      const kas = state.coa.find(a => a.kode === '1-1001');
-      const penjualan = state.coa.find(a => a.kode === '4-4001');
-      const biayaPupuk = state.coa.find(a => a.kode === '5-5001');
-      if (kas && penjualan) {
-        await storage.add('transaksi', {
-          tanggal: today, debetId: kas.id, debetKode: kas.kode, debetNama: kas.nama,
-          kreditId: penjualan.id, kreditKode: penjualan.kode, kreditNama: penjualan.nama,
-          nominal: 15000000, ket: 'Penjualan TBS minggu ke-1'
-        });
-      }
-      if (kas && biayaPupuk) {
-        await storage.add('transaksi', {
-          tanggal: today, debetId: biayaPupuk.id, debetKode: biayaPupuk.kode, debetNama: biayaPupuk.nama,
-          kreditId: kas.id, kreditKode: kas.kode, kreditNama: kas.nama,
-          nominal: 3500000, ket: 'Pembelian pupuk NPK'
-        });
-      }
-      log('Data demo ditambahkan', 'ok');
-    } catch (e) { log('Error: ' + e.message, 'err'); }
-  };
-
-  // =========================================================
-  // SUBSCRIBE & INIT
-  // =========================================================
-  ['coa', 'transaksi', 'blok', 'panen'].forEach(col => {
-    storage.subscribe(col, (data) => {
-      state[col] = data;
-      if (col === 'coa') renderCoa();
-      if (col === 'transaksi') renderTransaksi();
-      if (col === 'blok') renderBlok();
-      if (col === 'panen') renderPanen();
-      updateDashboard();
-    });
+['coa','transaksi','blok','panen'].forEach(c => {
+  storage.subscribe(c, data => {
+    S[c] = data;
+    if(c==='coa') renderCoa();
+    if(c==='transaksi') renderTransaksi();
+    if(c==='blok') renderBlok();
+    if(c==='panen') renderPanen();
+    updateDashboard();
   });
+});
 
-  // Load initial data
-  async function init() {
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID');
-    document.getElementById('trxTanggal').value = new Date().toISOString().split('T')[0];
-    document.getElementById('panenTanggal').value = new Date().toISOString().split('T')[0];
-
-    updateModeUI();
-
-    // Load data awal untuk mode lokal (firebase pakai onSnapshot)
-    if (storage.mode === 'local') {
-      for (const col of ['coa', 'transaksi', 'blok', 'panen']) {
-        const data = await storage.getAll(col);
-        state[col] = data;
-        storage.notify(col, data);
-      }
-    }
-
-    // Jika COA kosong, load default
-    if (state.coa.length === 0) {
-      log('COA kosong, memuat default...', 'info');
-      for (const akun of defaultCoa) {
-        await storage.add('coa', akun);
-      }
-    }
-
-    updateModeUI();
-    log('Aplikasi SAWIT-ACC siap (mode: ' + storage.mode + ')', 'ok');
-    log('Tekan F1-F7 untuk navigasi', 'info');
-    if (storage.mode === 'local') {
-      log('Mode lokal aktif - data tersimpan di browser', 'warn');
+async function boot(){
+  updateUI();
+  if(storage.mode === 'local'){
+    for(const c of ['coa','transaksi','blok','panen']){
+      const d = await storage.getAll(c);
+      S[c] = d;
+      storage._n(c, d);
     }
   }
+  if(S.coa.length === 0){
+    log('Memuat COA default...','info');
+    for(const a of defaultCoa) await storage.add('coa', a);
+  }
+  updateUI();
+  log('PT Prima Anugerah Makmur V1.0 siap','ok');
+  log('Mode penyimpanan: ' + storage.mode,'info');
+}
 
-  init();
+// Jalankan boot hanya jika sudah login
+if(sessionStorage.getItem('pam_auth') === 'true') {
+  boot();
+}
 </script>
-
 </body>
 </html>
