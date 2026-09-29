@@ -121,7 +121,6 @@ tr:last-child td{border-bottom:none}
 .divider{border-top:1px dashed var(--border);margin:24px 0}
 .section-title{font-size:14px;color:var(--text2);margin-bottom:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 
-/* JOURNAL FORM */
 .journal-lines-table{width:100%;border-collapse:collapse;margin:16px 0}
 .journal-lines-table th{background:var(--bg3);padding:10px 12px;font-size:11px}
 .journal-lines-table td{padding:8px;border-bottom:1px solid var(--border)}
@@ -131,7 +130,6 @@ tr:last-child td{border-bottom:none}
 .balance-indicator.unbalanced{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.3)}
 .balance-indicator .diff{margin-left:auto;font-variant-numeric:tabular-nums}
 
-/* JOURNAL LIST */
 .journal-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;overflow:hidden;transition:var(--transition)}
 .journal-card:hover{border-color:var(--border2)}
 .journal-header{padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;flex-wrap:wrap}
@@ -150,13 +148,25 @@ tr:last-child td{border-bottom:none}
 .journal-total-row{background:var(--bg3);font-weight:700}
 .edit-mode-indicator{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.3);padding:10px 16px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px}
 
-/* SEARCH */
 .search-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
 .search-bar input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:var(--radius-sm);font-size:14px;outline:none}
 .search-bar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 .search-bar .result-count{color:var(--text3);font-size:12px;white-space:nowrap}
 
 .closing-preview{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-top:16px;font-family:'Courier New',monospace;font-size:12px;max-height:400px;overflow-y:auto;white-space:pre;line-height:1.6}
+
+/* TOAST NOTIFICATION */
+.toast-container{position:fixed;top:24px;right:24px;z-index:10000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;box-shadow:0 8px 32px rgba(0,0,0,.4);display:flex;align-items:center;gap:12px;min-width:280px;max-width:400px;animation:slideIn .3s ease;pointer-events:auto}
+.toast.success{border-left:4px solid var(--green)}
+.toast.error{border-left:4px solid var(--red)}
+.toast.warn{border-left:4px solid var(--amber)}
+.toast.info{border-left:4px solid var(--cyan)}
+.toast .toast-icon{font-size:20px}
+.toast .toast-msg{flex:1;font-size:13px;color:var(--text);font-weight:500}
+.toast.hiding{animation:slideOut .3s ease forwards}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
 
 @media(max-width:768px){.container{padding:16px}.form-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr 1fr}.nav{gap:4px;padding:4px}.nav-btn{padding:8px 12px;font-size:12px}}
 @media(max-width:480px){.stat-grid{grid-template-columns:1fr}}
@@ -170,7 +180,7 @@ tr:last-child td{border-bottom:none}
     <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V1.4</p>
     <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
     <input type="password" id="loginPass" placeholder="Password">
-    <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()"> Masuk Sistem</button>
+    <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
     <div id="loginError" class="login-error"></div>
   </div>
 </div>
@@ -184,16 +194,15 @@ tr:last-child td{border-bottom:none}
     <div class="header-right">
       <span class="badge local" id="modeBadge"><span class="dot"></span> <span id="modeText">LOKAL</span></span>
       <span class="date-badge" id="currentDate"></span>
-      <button class="btn sm danger" onclick="doLogout()"> Logout</button>
+      <button class="btn sm danger" onclick="doLogout()">🚪 Logout</button>
     </div>
   </div>
 
-  <!-- NAV SESUAI PERMINTAAN -->
   <div class="nav">
     <button class="nav-btn active" data-view="dashboard"><span>📊</span> Dashboard</button>
     <button class="nav-btn" data-view="coa"><span>📋</span> COA</button>
     <button class="nav-btn" data-view="jurnal"><span>📝</span> Input Jurnal</button>
-    <button class="nav-btn" data-view="daftar"><span>📄</span> Daftar Transaksi</button>
+    <button class="nav-btn" data-view="daftar"><span></span> Daftar Transaksi</button>
     <button class="nav-btn" data-view="blok"><span>🌴</span> Blok Kebun</button>
     <button class="nav-btn" data-view="panen"><span>🚜</span> Panen TBS</button>
     <button class="nav-btn" data-view="penutup"><span>🔒</span> Jurnal Penutup</button>
@@ -201,7 +210,6 @@ tr:last-child td{border-bottom:none}
     <button class="nav-btn" data-view="settings"><span>⚙️</span> Setting</button>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="view-dashboard" class="view active">
     <div id="noticeLocal" class="notice">⚠️ Mode Lokal — Data tersimpan di browser. Buka <strong>Setting</strong> untuk backup Excel.</div>
     <div class="stat-grid">
@@ -211,12 +219,11 @@ tr:last-child td{border-bottom:none}
       <div class="stat-card"><div class="label">Produksi TBS (Ton)</div><div class="value accent" id="statTbs">0</div></div>
     </div>
     <div class="card">
-      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)"></span> Log Aktivitas</div>
+      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📝</span> Log Aktivitas</div>
       <div class="log-box" id="activityLog"></div>
     </div>
   </div>
 
-  <!-- COA -->
   <div id="view-coa" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)"></span> Chart of Account</div>
@@ -244,16 +251,15 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <!-- INPUT JURNAL -->
   <div id="view-jurnal" class="view">
     <div class="card">
       <div class="card-title">
-        <span class="icon" style="background:var(--green-bg);color:var(--green)">📝</span>
+        <span class="icon" style="background:var(--green-bg);color:var(--green)"></span>
         <span id="journalFormTitle">Input Jurnal Baru</span>
       </div>
       
       <div id="editModeIndicator" class="edit-mode-indicator" style="display:none">
-        ️ MODE EDIT: <span id="editingJournalNumber"></span>
+        ✏️ MODE EDIT: <span id="editingJournalNumber"></span>
         <button class="btn sm danger" onclick="cancelEdit()" style="margin-left:auto">Batal Edit</button>
       </div>
 
@@ -299,19 +305,18 @@ tr:last-child td{border-bottom:none}
       </div>
 
       <div id="balanceIndicator" class="balance-indicator unbalanced">
-        <span id="balanceIcon">️</span>
+        <span id="balanceIcon">⚠️</span>
         <span id="balanceText">Jurnal belum balance</span>
         <span class="diff" id="balanceDiff">Selisih: Rp 0</span>
       </div>
 
       <div class="btn-group">
-        <button class="btn primary" id="btnSaveJournal" onclick="simpanJurnal()" disabled> Simpan Jurnal</button>
-        <button class="btn" onclick="resetJournalForm()">↻ Reset Form</button>
+        <button class="btn primary" id="btnSaveJournal" onclick="simpanJurnal()" disabled>💾 Simpan Jurnal</button>
+        <button class="btn" onclick="resetJournalForm()"> Reset Form</button>
       </div>
     </div>
   </div>
 
-  <!-- DAFTAR TRANSAKSI -->
   <div id="view-daftar" class="view">
     <div class="card">
       <div class="card-title">
@@ -331,7 +336,6 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <!-- BLOK KEBUN -->
   <div id="view-blok" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">🌴</span> Manajemen Blok Kebun</div>
@@ -345,7 +349,7 @@ tr:last-child td{border-bottom:none}
       <div class="btn-group"><button class="btn primary" onclick="simpanBlok()">💾 Simpan Blok</button></div>
     </div>
     <div class="card" style="margin-top:20px">
-      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)"></span> Daftar Blok</div>
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Daftar Blok</div>
       <div class="table-wrap">
         <table><thead><tr><th>Kode</th><th>Nama</th><th>Luas</th><th>Status</th><th>Tahun</th><th>Aksi</th></tr></thead>
         <tbody id="tbodyBlok"></tbody></table>
@@ -353,7 +357,6 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <!-- PANEN TBS -->
   <div id="view-panen" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--amber-bg);color:var(--amber)">🚜</span> Catat Panen TBS</div>
@@ -366,7 +369,7 @@ tr:last-child td{border-bottom:none}
       <div class="btn-group"><button class="btn primary" onclick="simpanPanen()">💾 Simpan Panen</button></div>
     </div>
     <div class="card" style="margin-top:20px">
-      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)"></span> Riwayat Panen</div>
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Riwayat Panen</div>
       <div class="table-wrap">
         <table><thead><tr><th>Tgl</th><th>Blok</th><th>Berat (Kg)</th><th>Petugas</th><th>Aksi</th></tr></thead>
         <tbody id="tbodyPanen"></tbody></table>
@@ -374,11 +377,10 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <!-- JURNAL PENUTUP (MENU TERSENDIRI) -->
   <div id="view-penutup" class="view">
     <div class="card" style="border-color:rgba(168,85,247,.3)">
       <div class="card-title">
-        <span class="icon" style="background:var(--purple-bg);color:var(--purple)">🔒</span>
+        <span class="icon" style="background:var(--purple-bg);color:var(--purple)"></span>
         Jurnal Penutup (Closing Entries)
       </div>
       <div class="info-box" style="background:var(--purple-bg);border-color:rgba(168,85,247,.2);color:var(--purple)">
@@ -403,7 +405,6 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <!-- LAPORAN -->
   <div id="view-laporan" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--amber-bg);color:var(--amber)">📑</span> Laporan Keuangan</div>
@@ -428,22 +429,21 @@ tr:last-child td{border-bottom:none}
           </label>
         </div>
         <div class="form-group" style="display:flex;align-items:flex-end">
-          <button class="btn primary sm" onclick="applyReportFilters()">🔄 Terapkan Filter</button>
+          <button class="btn primary sm" onclick="applyReportFilters()"> Terapkan Filter</button>
         </div>
       </div>
       <div class="report-tabs">
         <button class="btn primary sm" onclick="setReportType('lr')">📊 Laba Rugi</button>
         <button class="btn sm" onclick="setReportType('neraca')">🏦 Neraca</button>
         <button class="btn sm" onclick="setReportType('bb')">📖 Buku Besar</button>
-        <button class="btn sm" onclick="setReportType('bbhutang')"> BB Pembantu Hutang</button>
-        <button class="btn sm" onclick="setReportType('bbpiutang')">📗 BB Pembantu Piutang</button>
+        <button class="btn sm" onclick="setReportType('bbhutang')">📕 BB Pembantu Hutang</button>
+        <button class="btn sm" onclick="setReportType('bbpiutang')"> BB Pembantu Piutang</button>
         <button class="btn sm" onclick="setReportType('bbmodal')">📘 BB Modal</button>
       </div>
       <div class="report-box" id="reportOutput">Pilih jenis laporan dan klik "Terapkan Filter" untuk menampilkan data...</div>
     </div>
   </div>
 
-  <!-- SETTINGS -->
   <div id="view-settings" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span> Pengaturan & Data</div>
@@ -451,7 +451,7 @@ tr:last-child td{border-bottom:none}
       <div class="section-title">📊 SALDO AWAL</div>
       <div class="info-box">ℹ️ Saldo awal digunakan saat memulai tahun buku baru. Total Debet harus = Total Kredit.</div>
       <div class="btn-group" style="margin-top:0;margin-bottom:16px">
-        <button class="btn success" onclick="exportSaldoAwal()">📤 Export Saldo Awal</button>
+        <button class="btn success" onclick="exportSaldoAwal()"> Export Saldo Awal</button>
         <button class="btn amber" onclick="document.getElementById('importSaldoFile').click()">📥 Import Saldo Awal</button>
         <button class="btn primary" onclick="downloadTemplateSaldoAwal()">📄 Template Saldo Awal</button>
         <button class="btn" onclick="lihatSaldoAwal()"> Lihat Saldo Awal</button>
@@ -462,9 +462,9 @@ tr:last-child td{border-bottom:none}
 
       <div class="divider"></div>
 
-      <div class="section-title">💾 BACKUP & RESTORE</div>
+      <div class="section-title"> BACKUP & RESTORE</div>
       <div class="btn-group" style="margin-top:0;margin-bottom:16px">
-        <button class="btn success" onclick="exportToExcel()">📤 Export Semua ke Excel</button>
+        <button class="btn success" onclick="exportToExcel()"> Export Semua ke Excel</button>
         <button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import dari Excel</button>
         <button class="btn primary" onclick="downloadExcelTemplate()">📄 Template Lengkap</button>
         <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none" onchange="importFromExcel(event)">
@@ -474,20 +474,22 @@ tr:last-child td{border-bottom:none}
 
       <div class="section-title">🔥 FIREBASE</div>
       <p style="color:var(--text3);font-size:13px;margin-bottom:12px">Config Firebase telah dipasang. Jika koneksi gagal, sistem otomatis fallback ke LocalStorage.</p>
-      <button class="btn success" onclick="checkFirebase()"> Cek Koneksi</button>
+      <button class="btn success" onclick="checkFirebase()">🔍 Cek Koneksi</button>
       
       <div class="divider"></div>
 
       <div class="section-title" style="color:var(--red)">⚠️ ZONA BAHAYA</div>
       <div class="btn-group" style="margin-top:0">
         <button class="btn danger" onclick="resetSemuaData()">🗑 Hapus Semua Data</button>
-        <button class="btn success" onclick="loadDataDummy()">🎭 Load Data Demo</button>
+        <button class="btn success" onclick="loadDataDummy()"> Load Data Demo</button>
       </div>
     </div>
   </div>
 
   <div class="footer">PT Prima Anugerah Makmur — V1.4 &nbsp;|&nbsp; Data: <span id="footerMode">LocalStorage</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
+
+<div class="toast-container" id="toastContainer"></div>
 
 <div class="modal-overlay" id="modalConfirm">
   <div class="modal">
@@ -498,9 +500,6 @@ tr:last-child td{border-bottom:none}
 </div>
 
 <script type="module">
-// ═══════════════════════════════════════════════════════════
-// FIREBASE CONFIG
-// ═══════════════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyAy3H1f3-DAR22Tox1Ex9aXvOpIre0yymY",
   authDomain: "pam-sawit.firebaseapp.com",
@@ -511,9 +510,6 @@ const firebaseConfig = {
   appId: "1:687283196681:web:9c03bb909afa838a59f9d8"
 };
 
-// ══════════════════════════════════════════════════════════
-// AUTHENTICATION
-// ═══════════════════════════════════════════════════════════
 window.doLogin = () => {
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value.trim();
@@ -541,9 +537,6 @@ if (sessionStorage.getItem('pam_auth') === 'true') {
   document.getElementById('mainApp').style.display = 'block';
 }
 
-// ═══════════════════════════════════════════════════════════
-// STORAGE ADAPTERS
-// ═══════════════════════════════════════════════════════════
 class LocalStorageAdapter {
   constructor(){this.mode='local';this.P='pam_';this.L={}}
   _k(c){return this.P+c}
@@ -597,10 +590,8 @@ const S = {coa:[], jurnal:[], blok:[], panen:[], saldo_awal:[]};
 let currentReportType = 'lr';
 let editingJournalId = null;
 let journalLines = [];
+let isSaving = false;
 
-// ═══════════════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════════════
 const fmt = n => 'Rp ' + (n || 0).toLocaleString('id-ID');
 const fmtDate = d => d ? new Date(d).toLocaleDateString('id-ID') : '-';
 const fmtTime = () => new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
@@ -638,6 +629,26 @@ function showModal(t, m){return new Promise(r=>{
 })}
 window.showModal = showModal;
 
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  
+  const icons = { success: '✅', error: '❌', warn: '⚠️', info: 'ℹ️' };
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <span class="toast-icon">${icons[type] || '✅'}</span>
+    <span class="toast-msg">${message}</span>
+  `;
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.add('hiding');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+window.showToast = showToast;
+
 function updateUI(){
   const badge = document.getElementById('modeBadge'), txt = document.getElementById('modeText'), ft = document.getElementById('footerMode'), nt = document.getElementById('noticeLocal');
   if(storage.mode === 'firebase'){
@@ -659,22 +670,16 @@ function updateSaldoAwalInfo() {
     const tanggal = S.saldo_awal[0].tanggal || '-';
     const totalD = S.saldo_awal.reduce((s, x) => s + (Number(x.debet) || 0), 0);
     const totalK = S.saldo_awal.reduce((s, x) => s + (Number(x.kredit) || 0), 0);
-    el.innerHTML = `✅ <strong>${S.saldo_awal.length} akun</strong> dengan tanggal saldo awal: <strong>${fmtDate(tanggal)}</strong><br>Total Debet: ${fmt(totalD)} | Total Kredit: ${fmt(totalK)} | ${totalD === totalK ? '<span style="color:var(--green)">✓ BALANCE</span>' : '<span style="color:var(--red)"> TIDAK BALANCE</span>'}`;
+    el.innerHTML = `✅ <strong>${S.saldo_awal.length} akun</strong> dengan tanggal saldo awal: <strong>${fmtDate(tanggal)}</strong><br>Total Debet: ${fmt(totalD)} | Total Kredit: ${fmt(totalK)} | ${totalD === totalK ? '<span style="color:var(--green)">✓ BALANCE</span>' : '<span style="color:var(--red)">✗ TIDAK BALANCE</span>'}`;
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// NAV
-// ═══════════════════════════════════════════════════════════
 document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + b.dataset.view).classList.add('active');
 }));
 
-// ═══════════════════════════════════════════════════════════
-// COA
-// ═══════════════════════════════════════════════════════════
 const defaultCoa = [
   {id:genId(),kode:'1-1001',nama:'Kas',tipe:'ASET'}, {id:genId(),kode:'1-1002',nama:'Bank',tipe:'ASET'},
   {id:genId(),kode:'1-1003',nama:'Piutang Usaha',tipe:'ASET'}, {id:genId(),kode:'1-1100',nama:'Persediaan Pupuk',tipe:'ASET'},
@@ -710,10 +715,6 @@ window.initDefaultCoa = async () => {
   for(const a of defaultCoa) await storage.add('coa', a); log('COA direset','ok');
 };
 
-// ═══════════════════════════════════════════════════════════
-// JOURNAL SYSTEM - SEMUA FUNGSI DI-EXPOSE KE WINDOW
-// ═══════════════════════════════════════════════════════════
-
 function getNextJournalNumber(tipe) {
   const prefix = tipe === 'saldo_awal' ? 'JU0-' : tipe === 'closing' ? 'JU2-' : 'JU1-';
   const existing = S.jurnal.filter(j => j.nomor_bukti && j.nomor_bukti.startsWith(prefix));
@@ -736,14 +737,12 @@ function updateJournalLineDropdowns() {
   });
 }
 
-// ✅ EXPOSED: Tambah baris
 window.addJournalLine = function(data = null) {
   const line = data || { id: genId(), akun_id: '', kode: '', nama: '', dk: 'D', nominal: 0, ket: '' };
   journalLines.push(line);
   renderJournalLines();
 };
 
-// ✅ EXPOSED: Hapus baris
 window.removeJournalLine = function(index) {
   if (journalLines.length <= 2) {
     log('Minimal 2 baris dalam 1 jurnal', 'warn');
@@ -787,7 +786,6 @@ function renderJournalLines() {
   updateBalanceIndicator();
 }
 
-// ✅ EXPOSED
 window.updateLineAccount = function(index, select) {
   const option = select.selectedOptions[0];
   if (!option || !option.value) {
@@ -801,25 +799,21 @@ window.updateLineAccount = function(index, select) {
   journalLines[index].nama = option.dataset.nama;
 };
 
-// ✅ EXPOSED
 window.updateLineDK = function(index, dk) {
   journalLines[index].dk = dk;
   updateBalanceIndicator();
 };
 
-// ✅ EXPOSED
 window.updateLineNominal = function(index, value) {
   const parsed = parseNominal(value);
   journalLines[index].nominal = parsed;
   renderJournalLines();
 };
 
-// ✅ EXPOSED
 window.updateLineValue = function(index, field, value) {
   journalLines[index][field] = value;
 };
 
-// ✅ EXPOSED
 window.formatNominalInput = function(input) {
   const raw = input.value.replace(/[^0-9]/g, '');
   if (!raw) { input.value = ''; return; }
@@ -850,7 +844,7 @@ function updateBalanceIndicator() {
   
   if (!hasValidLines) {
     indicator.className = 'balance-indicator unbalanced';
-    icon.textContent = '️';
+    icon.textContent = '⚠️';
     text.textContent = 'Minimal 2 baris diperlukan';
     diffEl.textContent = '';
     btnSave.disabled = true;
@@ -881,8 +875,12 @@ function updateBalanceIndicator() {
   }
 }
 
-// ✅ EXPOSED: Simpan jurnal + auto reset
 window.simpanJurnal = async () => {
+  if (isSaving) {
+    log('Tunggu proses simpan selesai...', 'warn');
+    return;
+  }
+  
   const tanggal = document.getElementById('jurnalTanggal').value;
   const keterangan = document.getElementById('jurnalKeterangan').value.trim();
   const pihak = document.getElementById('jurnalPihak').value.trim();
@@ -930,23 +928,39 @@ window.simpanJurnal = async () => {
     tipe: 'jurnal'
   };
   
+  isSaving = true;
+  const btnSave = document.getElementById('btnSaveJournal');
+  if (btnSave) {
+    btnSave.disabled = true;
+    btnSave.textContent = '⏳ Menyimpan...';
+  }
+  
   try {
     if (editingJournalId) {
       await storage.update('jurnal', editingJournalId, journalData);
       log(`Jurnal ${nomorBukti} diupdate`, 'ok');
       editingJournalId = null;
+      showToast(`Jurnal ${nomorBukti} berhasil diupdate!`, 'success');
     } else {
       await storage.add('jurnal', journalData);
       log(`Jurnal ${nomorBukti} disimpan`, 'ok');
+      showToast(`Jurnal ${nomorBukti} berhasil disimpan!`, 'success');
     }
-    // ✅ AUTO RESET setelah save berhasil
+    
     resetJournalForm();
+    
   } catch (e) {
     log('Error: ' + e.message, 'err');
+    showToast('Gagal menyimpan: ' + e.message, 'error');
+  } finally {
+    isSaving = false;
+    if (btnSave) {
+      btnSave.disabled = false;
+      btnSave.textContent = '💾 Simpan Jurnal';
+    }
   }
 };
 
-// ✅ EXPOSED: Reset form
 window.resetJournalForm = function() {
   editingJournalId = null;
   const editIndicator = document.getElementById('editModeIndicator');
@@ -968,7 +982,6 @@ window.resetJournalForm = function() {
   addJournalLine();
 };
 
-// ✅ EXPOSED: Edit jurnal
 window.editJurnal = function(id) {
   const jurnal = S.jurnal.find(j => j.id === id);
   if (!jurnal) return;
@@ -1004,7 +1017,6 @@ window.editJurnal = function(id) {
   }));
   renderJournalLines();
   
-  // Switch to jurnal view
   document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
   const jurnalBtn = document.querySelector('[data-view="jurnal"]');
   if (jurnalBtn) jurnalBtn.classList.add('active');
@@ -1015,7 +1027,6 @@ window.editJurnal = function(id) {
   log('Edit jurnal ' + jurnal.nomor_bukti, 'info');
 };
 
-// ✅ EXPOSED
 window.cancelEdit = function() {
   editingJournalId = null;
   const editIndicator = document.getElementById('editModeIndicator');
@@ -1027,7 +1038,6 @@ window.cancelEdit = function() {
   resetJournalForm();
 };
 
-// ✅ EXPOSED
 window.hapusJurnal = async function(id) {
   const jurnal = S.jurnal.find(j => j.id === id);
   if (!jurnal) return;
@@ -1036,7 +1046,6 @@ window.hapusJurnal = async function(id) {
   log('Jurnal ' + jurnal.nomor_bukti + ' dihapus', 'ok');
 };
 
-// ✅ EXPOSED
 window.toggleJournalLines = function(id) {
   const el = document.getElementById('lines-' + id);
   if (el) el.classList.toggle('show');
@@ -1109,7 +1118,7 @@ function renderDaftarTransaksi() {
         </span>
         <div class="journal-actions" onclick="event.stopPropagation()">
           ${editBtn}
-          <button class="btn sm danger" onclick="hapusJurnal('${j.id}')" title="Hapus"></button>
+          <button class="btn sm danger" onclick="hapusJurnal('${j.id}')" title="Hapus">🗑</button>
         </div>
       </div>
       <div class="journal-lines" id="lines-${j.id}">
@@ -1147,10 +1156,6 @@ function getAllJournalLines() {
   });
   return lines;
 }
-
-// ═══════════════════════════════════════════════════════════
-// JURNAL PENUTUP
-// ═══════════════════════════════════════════════════════════
 
 function populateClosingYearSelect() {
   const sel = document.getElementById('closingYear');
@@ -1208,7 +1213,6 @@ function calculateYearEndBalances(year) {
   return { pendapatanTotals, biayaTotals, totalPendapatan, totalBiaya, labaRugi };
 }
 
-// ✅ EXPOSED
 window.previewClosingJournal = function() {
   const year = parseInt(document.getElementById('closingYear').value);
   const closingDate = document.getElementById('closingDate').value;
@@ -1277,7 +1281,6 @@ window.previewClosingJournal = function() {
   log(`Preview jurnal penutup tahun ${year}`, 'info');
 };
 
-// ✅ EXPOSED
 window.generateClosingJournal = async function() {
   const year = parseInt(document.getElementById('closingYear').value);
   const closingDate = document.getElementById('closingDate').value;
@@ -1295,7 +1298,7 @@ window.generateClosingJournal = async function() {
   
   const hasClosing = S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(year)));
   if (hasClosing) {
-    const confirm = await showModal('⚠️ Duplikasi Jurnal Penutup', `Sudah ada jurnal penutup untuk tahun ${year}!\n\nMembuat jurnal penutup lagi akan menyebabkan saldo akun Pendapatan/Biaya menjadi tidak nol (double closing).\n\nYakin tetap membuat?`);
+    const confirm = await showModal('️ Duplikasi Jurnal Penutup', `Sudah ada jurnal penutup untuk tahun ${year}!\n\nMembuat jurnal penutup lagi akan menyebabkan saldo akun Pendapatan/Biaya menjadi tidak nol (double closing).\n\nYakin tetap membuat?`);
     if (!confirm) return;
   }
   
@@ -1370,9 +1373,6 @@ window.generateClosingJournal = async function() {
   }
 };
 
-// ═══════════════════════════════════════════════════════════
-// BLOK
-// ═══════════════════════════════════════════════════════════
 function renderBlok(){
   const tb = document.getElementById('tbodyBlok'); if (!tb) return; tb.innerHTML = '';
   S.blok.forEach(b => {
@@ -1391,9 +1391,6 @@ window.simpanBlok = async () => {
 };
 window.hapusBlok = async id => { if(!await showModal('Hapus','Yakin?')) return; await storage.delete('blok', id); log('Dihapus','ok') };
 
-// ═══════════════════════════════════════════════════════════
-// PANEN
-// ══════════════════════════════════════════════════════════
 function renderPanen(){
   const tb = document.getElementById('tbodyPanen'); if (!tb) return; tb.innerHTML = '';
   S.panen.sort((a,b) => b.tanggal.localeCompare(a.tanggal)).forEach(p => {
@@ -1412,9 +1409,6 @@ window.simpanPanen = async () => {
 };
 window.hapusPanen = async id => { if(!await showModal('Hapus','Yakin?')) return; await storage.delete('panen', id); log('Dihapus','ok') };
 
-// ═══════════════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════════════
 function updateDashboard(){
   const bi = new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0');
   const allLines = getAllJournalLines();
@@ -1438,9 +1432,6 @@ function updateDashboard(){
   const st = document.getElementById('statTbs'); if (st) st.textContent = tbs.toFixed(2);
 }
 
-// ═══════════════════════════════════════════════════════════
-// LAPORAN
-// ═══════════════════════════════════════════════════════════
 function populateReportYears() {
   const sel = document.getElementById('reportYear'); if (!sel) return;
   const currentYear = new Date().getFullYear();
@@ -1620,8 +1611,8 @@ window.applyReportFilters = function() {
   } else if (currentReportType === 'bb') {
     const sal = getSaldoWithSaldoAwal();
     o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
-    o += `║     PT PRIMA ANUGERAH MAKMUR                                        \n`;
-    o += `║     BUKU BESAR (TRIAL BALANCE)                                      \n`;
+    o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
+    o += `║     BUKU BESAR (TRIAL BALANCE)                                      ║\n`;
     o += `║     Periode: ${periodStr}                                           ║\n`;
     o += `══════════════════════════════════════════════════════════════════════╝\n\n`;
     if(S.saldo_awal.length > 0) o += `* Termasuk Saldo Awal per ${fmtDate(S.saldo_awal[0].tanggal)}\n\n`;
@@ -1633,7 +1624,7 @@ window.applyReportFilters = function() {
       if(s > 0) { o += `${a.kode.padEnd(10)}${a.nama.padEnd(32)}${fmt(s).padStart(14)}  ${''.padStart(14)}\n`; totD += s; }
       else { o += `${a.kode.padEnd(10)}${a.nama.padEnd(32)}${''.padStart(14)}  ${fmt(Math.abs(s)).padStart(14)}\n`; totK += Math.abs(s); }
     });
-    o += `────────  ──────────────────────────────  ──────────────  ─────────────\n`;
+    o += `────────  ──────────────────────────────  ──────────────  ──────────────\n`;
     o += `${'TOTAL'.padEnd(42)}${fmt(totD).padStart(14)}  ${fmt(totK).padStart(14)}`;
 
   } else if (currentReportType === 'bbhutang') {
@@ -1650,7 +1641,7 @@ window.applyReportFilters = function() {
     o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
     o += `║     BUKU BESAR PEMBANTU HUTANG                                      ║\n`;
     o += `║     Periode: ${periodStr}                                           ║\n`;
-    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
+    o += `══════════════════════════════════════════════════════════════════════╝\n\n`;
     if(Object.keys(byPihak).length === 0) { o += 'Belum ada transaksi hutang pada periode ini.'; }
     else {
       Object.entries(byPihak).forEach(([pihak, trxList]) => {
@@ -1695,7 +1686,7 @@ window.applyReportFilters = function() {
         o += `│ DEBITUR: ${pihak.padEnd(45)}│\n`;
         o += `├──────────┬────────────────────┬─────────────┬────────────┤\n`;
         o += `│ Tanggal  │ Jurnal / Ket       │   Debet     │   Kredit   │\n`;
-        o += `├──────────┼────────────────────┼─────────────┼────────────\n`;
+        o += `├──────────┼────────────────────┼─────────────┼────────────┤\n`;
         let saldo = 0;
         trxList.sort((a,b)=>a.tanggal.localeCompare(b.tanggal)).forEach(l => {
           const acc = S.coa.find(a => a.id === l.akun_id);
@@ -1743,9 +1734,6 @@ window.applyReportFilters = function() {
   log(`Laporan ${currentReportType} untuk ${periodStr} digenerate`, 'ok');
 };
 
-// ═══════════════════════════════════════════════════════════
-// EXCEL IMPORT/EXPORT
-// ═══════════════════════════════════════════════════════════
 window.exportToExcel = function() {
   const coaData = S.coa.map(a => ({ 'Kode': a.kode, 'Nama': a.nama, 'Tipe': a.tipe }));
   
@@ -2067,7 +2055,7 @@ window.checkFirebase = function() {
 };
 
 window.resetSemuaData = async function() {
-  if(!await showModal('️ PERINGATAN', 'Semua data akan dihapus permanen!')) return;
+  if(!await showModal('⚠️ PERINGATAN', 'Semua data akan dihapus permanen!')) return;
   storage.clearAll();
   log('Semua data dihapus', 'ok');
 };
@@ -2148,9 +2136,6 @@ window.loadDataDummy = async function() {
   }, 500);
 };
 
-// ═══════════════════════════════════════════════════════════
-// BOOT
-// ═══════════════════════════════════════════════════════════
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 const cd = document.getElementById('closingDate'); if (cd) cd.value = new Date().toISOString().split('T')[0];
 populateReportYears();
