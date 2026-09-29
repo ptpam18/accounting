@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PT Prima Anugerah Makmur - V1.1</title>
+<title>PT Prima Anugerah Makmur - V1.3</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -18,6 +18,7 @@
   --red:#ef4444;--red-bg:rgba(239,68,68,.1);
   --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);
   --cyan:#06b6d4;--cyan-bg:rgba(6,182,212,.1);
+  --purple:#a855f7;--purple-bg:rgba(168,85,247,.1);
   --radius:12px;--radius-sm:8px;
   --shadow:0 4px 24px rgba(0,0,0,.3);
   --transition:all .2s ease;
@@ -83,6 +84,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .btn.danger{color:var(--red);border-color:rgba(239,68,68,.3)}.btn.danger:hover{background:var(--red-bg)}
 .btn.success{color:var(--green);border-color:rgba(34,197,94,.3)}.btn.success:hover{background:var(--green-bg)}
 .btn.amber{color:var(--amber);border-color:rgba(245,158,11,.3)}.btn.amber:hover{background:var(--amber-bg)}
+.btn.purple{color:var(--purple);border-color:rgba(168,85,247,.3)}.btn.purple:hover{background:var(--purple-bg)}
 .btn.sm{padding:6px 12px;font-size:12px}
 .btn.icon-btn{padding:6px 10px}
 
@@ -124,20 +126,18 @@ tr:last-child td{border-bottom:none}
 .journal-lines-table th{background:var(--bg3);padding:10px 12px;font-size:11px}
 .journal-lines-table td{padding:8px;border-bottom:1px solid var(--border)}
 .journal-lines-table input,.journal-lines-table select{padding:8px 10px;font-size:13px}
-.journal-lines-table .line-akun{min-width:200px}
-.journal-lines-table .line-debet,.journal-lines-table .line-kredit{min-width:130px}
-.journal-lines-table .line-ket{min-width:150px}
 .balance-indicator{padding:12px 16px;border-radius:var(--radius-sm);margin:16px 0;font-weight:600;font-size:14px;display:flex;align-items:center;gap:10px}
 .balance-indicator.balanced{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.3)}
 .balance-indicator.unbalanced{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.3)}
 .balance-indicator .diff{margin-left:auto;font-variant-numeric:tabular-nums}
 
-/* JOURNAL LIST (GROUPED) */
+/* JOURNAL LIST */
 .journal-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;overflow:hidden;transition:var(--transition)}
 .journal-card:hover{border-color:var(--border2)}
 .journal-header{padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;flex-wrap:wrap}
 .journal-header:hover{background:var(--surface)}
 .journal-number{font-weight:700;color:var(--accent2);font-size:14px;min-width:110px}
+.journal-number.closing{color:var(--purple)}
 .journal-date{color:var(--text2);font-size:13px;min-width:100px}
 .journal-desc{flex:1;color:var(--text);font-size:14px;min-width:200px}
 .journal-meta{display:flex;gap:12px;align-items:center;color:var(--text3);font-size:12px}
@@ -150,6 +150,14 @@ tr:last-child td{border-bottom:none}
 .journal-total-row{background:var(--bg3);font-weight:700}
 .edit-mode-indicator{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.3);padding:10px 16px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px}
 
+/* SEARCH BAR */
+.search-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.search-bar input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:var(--radius-sm);font-size:14px;outline:none}
+.search-bar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.search-bar .result-count{color:var(--text3);font-size:12px;white-space:nowrap}
+
+.closing-preview{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-top:16px;font-family:'Courier New',monospace;font-size:12px;max-height:300px;overflow-y:auto;white-space:pre;line-height:1.6}
+
 @media(max-width:768px){.container{padding:16px}.form-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr 1fr}.nav{gap:4px;padding:4px}.nav-btn{padding:8px 12px;font-size:12px}}
 @media(max-width:480px){.stat-grid{grid-template-columns:1fr}}
 </style>
@@ -159,7 +167,7 @@ tr:last-child td{border-bottom:none}
 <div id="loginScreen" class="login-overlay">
   <div class="login-box">
     <h2>PT Prima Anugerah Makmur</h2>
-    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V1.1</p>
+    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V1.3</p>
     <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
     <input type="password" id="loginPass" placeholder="Password">
     <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
@@ -171,18 +179,19 @@ tr:last-child td{border-bottom:none}
   <div class="header">
     <div class="header-left">
       <h1>PT Prima Anugerah Makmur</h1>
-      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V1.1 (Multi-Line Journal)</div>
+      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V1.3</div>
     </div>
     <div class="header-right">
       <span class="badge local" id="modeBadge"><span class="dot"></span> <span id="modeText">LOKAL</span></span>
       <span class="date-badge" id="currentDate"></span>
-      <button class="btn sm danger" onclick="doLogout()"> Logout</button>
+      <button class="btn sm danger" onclick="doLogout()">🚪 Logout</button>
     </div>
   </div>
 
   <div class="nav">
     <button class="nav-btn active" data-view="dashboard"><span>📊</span> Dashboard</button>
-    <button class="nav-btn" data-view="jurnal"><span>📝</span> Jurnal</button>
+    <button class="nav-btn" data-view="jurnal"><span></span> Input Jurnal</button>
+    <button class="nav-btn" data-view="daftar"><span>📋</span> Daftar Transaksi</button>
     <button class="nav-btn" data-view="blok"><span>🌴</span> Blok Kebun</button>
     <button class="nav-btn" data-view="panen"><span>🚜</span> Panen TBS</button>
     <button class="nav-btn" data-view="coa"><span>📋</span> COA</button>
@@ -205,10 +214,38 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <!-- JURNAL (REPLACES TRANSAKSI) -->
+  <!-- INPUT JURNAL -->
   <div id="view-jurnal" class="view">
+    
+    <!-- JURNAL PENUTUP -->
+    <div class="card" style="margin-bottom:20px;border-color:rgba(168,85,247,.3)">
+      <div class="card-title">
+        <span class="icon" style="background:var(--purple-bg);color:var(--purple)">🔒</span>
+        Jurnal Penutup (Closing Entries)
+      </div>
+      <div class="info-box" style="background:var(--purple-bg);border-color:rgba(168,85,247,.2);color:var(--purple)">
+        ℹ️ <strong>Jurnal Penutup</strong> digunakan di akhir tahun buku untuk menol-kan semua akun Pendapatan & Biaya, 
+        dan memindahkan Laba/Rugi ke akun <strong>Laba Ditahan</strong> (Passiva/Ekuitas). Prefix: <strong>JU2-XXXXX</strong>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Tahun Buku yang Ditutup *</label>
+          <select class="form-select" id="closingYear"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tanggal Jurnal Penutup *</label>
+          <input type="date" class="form-input" id="closingDate">
+        </div>
+      </div>
+      <div class="btn-group" style="margin-top:16px">
+        <button class="btn purple" onclick="previewClosingJournal()">👁️ Preview Jurnal Penutup</button>
+        <button class="btn primary" onclick="generateClosingJournal()">🔒 Generate Jurnal Penutup</button>
+      </div>
+      <div id="closingPreview" class="closing-preview" style="display:none"></div>
+    </div>
+
     <!-- FORM INPUT JURNAL -->
-    <div class="card" style="margin-bottom:20px">
+    <div class="card">
       <div class="card-title">
         <span class="icon" style="background:var(--green-bg);color:var(--green)">📝</span>
         <span id="journalFormTitle">Input Jurnal Baru</span>
@@ -230,7 +267,7 @@ tr:last-child td{border-bottom:none}
         </div>
         <div class="form-group full">
           <label class="form-label">Keterangan *</label>
-          <input type="text" class="form-input" id="jurnalKeterangan" placeholder="Deskripsi jurnal (misal: Penjualan TBS 11 ton ke SLUM)">
+          <input type="text" class="form-input" id="jurnalKeterangan" placeholder="Deskripsi jurnal">
         </div>
         <div class="form-group full">
           <label class="form-label">Pihak (Vendor/Customer) - Opsional</label>
@@ -240,17 +277,17 @@ tr:last-child td{border-bottom:none}
 
       <div style="margin-top:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <label class="form-label" style="margin:0">Baris Jurnal (min. 2 baris, 1 baris = 1 sisi)</label>
-          <button class="btn sm success" onclick="addJournalLine()"> Tambah Baris</button>
+          <label class="form-label" style="margin:0">Baris Jurnal (min. 2 baris)</label>
+          <button class="btn sm success" onclick="addJournalLine()">➕ Tambah Baris</button>
         </div>
         <div class="table-wrap" style="margin-top:0">
-          <table class="journal-lines-table" id="journalLinesTable">
+          <table class="journal-lines-table">
             <thead>
               <tr>
                 <th style="width:40px">#</th>
                 <th>Akun *</th>
-                <th>Debet (Rp)</th>
-                <th>Kredit (Rp)</th>
+                <th style="width:140px">D/K</th>
+                <th style="width:180px">Nominal (Rp)</th>
                 <th>Keterangan Baris</th>
                 <th style="width:60px">Aksi</th>
               </tr>
@@ -271,15 +308,26 @@ tr:last-child td{border-bottom:none}
         <button class="btn" onclick="resetJournalForm()">↻ Reset Form</button>
       </div>
     </div>
+  </div>
 
-    <!-- DAFTAR JURNAL (GROUPED) -->
+  <!-- DAFTAR TRANSAKSI -->
+  <div id="view-daftar" class="view">
     <div class="card">
       <div class="card-title">
-        <span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span>
-        Daftar Jurnal
-        <span style="margin-left:auto;font-size:12px;color:var(--text3);font-weight:400" id="journalCount">0 jurnal</span>
+        <span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📋</span>
+        Daftar Transaksi
+        <span style="margin-left:auto;font-size:12px;color:var(--text3);font-weight:400" id="daftarCount">0 jurnal</span>
       </div>
-      <div id="journalListContainer"></div>
+
+      <!-- SEARCH BAR -->
+      <div class="search-bar">
+        <span style="font-size:16px"></span>
+        <input type="text" id="searchInput" placeholder="Cari No. Jurnal atau Keterangan..." oninput="renderDaftarTransaksi()">
+        <span class="result-count" id="searchResultCount"></span>
+        <button class="btn sm" onclick="document.getElementById('searchInput').value='';renderDaftarTransaksi()">✕ Clear</button>
+      </div>
+
+      <div id="daftarContainer"></div>
     </div>
   </div>
 
@@ -294,10 +342,10 @@ tr:last-child td{border-bottom:none}
         <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="blokStatus"><option value="TBM">TBM</option><option value="TM">TM</option></select></div>
         <div class="form-group"><label class="form-label">Tahun Tanam</label><input type="number" class="form-input" id="blokTahun" placeholder="2020"></div>
       </div>
-      <div class="btn-group"><button class="btn primary" onclick="simpanBlok()">💾 Simpan Blok</button></div>
+      <div class="btn-group"><button class="btn primary" onclick="simpanBlok()"> Simpan Blok</button></div>
     </div>
     <div class="card" style="margin-top:20px">
-      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)"></span> Daftar Blok</div>
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Daftar Blok</div>
       <div class="table-wrap">
         <table><thead><tr><th>Kode</th><th>Nama</th><th>Luas</th><th>Status</th><th>Tahun</th><th>Aksi</th></tr></thead>
         <tbody id="tbodyBlok"></tbody></table>
@@ -329,7 +377,7 @@ tr:last-child td{border-bottom:none}
   <!-- COA -->
   <div id="view-coa" class="view">
     <div class="card">
-      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account</div>
+      <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)"></span> Chart of Account</div>
       <div class="form-grid">
         <div class="form-group"><label class="form-label">Kode Akun</label><input type="text" class="form-input" id="coaKode" placeholder="1-1001"></div>
         <div class="form-group"><label class="form-label">Nama Akun</label><input type="text" class="form-input" id="coaNama" placeholder="Kas"></div>
@@ -346,7 +394,7 @@ tr:last-child td{border-bottom:none}
       </div>
     </div>
     <div class="card" style="margin-top:20px">
-      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)"></span> Daftar Akun</div>
+      <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span> Daftar Akun</div>
       <div class="table-wrap">
         <table><thead><tr><th>Kode</th><th>Nama</th><th>Tipe</th><th>Aksi</th></tr></thead>
         <tbody id="tbodyCoa"></tbody></table>
@@ -357,7 +405,7 @@ tr:last-child td{border-bottom:none}
   <!-- LAPORAN -->
   <div id="view-laporan" class="view">
     <div class="card">
-      <div class="card-title"><span class="icon" style="background:var(--amber-bg);color:var(--amber)"></span> Laporan Keuangan</div>
+      <div class="card-title"><span class="icon" style="background:var(--amber-bg);color:var(--amber)">📑</span> Laporan Keuangan</div>
       <div class="report-controls">
         <div class="form-group">
           <label class="form-label">Tahun</label>
@@ -383,9 +431,9 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
       <div class="report-tabs">
-        <button class="btn primary sm" onclick="setReportType('lr')"> Laba Rugi</button>
-        <button class="btn sm" onclick="setReportType('neraca')">🏦 Neraca</button>
-        <button class="btn sm" onclick="setReportType('bb')">📖 Buku Besar</button>
+        <button class="btn primary sm" onclick="setReportType('lr')">📊 Laba Rugi</button>
+        <button class="btn sm" onclick="setReportType('neraca')"> Neraca</button>
+        <button class="btn sm" onclick="setReportType('bb')"> Buku Besar</button>
         <button class="btn sm" onclick="setReportType('bbhutang')">📕 BB Pembantu Hutang</button>
         <button class="btn sm" onclick="setReportType('bbpiutang')">📗 BB Pembantu Piutang</button>
         <button class="btn sm" onclick="setReportType('bbmodal')">📘 BB Modal</button>
@@ -400,12 +448,12 @@ tr:last-child td{border-bottom:none}
       <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span> Pengaturan & Data</div>
       
       <div class="section-title">📊 SALDO AWAL</div>
-      <div class="info-box">💡 Saldo awal digunakan saat memulai tahun buku baru. Saldo akan otomatis diperhitungkan di semua laporan. <strong>Total Debet harus = Total Kredit.</strong></div>
+      <div class="info-box">️ Saldo awal digunakan saat memulai tahun buku baru. Total Debet harus = Total Kredit.</div>
       <div class="btn-group" style="margin-top:0;margin-bottom:16px">
         <button class="btn success" onclick="exportSaldoAwal()">📤 Export Saldo Awal</button>
         <button class="btn amber" onclick="document.getElementById('importSaldoFile').click()">📥 Import Saldo Awal</button>
         <button class="btn primary" onclick="downloadTemplateSaldoAwal()">📄 Template Saldo Awal</button>
-        <button class="btn" onclick="lihatSaldoAwal()"> Lihat Saldo Awal</button>
+        <button class="btn" onclick="lihatSaldoAwal()">👁 Lihat Saldo Awal</button>
         <button class="btn danger" onclick="hapusSaldoAwal()">🗑 Hapus Saldo Awal</button>
         <input type="file" id="importSaldoFile" accept=".xlsx,.xls" style="display:none" onchange="importSaldoAwal(event)">
       </div>
@@ -437,7 +485,7 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <div class="footer">PT Prima Anugerah Makmur — V1.1 &nbsp;|&nbsp; Data: <span id="footerMode">LocalStorage</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
+  <div class="footer">PT Prima Anugerah Makmur — V1.3 &nbsp;|&nbsp; Data: <span id="footerMode">LocalStorage</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <div class="modal-overlay" id="modalConfirm">
@@ -547,16 +595,29 @@ if(isFB){
 const S = {coa:[], jurnal:[], blok:[], panen:[], saldo_awal:[]};
 let currentReportType = 'lr';
 let editingJournalId = null;
-let journalLines = []; // temporary lines for form
+let journalLines = [];
 
 // ═══════════════════════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════════════════════
 const fmt = n => 'Rp ' + (n || 0).toLocaleString('id-ID');
-const fmtNum = n => (n || 0).toLocaleString('id-ID');
 const fmtDate = d => d ? new Date(d).toLocaleDateString('id-ID') : '-';
 const fmtTime = () => new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
 const genId = () => 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 7);
+
+// Format number to Indonesian format (10.000)
+const formatNominal = (val) => {
+  if (!val) return '';
+  const num = String(val).replace(/[^0-9]/g, '');
+  if (!num) return '';
+  return parseInt(num).toLocaleString('id-ID');
+};
+
+// Parse formatted number back to plain number
+const parseNominal = (val) => {
+  if (!val) return 0;
+  return parseFloat(String(val).replace(/[^0-9]/g, '')) || 0;
+};
 
 function log(msg, type='info'){
   const el = document.getElementById('activityLog');
@@ -651,11 +712,11 @@ window.initDefaultCoa = async () => {
 };
 
 // ═══════════════════════════════════════════════════════════
-// JOURNAL SYSTEM (MULTI-LINE)
+// JOURNAL SYSTEM (MULTI-LINE) - UPDATED
 // ═══════════════════════════════════════════════════════════
 
 function getNextJournalNumber(tipe) {
-  const prefix = tipe === 'saldo_awal' ? 'JU0-' : 'JU1-';
+  const prefix = tipe === 'saldo_awal' ? 'JU0-' : tipe === 'closing' ? 'JU2-' : 'JU1-';
   const existing = S.jurnal.filter(j => j.nomor_bukti && j.nomor_bukti.startsWith(prefix));
   let maxNum = 0;
   existing.forEach(j => {
@@ -666,7 +727,6 @@ function getNextJournalNumber(tipe) {
 }
 
 function updateJournalLineDropdowns() {
-  // Update all account dropdowns in journal lines
   document.querySelectorAll('.line-akun-select').forEach(select => {
     const currentVal = select.value;
     select.innerHTML = '<option value="">-- Pilih Akun --</option>';
@@ -678,7 +738,7 @@ function updateJournalLineDropdowns() {
 }
 
 function addJournalLine(data = null) {
-  const line = data || { id: genId(), akun_id: '', kode: '', nama: '', debet: 0, kredit: 0, ket: '' };
+  const line = data || { id: genId(), akun_id: '', kode: '', nama: '', dk: 'D', nominal: 0, ket: '' };
   journalLines.push(line);
   renderJournalLines();
 }
@@ -698,25 +758,26 @@ function renderJournalLines() {
   
   journalLines.forEach((line, idx) => {
     const tr = document.createElement('tr');
-    
-    // Build account options
     let accountOptions = '<option value="">-- Pilih Akun --</option>';
     S.coa.sort((a,b) => a.kode.localeCompare(b.kode)).forEach(a => {
       const selected = a.id === line.akun_id ? 'selected' : '';
       accountOptions += `<option value="${a.id}" data-kode="${a.kode}" data-nama="${a.nama}" ${selected}>${a.kode} - ${a.nama}</option>`;
     });
     
+    const nominalFormatted = line.nominal ? formatNominal(line.nominal) : '';
+    
     tr.innerHTML = `
       <td style="text-align:center;color:var(--text3)">${idx + 1}</td>
+      <td><select class="form-select line-akun-select" onchange="updateLineAccount(${idx}, this)">${accountOptions}</select></td>
       <td>
-        <select class="form-select line-akun-select" onchange="updateLineAccount(${idx}, this)">
-          ${accountOptions}
+        <select class="form-select" onchange="updateLineDK(${idx}, this.value)" style="font-weight:700">
+          <option value="D" ${line.dk === 'D' ? 'selected' : ''}>D</option>
+          <option value="K" ${line.dk === 'K' ? 'selected' : ''}>K</option>
         </select>
       </td>
-      <td><input type="number" class="form-input" value="${line.debet || 0}" min="0" step="1" onchange="updateLineValue(${idx}, 'debet', this.value)" onfocus="this.select()"></td>
-      <td><input type="number" class="form-input" value="${line.kredit || 0}" min="0" step="1" onchange="updateLineValue(${idx}, 'kredit', this.value)" onfocus="this.select()"></td>
+      <td><input type="text" class="form-input" value="${nominalFormatted}" placeholder="0" oninput="formatNominalInput(this)" onblur="updateLineNominal(${idx}, this.value)" style="text-align:right"></td>
       <td><input type="text" class="form-input" value="${line.ket || ''}" placeholder="Ket. baris" onchange="updateLineValue(${idx}, 'ket', this.value)"></td>
-      <td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris">🗑</button></td>
+      <td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris"></button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -737,27 +798,51 @@ function updateLineAccount(index, select) {
   journalLines[index].nama = option.dataset.nama;
 }
 
+function updateLineDK(index, dk) {
+  journalLines[index].dk = dk;
+  updateBalanceIndicator();
+}
+
+function updateLineNominal(index, value) {
+  const parsed = parseNominal(value);
+  journalLines[index].nominal = parsed;
+  // Re-render untuk update format
+  renderJournalLines();
+}
+
 function updateLineValue(index, field, value) {
-  if (field === 'ket') {
-    journalLines[index][field] = value;
-  } else {
-    journalLines[index][field] = parseFloat(value) || 0;
-  }
+  journalLines[index][field] = value;
+}
+
+function formatNominalInput(input) {
+  const cursorPos = input.selectionStart;
+  const oldLength = input.value.length;
+  const raw = input.value.replace(/[^0-9]/g, '');
+  if (!raw) { input.value = ''; return; }
+  const formatted = formatNominal(raw);
+  input.value = formatted;
+  // Adjust cursor position
+  const newLength = formatted.length;
+  const diff = newLength - oldLength;
+  const newPos = cursorPos + diff;
+  input.setSelectionRange(newPos, newPos);
+  // Update balance indicator
   updateBalanceIndicator();
 }
 
 function updateBalanceIndicator() {
   let totalDebet = 0, totalKredit = 0;
   journalLines.forEach(l => {
-    totalDebet += Number(l.debet) || 0;
-    totalKredit += Number(l.kredit) || 0;
+    const nominal = Number(l.nominal) || 0;
+    if (l.dk === 'D') totalDebet += nominal;
+    else totalKredit += nominal;
   });
   
   const diff = Math.abs(totalDebet - totalKredit);
   const isBalanced = diff < 0.01 && totalDebet > 0;
   const hasValidLines = journalLines.length >= 2;
   const allLinesHaveAccount = journalLines.every(l => l.akun_id);
-  const noDoubleEntry = journalLines.every(l => !((l.debet > 0) && (l.kredit > 0)));
+  const allLinesHaveNominal = journalLines.every(l => (Number(l.nominal) || 0) > 0);
   
   const indicator = document.getElementById('balanceIndicator');
   const icon = document.getElementById('balanceIcon');
@@ -767,7 +852,7 @@ function updateBalanceIndicator() {
   
   if (!hasValidLines) {
     indicator.className = 'balance-indicator unbalanced';
-    icon.textContent = '️';
+    icon.textContent = '⚠️';
     text.textContent = 'Minimal 2 baris diperlukan';
     diffEl.textContent = '';
     btnSave.disabled = true;
@@ -777,10 +862,10 @@ function updateBalanceIndicator() {
     text.textContent = 'Semua baris harus pilih akun';
     diffEl.textContent = '';
     btnSave.disabled = true;
-  } else if (!noDoubleEntry) {
+  } else if (!allLinesHaveNominal) {
     indicator.className = 'balance-indicator unbalanced';
     icon.textContent = '⚠️';
-    text.textContent = '1 baris tidak boleh isi Debet & Kredit sekaligus';
+    text.textContent = 'Semua baris harus isi nominal > 0';
     diffEl.textContent = '';
     btnSave.disabled = true;
   } else if (isBalanced) {
@@ -808,18 +893,28 @@ window.simpanJurnal = async () => {
   if (!keterangan) return log('Keterangan wajib diisi', 'err');
   if (journalLines.length < 2) return log('Minimal 2 baris', 'err');
   
-  // Validasi semua baris
   for (const line of journalLines) {
     if (!line.akun_id) return log('Semua baris harus pilih akun', 'err');
-    if ((line.debet > 0) && (line.kredit > 0)) return log('1 baris tidak boleh isi Debet & Kredit sekaligus', 'err');
-    if ((line.debet === 0) && (line.kredit === 0)) return log('Setiap baris harus isi Debet atau Kredit', 'err');
+    const nominal = Number(line.nominal) || 0;
+    if (nominal <= 0) return log('Setiap baris harus isi nominal > 0', 'err');
   }
   
-  // Hitung total
   let totalDebet = 0, totalKredit = 0;
-  journalLines.forEach(l => {
-    totalDebet += Number(l.debet) || 0;
-    totalKredit += Number(l.kredit) || 0;
+  const lines = journalLines.map(l => {
+    const nominal = Number(l.nominal) || 0;
+    const debet = l.dk === 'D' ? nominal : 0;
+    const kredit = l.dk === 'K' ? nominal : 0;
+    totalDebet += debet;
+    totalKredit += kredit;
+    return {
+      id: l.id || genId(),
+      akun_id: l.akun_id,
+      kode: l.kode,
+      nama: l.nama,
+      debet,
+      kredit,
+      ket: l.ket || ''
+    };
   });
   
   if (Math.abs(totalDebet - totalKredit) > 0.01) return log('Jurnal tidak balance', 'err');
@@ -830,15 +925,7 @@ window.simpanJurnal = async () => {
     tanggal,
     keterangan,
     pihak,
-    lines: journalLines.map(l => ({
-      id: l.id || genId(),
-      akun_id: l.akun_id,
-      kode: l.kode,
-      nama: l.nama,
-      debet: Number(l.debet) || 0,
-      kredit: Number(l.kredit) || 0,
-      ket: l.ket || ''
-    })),
+    lines,
     total_debet: totalDebet,
     total_kredit: totalKredit,
     tipe: 'jurnal'
@@ -876,21 +963,34 @@ window.resetJournalForm = () => {
 window.editJurnal = (id) => {
   const jurnal = S.jurnal.find(j => j.id === id);
   if (!jurnal) return;
+  if (jurnal.tipe === 'closing') {
+    log('Jurnal penutup tidak dapat diedit. Hapus dan buat ulang jika perlu.', 'warn');
+    return;
+  }
   
   editingJournalId = id;
   document.getElementById('editModeIndicator').style.display = 'flex';
   document.getElementById('editingJournalNumber').textContent = jurnal.nomor_bukti;
   document.getElementById('journalFormTitle').textContent = 'Edit Jurnal';
-  document.getElementById('btnSaveJournal').textContent = '💾 Update Jurnal';
+  document.getElementById('btnSaveJournal').textContent = ' Update Jurnal';
   document.getElementById('jurnalNomor').value = jurnal.nomor_bukti;
   document.getElementById('jurnalTanggal').value = jurnal.tanggal;
   document.getElementById('jurnalKeterangan').value = jurnal.keterangan;
   document.getElementById('jurnalPihak').value = jurnal.pihak || '';
   
-  journalLines = JSON.parse(JSON.stringify(jurnal.lines));
+  // Convert lines back to form format
+  journalLines = jurnal.lines.map(l => ({
+    ...l,
+    dk: l.debet > 0 ? 'D' : 'K',
+    nominal: l.debet > 0 ? l.debet : l.kredit
+  }));
   renderJournalLines();
   
-  // Scroll to form
+  // Switch to jurnal view
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.querySelector('[data-view="jurnal"]').classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-jurnal').classList.add('active');
   document.getElementById('view-jurnal').scrollIntoView({ behavior: 'smooth' });
   log('Edit jurnal ' + jurnal.nomor_bukti, 'info');
 };
@@ -917,37 +1017,67 @@ window.toggleJournalLines = (id) => {
 };
 
 function renderJournalList() {
-  const container = document.getElementById('journalListContainer');
-  const countEl = document.getElementById('journalCount');
+  // For view-jurnal (input only, no list here anymore)
+}
+
+function renderDaftarTransaksi() {
+  const container = document.getElementById('daftarContainer');
+  const countEl = document.getElementById('daftarCount');
+  const searchInput = document.getElementById('searchInput');
+  const searchResultCount = document.getElementById('searchResultCount');
+  const searchTerm = (searchInput.value || '').toLowerCase().trim();
   
   if (S.jurnal.length === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Belum ada jurnal. Buat jurnal pertama Anda di form atas.</div>';
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Belum ada transaksi. Buat jurnal pertama Anda di menu Input Jurnal.</div>';
     countEl.textContent = '0 jurnal';
+    searchResultCount.textContent = '';
     return;
   }
   
+  // Filter berdasarkan search
+  let filteredJurnal = S.jurnal;
+  if (searchTerm) {
+    filteredJurnal = S.jurnal.filter(j => 
+      j.nomor_bukti.toLowerCase().includes(searchTerm) ||
+      j.keterangan.toLowerCase().includes(searchTerm)
+    );
+  }
+  
   countEl.textContent = S.jurnal.length + ' jurnal';
+  searchResultCount.textContent = searchTerm ? `${filteredJurnal.length} ditemukan` : '';
+  
+  if (filteredJurnal.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Tidak ada transaksi yang cocok dengan pencarian.</div>';
+    return;
+  }
+  
   container.innerHTML = '';
   
-  const sortedJurnal = [...S.jurnal].sort((a, b) => b.tanggal.localeCompare(a.tanggal) || b.nomor_bukti.localeCompare(a.nomor_bukti));
+  const sortedJurnal = [...filteredJurnal].sort((a, b) => b.tanggal.localeCompare(a.tanggal) || b.nomor_bukti.localeCompare(a.nomor_bukti));
   
   sortedJurnal.forEach(j => {
     const card = document.createElement('div');
     card.className = 'journal-card';
+    if (j.tipe === 'closing') card.style.borderColor = 'rgba(168,85,247,.4)';
     
     const linesHtml = j.lines.map((l, idx) => `
       <tr>
         <td style="color:var(--text3)">${idx + 1}</td>
         <td><strong>${l.kode}</strong> - ${l.nama}</td>
-        <td class="amount positive">${l.debet > 0 ? fmt(l.debet) : '-'}</td>
-        <td class="amount negative">${l.kredit > 0 ? fmt(l.kredit) : '-'}</td>
+        <td style="font-weight:700;color:${l.debet > 0 ? 'var(--green)' : 'var(--red)'}">${l.debet > 0 ? 'D' : 'K'}</td>
+        <td class="amount">${fmt(l.debet > 0 ? l.debet : l.kredit)}</td>
         <td style="color:var(--text2)">${l.ket || '-'}</td>
       </tr>
     `).join('');
     
+    const isClosing = j.tipe === 'closing';
+    const numberClass = isClosing ? 'journal-number closing' : 'journal-number';
+    const prefixIcon = isClosing ? '🔒' : '📄';
+    const editBtn = isClosing ? '' : `<button class="btn sm" onclick="editJurnal('${j.id}')" title="Edit">✏️</button>`;
+    
     card.innerHTML = `
       <div class="journal-header" onclick="toggleJournalLines('${j.id}')">
-        <span class="journal-number">📄 ${j.nomor_bukti}</span>
+        <span class="${numberClass}">${prefixIcon} ${j.nomor_bukti}</span>
         <span class="journal-date">📅 ${fmtDate(j.tanggal)}</span>
         <span class="journal-desc">${j.keterangan}</span>
         <span class="journal-meta">
@@ -955,21 +1085,18 @@ function renderJournalList() {
           ${j.lines.length} baris | ${fmt(j.total_debet)}
         </span>
         <div class="journal-actions" onclick="event.stopPropagation()">
-          <button class="btn sm" onclick="editJurnal('${j.id}')" title="Edit">✏️</button>
+          ${editBtn}
           <button class="btn sm danger" onclick="hapusJurnal('${j.id}')" title="Hapus">🗑</button>
         </div>
       </div>
       <div class="journal-lines" id="lines-${j.id}">
         <table>
-          <thead>
-            <tr><th>#</th><th>Akun</th><th>Debet</th><th>Kredit</th><th>Keterangan</th></tr>
-          </thead>
+          <thead><tr><th>#</th><th>Akun</th><th>D/K</th><th>Nominal</th><th>Keterangan</th></tr></thead>
           <tbody>
             ${linesHtml}
             <tr class="journal-total-row">
-              <td colspan="2" style="text-align:right">TOTAL</td>
-              <td class="amount positive">${fmt(j.total_debet)}</td>
-              <td class="amount negative">${fmt(j.total_kredit)}</td>
+              <td colspan="3" style="text-align:right">TOTAL</td>
+              <td class="amount">${fmt(j.total_debet)}</td>
               <td></td>
             </tr>
           </tbody>
@@ -980,7 +1107,6 @@ function renderJournalList() {
   });
 }
 
-// Helper: flatten all journal lines for reports
 function getAllJournalLines() {
   const lines = [];
   S.jurnal.forEach(j => {
@@ -991,12 +1117,231 @@ function getAllJournalLines() {
         nomor_bukti: j.nomor_bukti,
         tanggal: j.tanggal,
         keterangan_jurnal: j.keterangan,
-        pihak: j.pihak
+        pihak: j.pihak,
+        tipe_jurnal: j.tipe
       });
     });
   });
   return lines;
 }
+
+// ═══════════════════════════════════════════════════════════
+// JURNAL PENUTUP (CLOSING ENTRIES)
+// ═══════════════════════════════════════════════════════════
+
+function populateClosingYearSelect() {
+  const sel = document.getElementById('closingYear');
+  const currentYear = new Date().getFullYear();
+  sel.innerHTML = '';
+  
+  const years = new Set();
+  getAllJournalLines().forEach(l => years.add(parseInt(l.tanggal.substring(0, 4))));
+  for (let y = currentYear; y >= currentYear - 5; y--) years.add(y);
+  
+  const sortedYears = Array.from(years).sort((a, b) => b - a);
+  sortedYears.forEach(y => {
+    const hasClosing = S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(y)));
+    const label = hasClosing ? `${y} ✓ (Sudah ditutup)` : `${y}`;
+    sel.innerHTML += `<option value="${y}" ${hasClosing ? 'style="color:var(--green)"' : ''}>${label}</option>`;
+  });
+}
+
+function calculateYearEndBalances(year) {
+  const allLines = getAllJournalLines();
+  const linesInYear = allLines.filter(l => {
+    const lineYear = parseInt(l.tanggal.substring(0, 4));
+    return lineYear === year && l.tipe_jurnal !== 'closing';
+  });
+  
+  const pendapatanAccounts = S.coa.filter(a => a.tipe === 'PENDAPATAN');
+  const biayaAccounts = S.coa.filter(a => a.tipe === 'BIAYA');
+  
+  const pendapatanTotals = {};
+  const biayaTotals = {};
+  
+  pendapatanAccounts.forEach(acc => {
+    const totalKredit = linesInYear
+      .filter(l => l.akun_id === acc.id)
+      .reduce((sum, l) => sum + (l.kredit - l.debet), 0);
+    if (totalKredit !== 0) {
+      pendapatanTotals[acc.id] = { acc, total: totalKredit };
+    }
+  });
+  
+  biayaAccounts.forEach(acc => {
+    const totalDebet = linesInYear
+      .filter(l => l.akun_id === acc.id)
+      .reduce((sum, l) => sum + (l.debet - l.kredit), 0);
+    if (totalDebet !== 0) {
+      biayaTotals[acc.id] = { acc, total: totalDebet };
+    }
+  });
+  
+  const totalPendapatan = Object.values(pendapatanTotals).reduce((s, v) => s + v.total, 0);
+  const totalBiaya = Object.values(biayaTotals).reduce((s, v) => s + v.total, 0);
+  const labaRugi = totalPendapatan - totalBiaya;
+  
+  return { pendapatanTotals, biayaTotals, totalPendapatan, totalBiaya, labaRugi };
+}
+
+window.previewClosingJournal = () => {
+  const year = parseInt(document.getElementById('closingYear').value);
+  const closingDate = document.getElementById('closingDate').value;
+  
+  if (!year) { log('Pilih tahun terlebih dahulu', 'warn'); return; }
+  if (!closingDate) { log('Pilih tanggal jurnal penutup', 'warn'); return; }
+  
+  const { pendapatanTotals, biayaTotals, totalPendapatan, totalBiaya, labaRugi } = calculateYearEndBalances(year);
+  
+  const previewEl = document.getElementById('closingPreview');
+  previewEl.style.display = 'block';
+  
+  let preview = `════════════════════════════════════════════════════════════════\n`;
+  preview += `  PREVIEW JURNAL PENUTUP TAHUN ${year}\n`;
+  preview += `  Tanggal: ${fmtDate(closingDate)}\n`;
+  preview += `════════════════════════════════════════════════════════════════\n\n`;
+  
+  if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) {
+    preview += `  ⚠️ Tidak ada transaksi Pendapatan atau Biaya di tahun ${year}.\n`;
+    preview += `  Jurnal penutup tidak perlu dibuat.\n`;
+    previewEl.textContent = preview;
+    return;
+  }
+  
+  const hasClosing = S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(year)));
+  if (hasClosing) {
+    preview += `  ⚠️ PERINGATAN: Sudah ada jurnal penutup untuk tahun ${year}!\n\n`;
+  }
+  
+  preview += `  TOTAL PENDAPATAN: ${fmt(totalPendapatan).padStart(18)}\n`;
+  preview += `  TOTAL BIAYA:      ${fmt(totalBiaya).padStart(18)}\n`;
+  preview += `  ─────────────────────────────────────────\n`;
+  
+  if (labaRugi >= 0) {
+    preview += `  LABA BERSIH:      ${fmt(labaRugi).padStart(18)}  → Masuk ke Laba Ditahan (Kredit)\n`;
+  } else {
+    preview += `  RUGI BERSIH:      ${fmt(Math.abs(labaRugi)).padStart(18)}  → Masuk ke Laba Ditahan (Debet)\n`;
+  }
+  
+  preview += `\n  STRUKTUR JURNAL:\n`;
+  preview += `  ┌────────────────────────────────────────────────────────┐\n`;
+  
+  Object.values(pendapatanTotals).forEach(({ acc, total }) => {
+    preview += `  │ ${acc.kode.padEnd(10)} ${acc.nama.padEnd(25)} D ${fmt(total).padStart(15)} │\n`;
+  });
+  
+  Object.values(biayaTotals).forEach(({ acc, total }) => {
+    preview += `  │ ${acc.kode.padEnd(10)} ${acc.nama.padEnd(25)} K ${fmt(total).padStart(15)} │\n`;
+  });
+  
+  const labaDitahanAcc = S.coa.find(a => a.kode === '3-3002' || a.nama.toLowerCase().includes('laba ditahan'));
+  if (labaDitahanAcc) {
+    if (labaRugi >= 0) {
+      preview += `  │ ${labaDitahanAcc.kode.padEnd(10)} ${labaDitahanAcc.nama.padEnd(25)} K ${fmt(labaRugi).padStart(15)} │\n`;
+    } else {
+      preview += `  │ ${labaDitahanAcc.kode.padEnd(10)} ${labaDitahanAcc.nama.padEnd(25)} D ${fmt(Math.abs(labaRugi)).padStart(15)} │\n`;
+    }
+  } else {
+    preview += `  │ ⚠️ Akun "Laba Ditahan" (3-3002) tidak ditemukan di COA! │\n`;
+  }
+  
+  preview += `  └────────────────────────────────────────────────────────┘\n`;
+  preview += `\n  Total Baris: ${Object.keys(pendapatanTotals).length + Object.keys(biayaTotals).length + 1}\n`;
+  
+  previewEl.textContent = preview;
+  log(`Preview jurnal penutup tahun ${year}`, 'info');
+};
+
+window.generateClosingJournal = async () => {
+  const year = parseInt(document.getElementById('closingYear').value);
+  const closingDate = document.getElementById('closingDate').value;
+  
+  if (!year) { log('Pilih tahun terlebih dahulu', 'warn'); return; }
+  if (!closingDate) { log('Pilih tanggal jurnal penutup', 'warn'); return; }
+  
+  const { pendapatanTotals, biayaTotals, totalPendapatan, totalBiaya, labaRugi } = calculateYearEndBalances(year);
+  
+  if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) {
+    log(`Tidak ada transaksi Pendapatan/Biaya di tahun ${year}`, 'warn');
+    showModal('Tidak Ada Data', `Tidak ditemukan transaksi Pendapatan atau Biaya di tahun ${year}.\n\nJurnal penutup tidak perlu dibuat.`);
+    return;
+  }
+  
+  const hasClosing = S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(year)));
+  if (hasClosing) {
+    const confirm = await showModal('⚠️ Duplikasi Jurnal Penutup', `Sudah ada jurnal penutup untuk tahun ${year}!\n\nMembuat jurnal penutup lagi akan menyebabkan saldo akun Pendapatan/Biaya menjadi tidak nol (double closing).\n\nYakin tetap membuat?`);
+    if (!confirm) return;
+  }
+  
+  const labaDitahanAcc = S.coa.find(a => a.kode === '3-3002' || a.nama.toLowerCase().includes('laba ditahan'));
+  if (!labaDitahanAcc) {
+    log('Akun "Laba Ditahan" tidak ditemukan di COA!', 'err');
+    showModal('Error', 'Akun "Laba Ditahan" (3-3002) tidak ditemukan di COA.\n\nSilakan tambahkan akun tersebut terlebih dahulu di menu COA.');
+    return;
+  }
+  
+  const lines = [];
+  
+  Object.values(pendapatanTotals).forEach(({ acc, total }) => {
+    lines.push({
+      id: genId(), akun_id: acc.id, kode: acc.kode, nama: acc.nama,
+      debet: total, kredit: 0, ket: `Nol-kan ${acc.nama} th ${year}`
+    });
+  });
+  
+  Object.values(biayaTotals).forEach(({ acc, total }) => {
+    lines.push({
+      id: genId(), akun_id: acc.id, kode: acc.kode, nama: acc.nama,
+      debet: 0, kredit: total, ket: `Nol-kan ${acc.nama} th ${year}`
+    });
+  });
+  
+  if (labaRugi >= 0) {
+    lines.push({
+      id: genId(), akun_id: labaDitahanAcc.id, kode: labaDitahanAcc.kode, nama: labaDitahanAcc.nama,
+      debet: 0, kredit: labaRugi, ket: `Laba bersih th ${year}`
+    });
+  } else {
+    lines.push({
+      id: genId(), akun_id: labaDitahanAcc.id, kode: labaDitahanAcc.kode, nama: labaDitahanAcc.nama,
+      debet: Math.abs(labaRugi), kredit: 0, ket: `Rugi bersih th ${year}`
+    });
+  }
+  
+  const totalD = lines.reduce((s, l) => s + l.debet, 0);
+  const totalK = lines.reduce((s, l) => s + l.kredit, 0);
+  
+  if (Math.abs(totalD - totalK) > 0.01) {
+    log('Error: Jurnal penutup tidak balance!', 'err');
+    return;
+  }
+  
+  const nomorBukti = getNextJournalNumber('closing');
+  
+  const closingJournal = {
+    id: genId(), nomor_bukti: nomorBukti, tanggal: closingDate,
+    keterangan: `Jurnal Penutup Tahun Buku ${year}`, pihak: '',
+    lines, total_debet: totalD, total_kredit: totalK,
+    tipe: 'closing', tahun_ditutup: year
+  };
+  
+  const confirm = await showModal(
+    'Konfirmasi Jurnal Penutup',
+    `Tahun: ${year}\nTanggal: ${fmtDate(closingDate)}\nNo. Jurnal: ${nomorBukti}\nJumlah Baris: ${lines.length}\n\nTotal Debet: ${fmt(totalD)}\nTotal Kredit: ${fmt(totalK)}\n${labaRugi >= 0 ? `Laba Bersih: ${fmt(labaRugi)} → Laba Ditahan (K)` : `Rugi Bersih: ${fmt(Math.abs(labaRugi))} → Laba Ditahan (D)`}\n\nProses jurnal penutup?`
+  );
+  
+  if (!confirm) return;
+  
+  try {
+    await storage.add('jurnal', closingJournal);
+    log(`✅ Jurnal Penutup ${nomorBukti} untuk tahun ${year} berhasil dibuat`, 'ok');
+    log(`Laba/Rugi ${fmt(labaRugi)} dipindahkan ke Laba Ditahan`, 'ok');
+    document.getElementById('closingPreview').style.display = 'none';
+    populateClosingYearSelect();
+  } catch (e) {
+    log('Error: ' + e.message, 'err');
+  }
+};
 
 // ═══════════════════════════════════════════════════════════
 // BLOK
@@ -1196,30 +1541,53 @@ window.applyReportFilters = () => {
   } else if (currentReportType === 'neraca') {
     const sal = getSaldoWithSaldoAwal();
     let A=[], L=[], E={};
+    
     S.coa.forEach(a => {
       const s = sal[a.kode] || 0;
-      if(a.tipe==='ASET' && s) A.push({n:a.nama, s});
-      if(a.tipe==='LIABILITAS' && s) L.push({n:a.nama, s:-s});
-      if(a.tipe==='EKUITAS' && s) E[a.nama] = -s;
+      if(a.tipe==='ASET') A.push({n:a.nama, s, kode:a.kode});
+      if(a.tipe==='LIABILITAS') L.push({n:a.nama, s:-s, kode:a.kode});
+      if(a.tipe==='EKUITAS') E[a.nama] = {s: -s, kode: a.kode};
     });
-    const tA = A.reduce((s,a)=>s+a.s,0), tL = L.reduce((s,a)=>s+a.s,0), tE = Object.values(E).reduce((s,v)=>s+v,0);
+    
+    const tA = A.reduce((s,a)=>s+(a.s>0?a.s:0),0);
+    const tL = L.reduce((s,a)=>s+(a.s>0?a.s:0),0);
+    const tE = Object.values(E).reduce((s,v)=>s+(v.s>0?v.s:0),0);
+    
     o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
     o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
     o += `║     NERACA (BALANCE SHEET)                                          ║\n`;
     o += `║     Per Akhir ${periodStr}                                          ║\n`;
-    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
+    o += `══════════════════════════════════════════════════════════════════════╝\n\n`;
     if(S.saldo_awal.length > 0) o += `* Termasuk Saldo Awal per ${fmtDate(S.saldo_awal[0].tanggal)}\n\n`;
-    o += `ASET:\n`;
-    A.forEach(a => o += `  ${a.n.padEnd(35)}${fmt(a.s).padStart(18)}\n`);
-    o += `  ${'TOTAL ASET'.padEnd(35)}${fmt(tA).padStart(18)}\n\n`;
-    o += `LIABILITAS:\n`;
-    L.forEach(a => o += `  ${a.n.padEnd(35)}${fmt(a.s).padStart(18)}\n`);
-    o += `  ${'TOTAL LIABILITAS'.padEnd(35)}${fmt(tL).padStart(18)}\n\n`;
-    o += `EKUITAS:\n`;
-    Object.entries(E).forEach(([k,v]) => o += `  ${k.padEnd(35)}${fmt(v).padStart(18)}\n`);
-    o += `  ${'TOTAL EKUITAS'.padEnd(35)}${fmt(tE).padStart(18)}\n\n`;
+    
+    o += `AKTIVA (ASET):\n`;
+    o += `  ${'Kode'.padEnd(12)}${'Nama Akun'.padEnd(30)}${'Saldo'.padStart(18)}\n`;
+    o += `  ${'────────────'.padEnd(12)}${'──────────────────────────────'.padEnd(30)}${'──────────────────'.padStart(18)}\n`;
+    A.forEach(a => {
+      const saldoStr = a.s !== 0 ? fmt(a.s).padStart(18) : ''.padStart(18);
+      o += `  ${a.kode.padEnd(12)}${a.n.padEnd(30)}${saldoStr}\n`;
+    });
+    o += `  ${''.padEnd(42)}${'──────────────────'.padStart(18)}\n`;
+    o += `  ${'TOTAL AKTIVA'.padEnd(42)}${fmt(tA).padStart(18)}\n\n`;
+    
+    o += `PASSIVA (LIABILITAS + EKUITAS):\n`;
+    o += `  ${'Kode'.padEnd(12)}${'Nama Akun'.padEnd(30)}${'Saldo'.padStart(18)}\n`;
+    o += `  ${'────────────'.padEnd(12)}${'──────────────────────────────'.padEnd(30)}${'──────────────────'.padStart(18)}\n`;
+    o += `  Liabilitas:\n`;
+    L.forEach(a => {
+      const saldoStr = a.s !== 0 ? fmt(a.s).padStart(18) : ''.padStart(18);
+      o += `    ${a.kode.padEnd(10)}${a.n.padEnd(30)}${saldoStr}\n`;
+    });
+    o += `    ${'Total Liabilitas'.padEnd(40)}${fmt(tL).padStart(18)}\n\n`;
+    o += `  Ekuitas:\n`;
+    Object.entries(E).forEach(([nama, data]) => {
+      const saldoStr = data.s !== 0 ? fmt(data.s).padStart(18) : ''.padStart(18);
+      o += `    ${data.kode.padEnd(10)}${nama.padEnd(30)}${saldoStr}\n`;
+    });
+    o += `    ${'Total Ekuitas'.padEnd(40)}${fmt(tE).padStart(18)}\n\n`;
+    o += `  ${'TOTAL PASSIVA'.padEnd(42)}${fmt(tL + tE).padStart(18)}\n\n`;
     o += `══════════════════════════════════════════════════════════════════════\n`;
-    o += `  TOTAL LIABILITAS + EKUITAS            ${fmt(tL + tE).padStart(18)}\n`;
+    o += `  SELISIH (harus 0):                    ${fmt(tA - (tL + tE)).padStart(18)}\n`;
     o += `══════════════════════════════════════════════════════════════════════`;
 
   } else if (currentReportType === 'bb') {
@@ -1228,7 +1596,7 @@ window.applyReportFilters = () => {
     o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
     o += `║     BUKU BESAR (TRIAL BALANCE)                                      ║\n`;
     o += `║     Periode: ${periodStr}                                           ║\n`;
-    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
+    o += `══════════════════════════════════════════════════════════════════════╝\n\n`;
     if(S.saldo_awal.length > 0) o += `* Termasuk Saldo Awal per ${fmtDate(S.saldo_awal[0].tanggal)}\n\n`;
     o += `KODE      NAMA AKUN                         DEBET            KREDIT\n`;
     o += `────────  ──────────────────────────────  ──────────────  ──────────────\n`;
@@ -1238,7 +1606,7 @@ window.applyReportFilters = () => {
       if(s > 0) { o += `${a.kode.padEnd(10)}${a.nama.padEnd(32)}${fmt(s).padStart(14)}  ${''.padStart(14)}\n`; totD += s; }
       else { o += `${a.kode.padEnd(10)}${a.nama.padEnd(32)}${''.padStart(14)}  ${fmt(Math.abs(s)).padStart(14)}\n`; totK += Math.abs(s); }
     });
-    o += `────────  ──────────────────────────────  ─────────────  ──────────────\n`;
+    o += `────────  ──────────────────────────────  ──────────────  ──────────────\n`;
     o += `${'TOTAL'.padEnd(42)}${fmt(totD).padStart(14)}  ${fmt(totK).padStart(14)}`;
 
   } else if (currentReportType === 'bbhutang') {
@@ -1251,7 +1619,7 @@ window.applyReportFilters = () => {
       if(!byPihak[pihak]) byPihak[pihak] = [];
       byPihak[pihak].push(l);
     });
-    o += `══════════════════════════════════════════════════════════════════════╗\n`;
+    o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
     o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
     o += `║     BUKU BESAR PEMBANTU HUTANG                                      ║\n`;
     o += `║     Periode: ${periodStr}                                           ║\n`;
@@ -1263,7 +1631,7 @@ window.applyReportFilters = () => {
         o += `│ KREDITUR: ${pihak.padEnd(44)}│\n`;
         o += `├──────────┬────────────────────┬─────────────┬────────────┤\n`;
         o += `│ Tanggal  │ Jurnal / Ket       │   Debet     │   Kredit   │\n`;
-        o += `├──────────┼────────────────────┼─────────────┼────────────┤\n`;
+        o += `├──────────┼────────────────────┼─────────────────────────┤\n`;
         let saldo = 0;
         trxList.sort((a,b)=>a.tanggal.localeCompare(b.tanggal)).forEach(l => {
           const acc = S.coa.find(a => a.id === l.akun_id);
@@ -1298,7 +1666,7 @@ window.applyReportFilters = () => {
       Object.entries(byPihak).forEach(([pihak, trxList]) => {
         o += `┌──────────────────────────────────────────────────────────┐\n`;
         o += `│ DEBITUR: ${pihak.padEnd(45)}│\n`;
-        o += `├──────────┬────────────────────┬─────────────┬────────────\n`;
+        o += `├──────────┬────────────────────┬─────────────┬────────────┤\n`;
         o += `│ Tanggal  │ Jurnal / Ket       │   Debet     │   Kredit   │\n`;
         o += `├──────────┼────────────────────┼─────────────┼────────────┤\n`;
         let saldo = 0;
@@ -1320,16 +1688,16 @@ window.applyReportFilters = () => {
     const sal = getSaldoWithSaldoAwal();
     o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
     o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
-    o += `║     BUKU BESAR MODAL                                                ║\n`;
+    o += `║     BUKU BESAR MODAL                                                \n`;
     o += `║     Periode: ${periodStr}                                           ║\n`;
     o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
     modalAccounts.forEach(a => {
       const trxList = lines.filter(l => l.akun_id === a.id);
-      o += `┌──────────────────────────────────────────────────────────┐\n`;
+      o += `┌──────────────────────────────────────────────────────────\n`;
       o += `│ AKUN: ${a.kode} - ${a.nama.padEnd(38)}│\n`;
-      o += `├──────────┬────────────────────┬─────────────┬────────────\n`;
+      o += `├──────────┬────────────────────┬─────────────┬────────────┤\n`;
       o += `│ Tanggal  │ Jurnal / Ket       │   Debet     │   Kredit   │\n`;
-      o += `──────────┼────────────────────┼─────────────┼────────────┤\n`;
+      o += `├──────────┼────────────────────┼─────────────┼────────────┤\n`;
       if(trxList.length === 0) { o += `│ ${'(tidak ada transaksi pada periode ini)'.padEnd(54)}│\n`; }
       else { trxList.sort((x,y)=>x.tanggal.localeCompare(y.tanggal)).forEach(l => {
         const d = l.debet, k = l.kredit;
@@ -1348,24 +1716,24 @@ window.applyReportFilters = () => {
 };
 
 // ═══════════════════════════════════════════════════════════
-// EXCEL IMPORT/EXPORT (MULTI-LINE)
+// EXCEL IMPORT/EXPORT
 // ═══════════════════════════════════════════════════════════
 window.exportToExcel = () => {
   const coaData = S.coa.map(a => ({ 'Kode': a.kode, 'Nama': a.nama, 'Tipe': a.tipe }));
   
-  // Flatten journals to lines for Excel
   const trxData = [];
   S.jurnal.forEach(j => {
     j.lines.forEach(l => {
       trxData.push({
         'No. Jurnal': j.nomor_bukti,
+        'Tipe': j.tipe === 'closing' ? 'Penutup' : 'Biasa',
         'Tanggal': j.tanggal,
         'Keterangan Jurnal': j.keterangan,
         'Pihak': j.pihak || '',
         'Kode Akun': l.kode,
         'Nama Akun': l.nama,
-        'Debet': l.debet || 0,
-        'Kredit': l.kredit || 0,
+        'D/K': l.debet > 0 ? 'D' : 'K',
+        'Nominal': l.debet > 0 ? l.debet : l.kredit,
         'Ket. Baris': l.ket || ''
       });
     });
@@ -1388,7 +1756,7 @@ window.exportToExcel = () => {
 
 window.importFromExcel = async (e) => {
   const f = e.target.files[0]; if(!f) return;
-  if(!await showModal('Import Lengkap', 'SEMUA data (COA, Jurnal, Blok, Panen, Saldo Awal) akan ditimpa.\n\nLanjutkan?')) {
+  if(!await showModal('Import Lengkap', 'SEMUA data akan ditimpa.\n\nLanjutkan?')) {
     e.target.value = ''; return;
   }
   
@@ -1402,7 +1770,6 @@ window.importFromExcel = async (e) => {
       const kodeToIdMap = {};
       const blokKodeToIdMap = {};
 
-      // Import COA
       if(wb.Sheets['COA']) {
         const rawCoa = XLSX.utils.sheet_to_json(wb.Sheets['COA']);
         for(const row of rawCoa) {
@@ -1412,13 +1779,12 @@ window.importFromExcel = async (e) => {
         }
       }
 
-      // Import Jurnal (grouped by No. Jurnal)
       if(wb.Sheets['Jurnal']) {
         const rawTrx = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal']);
         const grouped = {};
         for(const row of rawTrx) {
           const noJurnal = row['No. Jurnal'] || 'AUTO';
-          if(!grouped[noJurnal]) grouped[noJurnal] = { header: null, lines: [] };
+          if(!grouped[noJurnal]) grouped[noJurnal] = { header: null, lines: [], tipe: row['Tipe'] || 'Biasa' };
           
           let tgl = row['Tanggal'];
           if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0];
@@ -1439,20 +1805,20 @@ window.importFromExcel = async (e) => {
             continue;
           }
           const acc = importedData.coa.find(a => a.id === accId);
+          const dk = row['D/K'] || 'D';
+          const nominal = Number(row['Nominal']) || 0;
           
           grouped[noJurnal].lines.push({
             id: genId(),
             akun_id: accId,
             kode: kodeAkun,
             nama: row['Nama Akun'] || (acc ? acc.nama : ''),
-            debet: Number(row['Debet']) || 0,
-            kredit: Number(row['Kredit']) || 0,
+            debet: dk === 'D' ? nominal : 0,
+            kredit: dk === 'K' ? nominal : 0,
             ket: row['Ket. Baris'] || ''
           });
         }
         
-        // Create journal entries
-        let journalCounter = 1;
         for(const [noJurnal, group] of Object.entries(grouped)) {
           if(group.lines.length < 2) {
             log('Warning: Jurnal ' + noJurnal + ' kurang dari 2 baris, skip', 'warn');
@@ -1473,13 +1839,11 @@ window.importFromExcel = async (e) => {
             lines: group.lines,
             total_debet: totalD,
             total_kredit: totalK,
-            tipe: 'jurnal'
+            tipe: group.tipe === 'Penutup' ? 'closing' : 'jurnal'
           });
-          journalCounter++;
         }
       }
 
-      // Import Blok
       if(wb.Sheets['Blok']) {
         const rawBlok = XLSX.utils.sheet_to_json(wb.Sheets['Blok']);
         for(const row of rawBlok) {
@@ -1489,7 +1853,6 @@ window.importFromExcel = async (e) => {
         }
       }
 
-      // Import Panen
       if(wb.Sheets['Panen']) {
         const rawPanen = XLSX.utils.sheet_to_json(wb.Sheets['Panen']);
         for(const row of rawPanen) {
@@ -1504,7 +1867,6 @@ window.importFromExcel = async (e) => {
         }
       }
 
-      // Import Saldo Awal
       if(wb.Sheets['Saldo Awal']) {
         const rawSaldo = XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal']);
         for(const row of rawSaldo) {
@@ -1533,14 +1895,11 @@ window.downloadExcelTemplate = () => {
   const templateData = {
     "COA": defaultCoa.map(a => ({ 'Kode': a.kode, 'Nama': a.nama, 'Tipe': a.tipe })),
     "Jurnal": [
-      { 'No. Jurnal': 'JU1-00001', 'Tanggal': '2024-01-05', 'Keterangan Jurnal': 'Setoran modal awal', 'Pihak': 'Pemilik', 'Kode Akun': '1-1001', 'Nama Akun': 'Kas', 'Debet': 100000000, 'Kredit': 0, 'Ket. Baris': '' },
-      { 'No. Jurnal': 'JU1-00001', 'Tanggal': '2024-01-05', 'Keterangan Jurnal': 'Setoran modal awal', 'Pihak': 'Pemilik', 'Kode Akun': '3-3001', 'Nama Akun': 'Modal Disetor', 'Debet': 0, 'Kredit': 100000000, 'Ket. Baris': '' },
-      { 'No. Jurnal': 'JU1-00002', 'Tanggal': '2024-01-10', 'Keterangan Jurnal': 'Penjualan TBS 11 ton ke SLUM', 'Pihak': 'SLUM', 'Kode Akun': '1-1001', 'Nama Akun': 'Kas', 'Debet': 1000000, 'Kredit': 0, 'Ket. Baris': '' },
-      { 'No. Jurnal': 'JU1-00002', 'Tanggal': '2024-01-10', 'Keterangan Jurnal': 'Penjualan TBS 11 ton ke SLUM', 'Pihak': 'SLUM', 'Kode Akun': '4-1001', 'Nama Akun': 'Penjualan TBS', 'Debet': 0, 'Kredit': 909091, 'Ket. Baris': 'TBS 11 ton' },
-      { 'No. Jurnal': 'JU1-00002', 'Tanggal': '2024-01-10', 'Keterangan Jurnal': 'Penjualan TBS 11 ton ke SLUM', 'Pihak': 'SLUM', 'Kode Akun': '2-1003', 'Nama Akun': 'PPN Keluaran', 'Debet': 0, 'Kredit': 90909, 'Ket. Baris': 'PPN 10%' },
-      { 'No. Jurnal': 'JU1-00003', 'Tanggal': '2024-01-15', 'Keterangan Jurnal': 'Pelunasan hutang dengan rounding', 'Pihak': 'Toko Tani', 'Kode Akun': '2-2002', 'Nama Akun': 'Hutang Supplier', 'Debet': 1000001, 'Kredit': 0, 'Ket. Baris': '' },
-      { 'No. Jurnal': 'JU1-00003', 'Tanggal': '2024-01-15', 'Keterangan Jurnal': 'Pelunasan hutang dengan rounding', 'Pihak': 'Toko Tani', 'Kode Akun': '1-1001', 'Nama Akun': 'Kas', 'Debet': 0, 'Kredit': 1000000, 'Ket. Baris': '' },
-      { 'No. Jurnal': 'JU1-00003', 'Tanggal': '2024-01-15', 'Keterangan Jurnal': 'Pelunasan hutang dengan rounding', 'Pihak': 'Toko Tani', 'Kode Akun': '6-6001', 'Nama Akun': 'Rounding', 'Debet': 0, 'Kredit': 1, 'Ket. Baris': 'Selisih pembulatan' }
+      { 'No. Jurnal': 'JU1-00001', 'Tipe': 'Biasa', 'Tanggal': '2024-01-05', 'Keterangan Jurnal': 'Setoran modal awal', 'Pihak': 'Pemilik', 'Kode Akun': '1-1001', 'Nama Akun': 'Kas', 'D/K': 'D', 'Nominal': 100000000, 'Ket. Baris': '' },
+      { 'No. Jurnal': 'JU1-00001', 'Tipe': 'Biasa', 'Tanggal': '2024-01-05', 'Keterangan Jurnal': 'Setoran modal awal', 'Pihak': 'Pemilik', 'Kode Akun': '3-3001', 'Nama Akun': 'Modal Disetor', 'D/K': 'K', 'Nominal': 100000000, 'Ket. Baris': '' },
+      { 'No. Jurnal': 'JU1-00002', 'Tipe': 'Biasa', 'Tanggal': '2024-12-31', 'Keterangan Jurnal': 'Penjualan TBS 11 ton ke SLUM', 'Pihak': 'SLUM', 'Kode Akun': '1-1001', 'Nama Akun': 'Kas', 'D/K': 'D', 'Nominal': 1000000, 'Ket. Baris': '' },
+      { 'No. Jurnal': 'JU1-00002', 'Tipe': 'Biasa', 'Tanggal': '2024-12-31', 'Keterangan Jurnal': 'Penjualan TBS 11 ton ke SLUM', 'Pihak': 'SLUM', 'Kode Akun': '4-1001', 'Nama Akun': 'Penjualan TBS', 'D/K': 'K', 'Nominal': 909091, 'Ket. Baris': 'TBS 11 ton' },
+      { 'No. Jurnal': 'JU1-00002', 'Tipe': 'Biasa', 'Tanggal': '2024-12-31', 'Keterangan Jurnal': 'Penjualan TBS 11 ton ke SLUM', 'Pihak': 'SLUM', 'Kode Akun': '2-1003', 'Nama Akun': 'PPN Keluaran', 'D/K': 'K', 'Nominal': 90909, 'Ket. Baris': 'PPN 10%' }
     ],
     "Blok": [
       { 'Kode': 'A01', 'Nama': 'Blok A Utara', 'Luas': 10, 'Status': 'TM', 'Tahun': 2018 }
@@ -1561,7 +1920,6 @@ window.downloadExcelTemplate = () => {
   log('Template Lengkap didownload', 'ok');
 };
 
-// Saldo Awal functions (unchanged logic)
 window.downloadTemplateSaldoAwal = () => {
   const data = [
     { 'Tanggal': '2024-01-01', 'Kode Akun': '1-1001', 'Nama Akun': 'Kas', 'Tipe': 'ASET', 'Debet': 100000000, 'Kredit': 0 },
@@ -1681,7 +2039,7 @@ window.checkFirebase = () => {
 };
 
 window.resetSemuaData = async () => {
-  if(!await showModal('⚠️ PERINGATAN', 'Semua data akan dihapus permanen!')) return;
+  if(!await showModal('️ PERINGATAN', 'Semua data akan dihapus permanen!')) return;
   storage.clearAll();
   log('Semua data dihapus', 'ok');
 };
@@ -1699,17 +2057,17 @@ window.loadDataDummy = async () => {
       await storage.add('panen', {id:genId(), tanggal:today, blokId:b1.id, blokKode:'A01', blokNama:'Blok A Utara', berat:1800, petugas:'Pak Budi'});
     }
     
-    // Create demo journals
     const kas = S.coa.find(a=>a.kode==='1-1001');
     const modal = S.coa.find(a=>a.kode==='3-3001');
     const jual = S.coa.find(a=>a.kode==='4-1001');
     const ppn = S.coa.find(a=>a.kode==='2-1003');
     const pupuk = S.coa.find(a=>a.kode==='5-5001');
     const rounding = S.coa.find(a=>a.kode==='6-6001');
+    const labaDitahan = S.coa.find(a=>a.kode==='3-3002');
     
     if(kas && modal) {
       await storage.add('jurnal', {
-        id: genId(), nomor_bukti: 'JU1-00001', tanggal: today,
+        id: genId(), nomor_bukti: 'JU1-00001', tanggal: '2024-01-05',
         keterangan: 'Setoran modal awal', pihak: 'Pemilik',
         lines: [
           {id:genId(), akun_id:kas.id, kode:kas.kode, nama:kas.nama, debet:100000000, kredit:0, ket:''},
@@ -1721,7 +2079,7 @@ window.loadDataDummy = async () => {
     
     if(kas && jual && ppn) {
       await storage.add('jurnal', {
-        id: genId(), nomor_bukti: 'JU1-00002', tanggal: today,
+        id: genId(), nomor_bukti: 'JU1-00002', tanggal: '2024-12-20',
         keterangan: 'Penjualan TBS 11 ton ke SLUM', pihak: 'SLUM',
         lines: [
           {id:genId(), akun_id:kas.id, kode:kas.kode, nama:kas.nama, debet:1000000, kredit:0, ket:''},
@@ -1734,7 +2092,7 @@ window.loadDataDummy = async () => {
     
     if(kas && pupuk && rounding) {
       await storage.add('jurnal', {
-        id: genId(), nomor_bukti: 'JU1-00003', tanggal: today,
+        id: genId(), nomor_bukti: 'JU1-00003', tanggal: '2024-12-25',
         keterangan: 'Pembelian pupuk dengan rounding', pihak: 'Toko Tani',
         lines: [
           {id:genId(), akun_id:pupuk.id, kode:pupuk.kode, nama:pupuk.nama, debet:3500001, kredit:0, ket:''},
@@ -1745,7 +2103,20 @@ window.loadDataDummy = async () => {
       });
     }
     
-    log('Data demo ditambahkan (3 jurnal multi-line)', 'ok');
+    if(jual && pupuk && labaDitahan) {
+      await storage.add('jurnal', {
+        id: genId(), nomor_bukti: 'JU2-00001', tanggal: '2023-12-31',
+        keterangan: 'Jurnal Penutup Tahun Buku 2023', pihak: '',
+        lines: [
+          {id:genId(), akun_id:jual.id, kode:jual.kode, nama:jual.nama, debet:500000, kredit:0, ket:'Nol-kan Penjualan TBS th 2023'},
+          {id:genId(), akun_id:pupuk.id, kode:pupuk.kode, nama:pupuk.nama, debet:0, kredit:200000, ket:'Nol-kan Biaya Pupuk th 2023'},
+          {id:genId(), akun_id:labaDitahan.id, kode:labaDitahan.kode, nama:labaDitahan.nama, debet:0, kredit:300000, ket:'Laba bersih th 2023'}
+        ],
+        total_debet: 500000, total_kredit: 500000, tipe: 'closing', tahun_ditutup: 2023
+      });
+    }
+    
+    log('Data demo ditambahkan (termasuk contoh jurnal penutup 2023)', 'ok');
   }, 500);
 };
 
@@ -1753,13 +2124,14 @@ window.loadDataDummy = async () => {
 // BOOT
 // ═══════════════════════════════════════════════════════════
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+document.getElementById('closingDate').value = new Date().toISOString().split('T')[0];
 populateReportYears();
 
 ['coa','jurnal','blok','panen','saldo_awal'].forEach(c => {
   storage.subscribe(c, data => {
     S[c] = data;
     if(c==='coa') renderCoa();
-    if(c==='jurnal') renderJournalList();
+    if(c==='jurnal') { renderDaftarTransaksi(); populateClosingYearSelect(); }
     if(c==='blok') renderBlok();
     if(c==='panen') renderPanen();
     if(c==='saldo_awal') updateSaldoAwalInfo();
@@ -1781,9 +2153,11 @@ async function boot(){
     for(const a of defaultCoa) await storage.add('coa', a);
   }
   resetJournalForm();
+  populateClosingYearSelect();
+  renderDaftarTransaksi();
   updateUI();
-  log('PT Prima Anugerah Makmur V1.1 siap','ok');
-  log('Mode: ' + storage.mode + ' | Multi-Line Journal aktif','info');
+  log('PT Prima Anugerah Makmur V1.3 siap','ok');
+  log('Mode: ' + storage.mode + ' | Jurnal + Daftar Transaksi aktif','info');
 }
 
 if(sessionStorage.getItem('pam_auth') === 'true') {
