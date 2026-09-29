@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PT Prima Anugerah Makmur - V1.0</title>
+<!-- SheetJS untuk Export/Import Excel -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -31,18 +33,9 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .container{max-width:1200px;margin:0 auto;padding:24px}
 
 /* LOGIN SCREEN */
-.login-overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  background:var(--bg);z-index:9999;
-  display:flex;align-items:center;justify-content:center;
-  background-image:radial-gradient(circle at 50% 50%, var(--bg3) 0%, var(--bg) 70%);
-}
+.login-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;background-image:radial-gradient(circle at 50% 50%, var(--bg3) 0%, var(--bg) 70%)}
 .login-overlay.hidden{display:none}
-.login-box{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:40px;width:100%;max-width:400px;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;
-}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center}
 .login-box h2{font-size:22px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .login-box p{color:var(--text3);font-size:14px;margin-bottom:24px}
 .login-box input{width:100%;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);font-size:14px;margin-bottom:16px;outline:none;transition:var(--transition)}
@@ -50,12 +43,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .login-error{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
 
 /* HEADER */
-.header{
-  background:linear-gradient(135deg,var(--bg3),var(--surface));
-  border:1px solid var(--border);border-radius:var(--radius);
-  padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
-  box-shadow:var(--shadow);position:relative;overflow:hidden;
-}
+.header{background:linear-gradient(135deg,var(--bg3),var(--surface));border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .header::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
 .header-left h1{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
 .header-left .ver{font-size:13px;color:var(--text3);font-weight:500;margin-top:4px}
@@ -176,7 +164,7 @@ tr:last-child td{border-bottom:none}
 
   <!-- DASHBOARD -->
   <div id="view-dashboard" class="view active">
-    <div id="noticeLocal" class="notice">⚠️ Mode Lokal — Data tersimpan di browser. Buka <strong>Settings</strong> untuk backup atau migrasi ke Firebase.</div>
+    <div id="noticeLocal" class="notice">⚠️ Mode Lokal — Data tersimpan di browser. Buka <strong>Settings</strong> untuk backup Excel atau migrasi ke Firebase.</div>
     <div class="stat-grid">
       <div class="stat-card"><div class="label">Total Aset</div><div class="value green" id="statAset">Rp 0</div></div>
       <div class="stat-card"><div class="label">Pendapatan Bulan Ini</div><div class="value cyan" id="statPendapatan">Rp 0</div></div>
@@ -333,12 +321,12 @@ tr:last-child td{border-bottom:none}
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span> Pengaturan & Data</div>
       
-      <h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">BACKUP & RESTORE</h3>
+      <h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">BACKUP & RESTORE (EXCEL)</h3>
       <div class="btn-group" style="margin-top:0;margin-bottom:24px">
-        <button class="btn amber" onclick="exportData()">📤 Export JSON</button>
-        <button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import JSON</button>
-        <button class="btn success" onclick="downloadTemplate()">📄 Download Template Import</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn success" onclick="exportToExcel()">📤 Export ke Excel</button>
+        <button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import dari Excel</button>
+        <button class="btn primary" onclick="downloadExcelTemplate()">📄 Download Template Excel</button>
+        <input type="file" id="importFile" accept=".xlsx, .xls" style="display:none" onchange="importFromExcel(event)">
       </div>
 
       <h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">MIGRASI FIREBASE</h3>
@@ -367,7 +355,7 @@ tr:last-child td{border-bottom:none}
 
 <script type="module">
 // ═══════════════════════════════════════════════════════════
-// FIREBASE CONFIG (Sesuai Permintaan)
+// FIREBASE CONFIG
 // ═══════════════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyAy3H1f3-DAR22Tox1Ex9aXvOpIre0yymY",
@@ -390,6 +378,7 @@ window.doLogin = () => {
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('mainApp').style.display = 'block';
     log('Login berhasil. Selamat datang.', 'ok');
+    boot(); // Initialize app after login
   } else {
     document.getElementById('loginError').textContent = 'Username atau Password salah!';
     document.getElementById('loginPass').value = '';
@@ -403,10 +392,10 @@ window.doLogout = async () => {
   }
 };
 
-// Check auth on load
 if (sessionStorage.getItem('pam_auth') === 'true') {
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('mainApp').style.display = 'block';
+  // boot() will be called at the end of script
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -423,16 +412,18 @@ class LocalStorageAdapter {
   async delete(c,id){this._w(c,this._r(c).filter(i=>i.id!==id));return true}
   subscribe(c,cb){if(!this.L[c])this.L[c]=[];this.L[c].push(cb);return()=>{this.L[c]=this.L[c].filter(x=>x!==cb)}}
   clearAll(){['coa','transaksi','blok','panen'].forEach(c=>{localStorage.removeItem(this._k(c));this._n(c,[])})}
-  exportAll(){const r={};['coa','transaksi','blok','panen'].forEach(c=>r[c]=this._r(c));return r}
-  importAll(d){
-    ['coa','transaksi','blok','panen'].forEach(c=>{
-      if(d[c]){
-        const items = d[c].map(item => ({
+  
+  // Excel Import Handler
+  importFromExcelData(dataObj) {
+    ['coa','transaksi','blok','panen'].forEach(c => {
+      if(dataObj[c] && Array.isArray(dataObj[c])) {
+        // Ensure every item has an ID
+        const cleanData = dataObj[c].map(item => ({
           ...item,
           id: item.id || ('imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,5))
         }));
-        localStorage.setItem(this._k(c), JSON.stringify(items));
-        this._n(c, items);
+        localStorage.setItem(this._k(c), JSON.stringify(cleanData));
+        this._n(c, cleanData);
       }
     });
   }
@@ -552,7 +543,7 @@ window.initDefaultCoa = async () => {
 };
 
 // ═══════════════════════════════════════════════════════════
-// TRANSAKSI, BLOK, PANEN (CRUD Standar)
+// TRANSAKSI, BLOK, PANEN
 // ═══════════════════════════════════════════════════════════
 function renderTransaksi(){
   const tb = document.getElementById('tbodyTransaksi'); tb.innerHTML = '';
@@ -631,7 +622,7 @@ function updateDashboard(){
 }
 
 // ═══════════════════════════════════════════════════════════
-// LAPORAN DENGAN FILTER PERIODE & YoY
+// LAPORAN
 // ═══════════════════════════════════════════════════════════
 function populateReportYears() {
   const sel = document.getElementById('reportYear');
@@ -741,16 +732,6 @@ window.applyReportFilters = () => {
       o += `  ${fmt(prevLaba).padStart(18)}  ${fmt(Math.abs(diffLaba)).padStart(14)}  ${pctLaba.padStart(8)}\n`;
     }
     o += `══════════════════════════════════════════════════════════════════════`;
-
-  } else if (currentReportType === 'neraca') {
-    // Simplified Neraca with YoY logic (similar pattern)
-    o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
-    o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
-    o += `║     NERACA (Posisi Keuangan)                                        ║\n`;
-    o += `║     Per Akhir ${periodStr}${compare ? `  vs  Akhir ${prevPeriodStr}` : ''}          ║\n`;
-    o += `╚══════════════════════════════════════════════════════════════════════╝\n\n`;
-    o += `(Fitur Neraca YoY tersedia. Silakan generate untuk melihat detail saldo akun Aset, Liabilitas, dan Ekuitas.)\n`;
-    // Untuk ringkasan kode, logika neraca YoY mengikuti pola Laba Rugi di atas.
   } else {
     o += `╔══════════════════════════════════════════════════════════════════════╗\n`;
     o += `║     PT PRIMA ANUGERAH MAKMUR                                        ║\n`;
@@ -765,83 +746,163 @@ window.applyReportFilters = () => {
       });
     }
   }
-
   document.getElementById('reportOutput').textContent = o;
   log(`Laporan ${currentReportType} untuk ${periodStr} digenerate`, 'ok');
 };
 
 // ═══════════════════════════════════════════════════════════
-// SETTINGS: EXPORT, IMPORT, TEMPLATE
+// EXCEL EXPORT / IMPORT / TEMPLATE
 // ═══════════════════════════════════════════════════════════
-window.exportData = () => {
-  if(storage.mode !== 'local') return log('Export hanya tersedia di mode lokal','warn');
-  const d = storage.exportAll();
-  const b = new Blob([JSON.stringify(d, null, 2)], {type: 'application/json'});
-  const u = URL.createObjectURL(b);
-  const a = document.createElement('a');
-  a.href = u; a.download = 'PAM-Backup-' + new Date().toISOString().split('T')[0] + '.json';
-  a.click(); URL.revokeObjectURL(u);
-  log('Data diexport ke file JSON', 'ok');
+window.exportToExcel = () => {
+  if(storage.mode !== 'local' && storage.mode !== 'firebase') return;
+  
+  // Prepare data for Excel (remove internal IDs for cleaner look, keep codes)
+  const coaData = S.coa.map(a => ({ 'Kode': a.kode, 'Nama': a.nama, 'Tipe': a.tipe }));
+  const trxData = S.transaksi.map(t => ({ 
+    'Tanggal': t.tanggal, 'Pihak': t.pihak || '', 
+    'Debet Kode': t.debetKode, 'Debet Nama': t.debetNama,
+    'Kredit Kode': t.kreditKode, 'Kredit Nama': t.kreditNama,
+    'Nominal': t.nominal, 'Keterangan': t.ket || ''
+  }));
+  const blokData = S.blok.map(b => ({ 'Kode': b.kode, 'Nama': b.nama, 'Luas': b.luas, 'Status': b.status, 'Tahun': b.tahun }));
+  const panenData = S.panen.map(p => ({ 'Tanggal': p.tanggal, 'Blok Kode': p.blokKode, 'Blok Nama': p.blokNama, 'Berat (Kg)': p.berat, 'Petugas': p.petugas || '' }));
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(coaData), "COA");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(trxData), "Transaksi");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(blokData), "Blok");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(panenData), "Panen");
+
+  XLSX.writeFile(wb, `PAM-Backup-${new Date().toISOString().split('T')[0]}.xlsx`);
+  log('Data berhasil diexport ke Excel', 'ok');
 };
 
-window.importData = async (e) => {
+window.importFromExcel = async (e) => {
   const f = e.target.files[0]; if(!f) return;
-  if(!await showModal('Import Data', 'Data saat ini akan ditimpa/digabung. Lanjutkan?')) return;
-  const r = new FileReader();
-  r.onload = (ev) => {
+  if(!await showModal('Import Data', 'Data saat ini akan ditimpa dengan data dari file Excel. Lanjutkan?')) return;
+  
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
     try {
-      const data = JSON.parse(ev.target.result);
-      storage.importAll(data);
-      log('Data berhasil diimport', 'ok');
+      const data = new Uint8Array(ev.target.result);
+      const wb = XLSX.read(data, { type: 'array', cellDates: true });
+      
+      const importedData = { coa: [], transaksi: [], blok: [], panen: [] };
+      const kodeToIdMap = {};
+      const blokKodeToIdMap = {};
+
+      // 1. Import COA & Build Map
+      if(wb.Sheets['COA']) {
+        const rawCoa = XLSX.utils.sheet_to_json(wb.Sheets['COA']);
+        for(const row of rawCoa) {
+          const id = 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
+          kodeToIdMap[row['Kode']] = id;
+          importedData.coa.push({ id, kode: row['Kode'], nama: row['Nama'], tipe: row['Tipe'] });
+        }
+      }
+
+      // 2. Import Transaksi & Resolve IDs
+      if(wb.Sheets['Transaksi']) {
+        const rawTrx = XLSX.utils.sheet_to_json(wb.Sheets['Transaksi']);
+        for(const row of rawTrx) {
+          let tgl = row['Tanggal'];
+          if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0];
+          
+          const dId = kodeToIdMap[row['Debet Kode']] || 'unknown_debet';
+          const kId = kodeToIdMap[row['Kredit Kode']] || 'unknown_kredit';
+          
+          importedData.transaksi.push({
+            id: 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,5),
+            tanggal: tgl || new Date().toISOString().split('T')[0],
+            pihak: row['Pihak'] || '',
+            debetId: dId, debetKode: row['Debet Kode'], debetNama: row['Debet Nama'],
+            kreditId: kId, kreditKode: row['Kredit Kode'], kreditNama: row['Kredit Nama'],
+            nominal: Number(row['Nominal']) || 0,
+            ket: row['Keterangan'] || ''
+          });
+        }
+      }
+
+      // 3. Import Blok & Build Map
+      if(wb.Sheets['Blok']) {
+        const rawBlok = XLSX.utils.sheet_to_json(wb.Sheets['Blok']);
+        for(const row of rawBlok) {
+          const id = 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
+          blokKodeToIdMap[row['Kode']] = id;
+          importedData.blok.push({ id, kode: row['Kode'], nama: row['Nama'], luas: Number(row['Luas'])||0, status: row['Status']||'TM', tahun: Number(row['Tahun'])||0 });
+        }
+      }
+
+      // 4. Import Panen & Resolve IDs
+      if(wb.Sheets['Panen']) {
+        const rawPanen = XLSX.utils.sheet_to_json(wb.Sheets['Panen']);
+        for(const row of rawPanen) {
+          let tgl = row['Tanggal'];
+          if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0];
+          
+          importedData.panen.push({
+            id: 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,5),
+            tanggal: tgl || new Date().toISOString().split('T')[0],
+            blokId: blokKodeToIdMap[row['Blok Kode']] || 'unknown_blok',
+            blokKode: row['Blok Kode'], blokNama: row['Blok Nama'],
+            berat: Number(row['Berat (Kg)']) || 0,
+            petugas: row['Petugas'] || ''
+          });
+        }
+      }
+
+      // Save to storage
+      if(storage.mode === 'local') {
+        storage.importFromExcelData(importedData);
+      } else {
+        // For Firebase, clear existing and add new (simplified for this demo)
+        for(const c of ['coa','transaksi','blok','panen']) {
+          const existing = await storage.getAll(c);
+          for(const item of existing) await storage.delete(c, item.id);
+          for(const item of importedData[c]) {
+            // Remove generated imp_ id so Firebase creates its own
+            const { id, ...rest } = item;
+            await storage.add(c, rest);
+          }
+        }
+      }
+      
+      log('Data berhasil diimport dari Excel', 'ok');
     } catch(err) {
-      log('Error import: Format file tidak valid', 'err');
+      console.error(err);
+      log('Error import: Format file tidak valid atau rusak', 'err');
     }
   };
-  r.readAsText(f); e.target.value = '';
+  reader.readAsArrayBuffer(f);
+  e.target.value = '';
 };
+// Alias for HTML onclick
+window.importFromExcelEvent = window.importFromExcel;
 
-window.downloadTemplate = () => {
-  // Buat 3 contoh transaksi yang valid dengan referensi ke COA default
+window.downloadExcelTemplate = () => {
   const templateData = {
-    coa: defaultCoa,
-    transaksi: [
-      {
-        tanggal: new Date().getFullYear() + '-01-05',
-        pihak: 'Pemilik',
-        debetKode: '1-1001', debetNama: 'Kas',
-        kreditKode: '3-3001', kreditNama: 'Modal Disetor',
-        nominal: 50000000,
-        ket: 'Setoran modal awal tahun berjalan'
-      },
-      {
-        tanggal: new Date().getFullYear() + '-01-10',
-        pihak: 'PT Sawit Jaya',
-        debetKode: '1-1001', debetNama: 'Kas',
-        kreditKode: '4-4001', kreditNama: 'Penjualan TBS',
-        nominal: 15000000,
-        ket: 'Penjualan TBS Januari'
-      },
-      {
-        tanggal: new Date().getFullYear() + '-01-15',
-        pihak: 'Toko Tani Makmur',
-        debetKode: '5-5001', debetNama: 'Biaya Pupuk',
-        kreditKode: '1-1001', kreditNama: 'Kas',
-        nominal: 3500000,
-        ket: 'Pembelian Pupuk NPK'
-      }
+    "COA": defaultCoa.map(a => ({ 'Kode': a.kode, 'Nama': a.nama, 'Tipe': a.tipe })),
+    "Transaksi": [
+      { 'Tanggal': '2024-01-05', 'Pihak': 'Pemilik', 'Debet Kode': '1-1001', 'Debet Nama': 'Kas', 'Kredit Kode': '3-3001', 'Kredit Nama': 'Modal Disetor', 'Nominal': 50000000, 'Keterangan': 'Setoran modal awal' },
+      { 'Tanggal': '2024-01-10', 'Pihak': 'PT Sawit Jaya', 'Debet Kode': '1-1001', 'Debet Nama': 'Kas', 'Kredit Kode': '4-4001', 'Kredit Nama': 'Penjualan TBS', 'Nominal': 15000000, 'Keterangan': 'Penjualan TBS Januari' },
+      { 'Tanggal': '2024-01-15', 'Pihak': 'Toko Tani Makmur', 'Debet Kode': '5-5001', 'Debet Nama': 'Biaya Pupuk', 'Kredit Kode': '1-1001', 'Kredit Nama': 'Kas', 'Nominal': 3500000, 'Keterangan': 'Pembelian Pupuk NPK' }
     ],
-    blok: [
-      {kode: 'A01', nama: 'Blok A Utara', luas: 10, status: 'TM', tahun: 2018}
+    "Blok": [
+      { 'Kode': 'A01', 'Nama': 'Blok A Utara', 'Luas': 10, 'Status': 'TM', 'Tahun': 2018 }
     ],
-    panen: []
+    "Panen": [
+      { 'Tanggal': '2024-01-20', 'Blok Kode': 'A01', 'Blok Nama': 'Blok A Utara', 'Berat (Kg)': 2500, 'Petugas': 'Pak Joko' }
+    ]
   };
-  
-  const b = new Blob([JSON.stringify(templateData, null, 2)], {type: 'application/json'});
-  const u = URL.createObjectURL(b);
-  const a = document.createElement('a');
-  a.href = u; a.download = 'PAM-Template-Import.json';
-  a.click(); URL.revokeObjectURL(u);
-  log('Template download berhasil', 'ok');
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(templateData["COA"]), "COA");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(templateData["Transaksi"]), "Transaksi");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(templateData["Blok"]), "Blok");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(templateData["Panen"]), "Panen");
+
+  XLSX.writeFile(wb, "PAM-Template-Import.xlsx");
+  log('Template Excel berhasil didownload', 'ok');
 };
 
 window.checkFirebase = () => {
@@ -917,7 +978,7 @@ async function boot(){
   log('Mode penyimpanan: ' + storage.mode,'info');
 }
 
-// Jalankan boot hanya jika sudah login
+// Jika sudah login saat load, jalankan boot
 if(sessionStorage.getItem('pam_auth') === 'true') {
   boot();
 }
