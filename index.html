@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>PT Prima Anugerah Makmur - V4.2</title>
+<title>PT Prima Anugerah Makmur - V4.3</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -86,7 +86,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .btn.amber{color:var(--amber);border-color:rgba(245,158,11,.3)}.btn.amber:hover{background:var(--amber-bg)}
 .btn.purple{color:var(--purple);border-color:rgba(168,85,247,.3)}.btn.purple:hover{background:var(--purple-bg)}
 .btn.sm{padding:8px 12px;font-size:12px;min-height:36px}
-.btn.icon-btn{padding:8px;min-height:36px;min-width:36px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
 
 .table-wrap{overflow-x:auto;margin-top:12px;border-radius:var(--radius-sm);border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -280,13 +280,13 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Menghubungkan ke database...</div>
+  <div class="loading-text" id="loadingText">Memproses...</div>
 </div>
 
 <div id="loginScreen" class="login-overlay">
   <div class="login-box">
     <h2>PT Prima Anugerah Makmur</h2>
-    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V4.2</p>
+    <p>Sistem Akuntansi Perkebunan Kelapa Sawit — V4.3</p>
     <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
     <input type="password" id="loginPass" placeholder="Password">
     <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
@@ -298,12 +298,12 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
   <div class="header">
     <div class="header-left">
       <h1>PT Prima Anugerah Makmur</h1>
-      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V4.2</div>
+      <div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V4.3</div>
     </div>
     <div class="header-right">
       <span class="badge firebase" id="modeBadge"><span class="dot"></span> <span id="modeText">FIREBASE</span></span>
       <span class="date-badge" id="currentDate"></span>
-      <button class="btn sm danger" onclick="doLogout()">Logout</button>
+      <button class="btn sm danger" onclick="doLogout()">🚪 Logout</button>
     </div>
   </div>
 
@@ -344,16 +344,14 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account (COA)</div>
       <div class="info-box">ℹ️ Format kode: <strong>XXX.XX.XXX</strong> (3 digit kepala.2 digit kelompok.3 digit urut). Kode tidak boleh duplikat!</div>
-      
       <div id="duplicateWarning" class="duplicate-warning">
-        <span>⚠️</span>
+        <span>️</span>
         <div style="flex:1">
           <strong>Ditemukan <span id="duplicateCount">0</span> akun duplikat!</strong>
           <span id="duplicateList" style="display:block;margin-top:4px;font-size:11px"></span>
         </div>
         <button class="btn sm danger" onclick="cleanDuplicates()">🧹 Bersihkan</button>
       </div>
-      
       <div class="form-grid">
         <div class="form-group">
           <label class="form-label">Kode Akun *</label>
@@ -369,9 +367,9 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
         </div>
       </div>
       <div class="btn-group">
-        <button class="btn primary" id="btnSaveCoa" onclick="simpanCoa()">💾 Simpan Akun</button>
-        <button class="btn" onclick="batalEditCoa()">↻ Batal</button>
-        <button class="btn danger" onclick="initDefaultCoa()">Reset Default</button>
+        <button class="btn primary" id="btnSaveCoa" onclick="simpanCoa()"> Simpan Akun</button>
+        <button class="btn" onclick="batalEditCoa()"> Batal</button>
+        <button class="btn danger" onclick="resetCoa()">🔄 Reset Default</button>
       </div>
     </div>
     <div class="card">
@@ -387,7 +385,7 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">📝</span><span id="journalFormTitle">Input Jurnal Baru</span></div>
       <div id="editModeIndicator" class="edit-mode-indicator" style="display:none">✏️ MODE EDIT: <span id="editingJournalNumber"></span><button class="btn sm danger" onclick="cancelEdit()" style="margin-left:auto">Batal</button></div>
-      <div id="assetNotification" class="warning-box" style="display:none"><span>⚠️</span><div style="flex:1"><strong>Anda memilih akun Fixed Asset!</strong> Pastikan aset sudah didaftarkan di menu Fixed Asset.<a href="#" onclick="document.querySelector('[data-view=aset]').click();return false;" style="color:var(--amber);text-decoration:underline;margin-left:6px">Buka →</a></div></div>
+      <div id="assetNotification" class="warning-box" style="display:none"><span>️</span><div style="flex:1"><strong>Anda memilih akun Fixed Asset!</strong> Pastikan aset sudah didaftarkan di menu Fixed Asset.<a href="#" onclick="document.querySelector('[data-view=aset]').click();return false;" style="color:var(--amber);text-decoration:underline;margin-left:6px">Buka →</a></div></div>
       <div class="form-grid">
         <div class="form-group"><label class="form-label">No. Jurnal</label><input type="text" class="form-input" id="jurnalNomor" readonly style="background:var(--bg);color:var(--accent2);font-weight:700"></div>
         <div class="form-group"><label class="form-label">Tanggal *</label><input type="date" class="form-input" id="jurnalTanggal"></div>
@@ -406,7 +404,7 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
           </table>
         </div>
       </div>
-      <div id="balanceIndicator" class="balance-indicator unbalanced"><span id="balanceIcon">⚠️</span><span id="balanceText">Jurnal belum balance</span><span class="diff" id="balanceDiff">Selisih: Rp 0</span></div>
+      <div id="balanceIndicator" class="balance-indicator unbalanced"><span id="balanceIcon">️</span><span id="balanceText">Jurnal belum balance</span><span class="diff" id="balanceDiff">Selisih: Rp 0</span></div>
       <div class="btn-group">
         <button class="btn primary" id="btnSaveJournal" onclick="simpanJurnal()" disabled>💾 Simpan Jurnal</button>
         <button class="btn" onclick="resetJournalForm()">↻ Reset</button>
@@ -425,11 +423,11 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
   <div id="view-aset" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--purple-bg);color:var(--purple)">🏭</span><span id="assetFormTitle">Tambah Fixed Asset</span></div>
-      <div id="editAssetIndicator" class="edit-mode-indicator" style="display:none">✏️ EDIT ASET: <span id="editingAssetName"></span><button class="btn sm danger" onclick="cancelEditAsset()" style="margin-left:auto">Batal</button></div>
+      <div id="editAssetIndicator" class="edit-mode-indicator" style="display:none">️ EDIT ASET: <span id="editingAssetName"></span><button class="btn sm danger" onclick="cancelEditAsset()" style="margin-left:auto">Batal</button></div>
       <div class="info-box">ℹ️ Pilih akun COA yang sudah ada. Atau pilih dari jurnal yang sudah tercatat.</div>
       <div class="asset-input-tabs">
         <button class="asset-input-tab active" data-method="manual" onclick="switchAssetInputMethod('manual', event)">✏️ Manual</button>
-        <button class="asset-input-tab" data-method="journal" onclick="switchAssetInputMethod('journal', event)">📄 Dari Jurnal</button>
+        <button class="asset-input-tab" data-method="journal" onclick="switchAssetInputMethod('journal', event)"> Dari Jurnal</button>
       </div>
       <div id="assetManualForm">
         <div class="form-grid">
@@ -469,7 +467,7 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
       </div>
     </div>
     <div class="asset-summary">
-      <div class="asset-summary-title"><span>Perbandingan Fixed Asset vs COA</span><span style="font-size:10px;color:var(--text3);margin-left:6px" id="summaryPeriod"></span><button class="btn sm refresh-btn" onclick="renderAssetSummary()">🔄</button></div>
+      <div class="asset-summary-title"><span>⚖️</span><span>Perbandingan Fixed Asset vs COA</span><span style="font-size:10px;color:var(--text3);margin-left:6px" id="summaryPeriod"></span><button class="btn sm refresh-btn" onclick="renderAssetSummary()">🔄</button></div>
       <div class="summary-grid" id="assetSummaryGrid"></div>
     </div>
     <div class="card">
@@ -482,7 +480,7 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--purple-bg);color:var(--purple)">🔄</span>Jurnal Penyesuaian</div>
       <div class="sub-tabs">
-        <button class="sub-tab active" data-subtab="penutup" onclick="switchSubTab('penutup', event)"> Penutup</button>
+        <button class="sub-tab active" data-subtab="penutup" onclick="switchSubTab('penutup', event)">🔒 Penutup</button>
         <button class="sub-tab" data-subtab="penyusutan" onclick="switchSubTab('penyusutan', event)">📉 Penyusutan</button>
       </div>
       <div id="subtab-penutup">
@@ -504,8 +502,8 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
           <div class="form-group"><label class="form-label">Tahun *</label><select class="form-select" id="depYear"></select></div>
         </div>
         <div class="btn-group" style="margin-top:14px">
-          <button class="btn" onclick="previewDepreciation()">👁️ Preview</button>
-          <button class="btn primary" onclick="generateDepreciation()">📉 Generate</button>
+          <button class="btn" onclick="previewDepreciation()">️ Preview</button>
+          <button class="btn primary" onclick="generateDepreciation()"> Generate</button>
         </div>
         <div id="depPreview" class="closing-preview" style="display:none"></div>
       </div>
@@ -523,7 +521,7 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
       </div>
       <div class="report-tabs">
         <button class="btn primary sm" onclick="setReportType('lr', event)">📊 Laba Rugi</button>
-        <button class="btn sm" onclick="setReportType('neraca', event)">🏦 Neraca</button>
+        <button class="btn sm" onclick="setReportType('neraca', event)"> Neraca</button>
         <button class="btn sm" onclick="setReportType('bb', event)">📖 Buku Besar</button>
         <button class="btn sm" onclick="setReportType('bbhutang', event)">📕 BB Hutang</button>
         <button class="btn sm" onclick="setReportType('bbpiutang', event)">📗 BB Piutang</button>
@@ -536,7 +534,6 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
   <div id="view-settings" class="view">
     <div class="card">
       <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span>Pengaturan & Data</div>
-      
       <div class="setting-section">
         <div class="setting-section-title">🔥 Status Koneksi Database</div>
         <div class="setting-desc">Informasi koneksi database saat ini</div>
@@ -548,10 +545,9 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
         <div class="setting-actions" style="margin-top:12px">
           <button class="btn success" onclick="checkFirebase()">🔍 Cek Koneksi</button>
           <button class="btn" onclick="forceRefreshData()">🔄 Force Refresh</button>
-          <button class="btn danger" onclick="cleanDuplicates()">Bersihkan Duplikat</button>
+          <button class="btn danger" onclick="cleanDuplicates()"> Bersihkan Duplikat</button>
         </div>
       </div>
-
       <div class="setting-section">
         <div class="setting-section-title">📊 Saldo Awal</div>
         <div class="setting-desc">Saldo awal untuk tahun buku baru. Total Debet = Total Kredit.</div>
@@ -565,18 +561,16 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
           <input type="file" id="importSaldoFile" accept=".xlsx,.xls" style="display:none" onchange="importSaldoAwal(event)">
         </div>
       </div>
-
       <div class="setting-section">
         <div class="setting-section-title">💾 Backup & Restore</div>
         <div class="setting-desc">Export/Import semua data dalam format Excel.</div>
         <div class="setting-actions">
-          <button class="btn success" onclick="exportToExcel()">Export Excel</button>
+          <button class="btn success" onclick="exportToExcel()">📤 Export Excel</button>
           <button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import Excel</button>
           <button class="btn primary" onclick="downloadExcelTemplate()">📄 Template</button>
           <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none" onchange="importFromExcel(event)">
         </div>
       </div>
-
       <div class="setting-section" style="border-color:var(--red)">
         <div class="setting-section-title" style="color:var(--red)">⚠️ Zona Bahaya</div>
         <div class="setting-desc" style="color:var(--red)">Operasi ini tidak dapat dibatalkan!</div>
@@ -588,7 +582,7 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
     </div>
   </div>
 
-  <div class="footer">PT Prima Anugerah Makmur — V4.2 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
+  <div class="footer">PT Prima Anugerah Makmur — V4.3 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
@@ -633,6 +627,7 @@ if (sessionStorage.getItem('pam_auth') === 'true') {
   document.getElementById('mainApp').style.display = 'block';
 }
 
+// ✅ FIREBASE ADAPTER DENGAN RETRY & VERIFIKASI
 class FirebaseAdapter {
   constructor(cfg){
     this.mode='firebase';
@@ -640,6 +635,7 @@ class FirebaseAdapter {
     this.db=null;
     this.sdk=null;
     this.unsubs={};
+    this.retryCount = 3;
   }
   async init(){
     try{
@@ -687,13 +683,33 @@ class FirebaseAdapter {
       return null;
     }
   }
-  async delete(c, id) {
+  async delete(c, id, retry = 0) {
     try {
+      console.log(`🗑 Deleting ${c}/${id} (attempt ${retry + 1})`);
       const docRef = this.sdk.doc(this.db, c, id);
       await this.sdk.deleteDoc(docRef);
+      
+      // Verifikasi penghapusan
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const docSnap = await this.sdk.getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        console.warn(`⚠️ Document still exists: ${c}/${id}`);
+        if (retry < this.retryCount) {
+          return this.delete(c, id, retry + 1);
+        }
+        return false;
+      }
+      
+      console.log(`✅ Successfully deleted: ${c}/${id}`);
       return true;
     } catch (e) {
       console.error(`❌ Delete error ${c}/${id}:`, e);
+      if (retry < this.retryCount) {
+        console.log(`🔄 Retrying delete ${c}/${id}...`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return this.delete(c, id, retry + 1);
+      }
       return false;
     }
   }
@@ -744,6 +760,7 @@ class FirebaseAdapter {
         this.sdk.collection(this.db, c),
         (snapshot) => {
           const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          console.log(` Snapshot ${c}: ${data.length} docs`);
           cb(data);
         },
         (error) => {
@@ -778,6 +795,7 @@ async function initFirebase(){
     storage = new FirebaseAdapter(firebaseConfig);
     const ok = await storage.init();
     if(!ok) throw new Error('Gagal inisialisasi Firebase');
+    console.log('✅ Firebase connected');
     firebaseReady = true;
     if(errorBanner) errorBanner.classList.remove('show');
     return true;
@@ -808,6 +826,20 @@ const fmtTime = () => new Date().toLocaleTimeString('id-ID', {hour:'2-digit', mi
 const genId = () => 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 7);
 const formatNominal = (val) => { if (!val) return ''; const num = String(val).replace(/[^0-9]/g, ''); if (!num) return ''; return parseInt(num).toLocaleString('id-ID'); };
 const parseNominal = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9]/g, '')) || 0; };
+
+function showLoading(text = 'Memproses...') {
+  const loading = document.getElementById('loadingOverlay');
+  const loadingText = document.getElementById('loadingText');
+  if (loading) {
+    if (loadingText) loadingText.textContent = text;
+    loading.classList.add('show');
+  }
+}
+
+function hideLoading() {
+  const loading = document.getElementById('loadingOverlay');
+  if (loading) loading.classList.remove('show');
+}
 
 function log(msg, type='info'){
   const el = document.getElementById('activityLog'); if(!el) return;
@@ -936,7 +968,7 @@ function validateCoaKode() {
   
   const duplicate = S.coa.find(c => c.kode.toUpperCase() === kode && c.id !== editingCoaId);
   if (duplicate) {
-    errorEl.textContent = `❌ Kode "${kode}" sudah digunakan oleh "${duplicate.nama}"`;
+    errorEl.textContent = ` Kode "${kode}" sudah digunakan oleh "${duplicate.nama}"`;
     inputEl.classList.add('error');
   } else {
     errorEl.textContent = '✅ Kode valid';
@@ -987,48 +1019,69 @@ window.cleanDuplicates = async function() {
   
   const idsToDelete = [];
   for (const { duplicate } of duplicates) {
-    const usedByAsset = S.aset.find(a => 
-      a.akun_aset_id === duplicate.id || 
-      a.akun_akumulasi_id === duplicate.id || 
+    const usedByAsset = S.aset.find(a =>
+      a.akun_aset_id === duplicate.id ||
+      a.akun_akumulasi_id === duplicate.id ||
       a.akun_biaya_id === duplicate.id
     );
     if (!usedByAsset) {
       idsToDelete.push(duplicate.id);
     }
   }
-
+  
   if (idsToDelete.length === 0) {
     showToast('Semua duplikat sedang digunakan oleh Fixed Asset', 'warn');
     return;
   }
-
+  
   const confirm = await showModal(
     'Bersihkan Duplikat',
-    `Ditemukan ${idsToDelete.length} akun duplikat yang dapat dihapus secara aman.\n\n⚠️ Akun pertama akan DIPERTAHANKAN dan duplikat akan DIHAPUS PERMANEN.\n\nLanjutkan?`
+    `Ditemukan ${idsToDelete.length} akun duplikat yang dapat dihapus secara aman.
+⚠️ Akun yang PERTAMA ditemukan akan DIPERTAHANKAN.
+⚠️ Akun yang DUPLIKAT akan DIHAPUS PERMANEN.
+
+Lanjutkan?`
   );
   
-  if (!confirm) return;
+  if (!confirm) {
+    log('Pembersihan duplikat dibatalkan', 'warn');
+    return;
+  }
   
-  showToast(`Menghapus ${idsToDelete.length} duplikat...`, 'info');
-  const ok = await storage.deleteBatch('coa', idsToDelete);
+  showLoading(`Menghapus ${idsToDelete.length} duplikat...`);
   
-  if (ok) {
-    S.coa = S.coa.filter(item => !idsToDelete.includes(item.id));
-    renderCoa();
-    populateAssetAccountDropdowns();
-    updateDashboard();
-    showToast(`✅ ${idsToDelete.length} duplikat berhasil dihapus`, 'success');
-    log(`${idsToDelete.length} duplikat COA dihapus`, 'ok');
-  } else {
-    showToast('Gagal menghapus beberapa duplikat', 'error');
+  try {
+    const ok = await storage.deleteBatch('coa', idsToDelete);
+    
+    if (ok) {
+      // Subscriber akan otomatis update S.coa dan re-render
+      showToast(`✅ ${idsToDelete.length} duplikat berhasil dihapus`, 'success');
+      log(`${idsToDelete.length} duplikat COA dihapus`, 'ok');
+    } else {
+      showToast('Gagal menghapus beberapa duplikat', 'error');
+      log('Gagal menghapus duplikat', 'err');
+    }
+  } catch (err) {
+    console.error('Error cleanDuplicates:', err);
+    showToast('Error: ' + err.message, 'error');
+    log('Error cleanDuplicates: ' + err.message, 'err');
+  } finally {
+    hideLoading();
   }
 };
 
 async function refreshData() {
   try {
+    console.log(' Memuat ulang data dari Firebase...');
+    showLoading('Memuat ulang data...');
+    
     const collections = ['coa', 'jurnal', 'aset', 'saldo_awal'];
     const results = await Promise.all(collections.map(c => storage.getAll(c)));
-    collections.forEach((c, i) => { S[c] = results[i]; });
+    
+    collections.forEach((c, i) => { 
+      S[c] = results[i];
+      console.log(`📦 ${c}: ${results[i].length} records`);
+    });
     
     renderCoa();
     renderDaftarTransaksi();
@@ -1037,12 +1090,16 @@ async function refreshData() {
     updateDashboard();
     updateUI();
     showDuplicateWarning();
+    
+    log('Data berhasil di-refresh', 'ok');
     return true;
   } catch (err) {
     console.error('❌ Error refresh:', err);
     log('Error refresh: ' + err.message, 'err');
     showToast('Gagal refresh data: ' + err.message, 'error');
     return false;
+  } finally {
+    hideLoading();
   }
 }
 
@@ -1066,7 +1123,7 @@ function renderCoa(){
     const isDuplicate = kodeCount.get(a.kode.toUpperCase()) > 1;
     const isUsedByAsset = S.aset.some(ast => ast.akun_aset_id === a.id || ast.akun_akumulasi_id === a.id || ast.akun_biaya_id === a.id);
     const deleteBtn = isUsedByAsset 
-      ? `<button class="btn sm" disabled title="Digunakan oleh aset" style="opacity:0.4;cursor:not-allowed;font-size:10px">🔒</button>`
+      ? `<button class="btn sm" disabled title="Digunakan oleh aset" style="opacity:0.4;cursor:not-allowed;font-size:10px"></button>`
       : `<button class="btn danger sm" onclick="hapusCoa('${a.id}')" title="Hapus" style="font-size:11px">Hapus</button>`;
     const rowClass = isDuplicate ? 'duplicate' : '';
     tb.innerHTML += `<tr class="${rowClass}"><td><strong>${a.kode}</strong>${isDuplicate ? ' ⚠️' : ''}</td><td>${a.nama}</td><td><span class="badge firebase" style="font-size:10px">${a.tipe}</span></td>
@@ -1124,70 +1181,117 @@ window.simpanCoa = async () => {
   errorEl.textContent = '';
   inputEl.classList.remove('error');
   
-  if (editingCoaId) {
-    const newCoa = { id: editingCoaId, kode, nama, tipe };
-    await storage.update('coa', editingCoaId, newCoa);
-    const idx = S.coa.findIndex(c => c.id === editingCoaId);
-    if (idx !== -1) S.coa[idx] = newCoa;
-    editingCoaId = null;
-    document.getElementById('btnSaveCoa').textContent = '💾 Simpan Akun';
-    log(`Akun ${kode} diupdate`, 'ok');
-    showToast(`Akun ${kode} berhasil diupdate`, 'success');
-  } else {
-    const newId = genId();
-    const newCoa = { id: newId, kode, nama, tipe };
-    await storage.add('coa', newCoa);
-    S.coa.push(newCoa);
-    log('Akun '+kode+' ditambahkan','ok');
-    showToast(`Akun ${kode} berhasil ditambahkan`, 'success');
+  showLoading('Menyimpan akun...');
+  
+  try {
+    if (editingCoaId) {
+      const newCoa = { id: editingCoaId, kode, nama, tipe };
+      await storage.update('coa', editingCoaId, newCoa);
+      
+      // Update referensi di jurnal
+      for (const jurnal of S.jurnal) {
+        let needsUpdate = false;
+        const newLines = jurnal.lines.map(line => {
+          if (line.akun_id === editingCoaId) { needsUpdate = true; return { ...line, kode: newCoa.kode, nama: newCoa.nama }; }
+          return line;
+        });
+        if (needsUpdate) await storage.update('jurnal', jurnal.id, { ...jurnal, lines: newLines });
+      }
+      
+      // Update referensi di aset
+      for (const aset of S.aset) {
+        let needsUpdate = false; const updatedAset = {...aset};
+        if (aset.akun_aset_id === editingCoaId) { updatedAset.akun_aset_kode = kode; updatedAset.akun_aset_nama = nama; needsUpdate = true; }
+        if (aset.akun_akumulasi_id === editingCoaId) { updatedAset.akun_akumulasi_kode = kode; updatedAset.akun_akumulasi_nama = nama; needsUpdate = true; }
+        if (aset.akun_biaya_id === editingCoaId) { updatedAset.akun_biaya_kode = kode; updatedAset.akun_biaya_nama = nama; needsUpdate = true; }
+        if (needsUpdate) await storage.update('aset', aset.id, updatedAset);
+      }
+      
+      editingCoaId = null;
+      document.getElementById('btnSaveCoa').textContent = '💾 Simpan Akun';
+      log(`Akun ${kode} diupdate`, 'ok');
+      showToast(`Akun ${kode} berhasil diupdate`, 'success');
+    } else {
+      await storage.add('coa', {id:genId(), kode, nama, tipe});
+      log('Akun '+kode+' ditambahkan','ok');
+      showToast(`Akun ${kode} berhasil ditambahkan`, 'success');
+    }
+    
+    document.getElementById('coaKode').value = '';
+    document.getElementById('coaNama').value = '';
+    document.getElementById('coaTipe').value = 'ASET';
+  } catch (err) {
+    console.error('Error simpanCoa:', err);
+    showToast('Gagal menyimpan: ' + err.message, 'error');
+    log('Error simpanCoa: ' + err.message, 'err');
+  } finally {
+    hideLoading();
   }
-
-  renderCoa();
-  populateAssetAccountDropdowns();
-
-  document.getElementById('coaKode').value = '';
-  document.getElementById('coaNama').value = '';
-  document.getElementById('coaTipe').value = 'ASET';
 };
 
-// FUNGSI HAPUS COA YANG DISINKRONISASI SECARA INSTAN KE TAMPILAN
 window.hapusCoa = async function(id) {
   const coa = S.coa.find(c => c.id === id);
-  if (!coa) return;
+  if (!coa) { log('Akun tidak ditemukan', 'err'); showToast('Akun tidak ditemukan', 'error'); return; }
   
   const usedByAsset = S.aset.find(a => a.akun_aset_id === id || a.akun_akumulasi_id === id || a.akun_biaya_id === id);
   if (usedByAsset) {
-    await showModal('Tidak Bisa Dihapus', `Akun "${coa.kode} - ${coa.nama}" digunakan oleh aset "${usedByAsset.nama}".`);
+    await showModal('Tidak Bisa Dihapus', `Akun "${coa.kode} - ${coa.nama}" digunakan oleh aset "${usedByAsset.nama}".\n\nHapus aset terlebih dahulu.`);
     return;
   }
   
-  if(!await showModal('Hapus Akun', `Yakin hapus akun "${coa.kode} - ${coa.nama}"?`)) return;
+  const usedInJournal = S.jurnal.some(j => j.lines.some(l => l.akun_id === id));
+  let warningMsg = `Yakin hapus akun "${coa.kode} - ${coa.nama}"?\n\n`;
+  if (usedInJournal) warningMsg += `⚠️ Akun ini digunakan dalam beberapa jurnal.\n\n`;
+  warningMsg += 'Data tidak dapat dikembalikan.';
   
-  const success = await storage.delete('coa', id);
-  if (success) {
-    S.coa = S.coa.filter(item => item.id !== id);
-    renderCoa();
-    populateAssetAccountDropdowns();
-    updateDashboard();
+  if(!await showModal('Hapus Akun', warningMsg)) return;
+  
+  showLoading('Menghapus akun...');
+  
+  try {
+    console.log('Attempting to delete:', coa.kode, id);
+    const success = await storage.delete('coa', id);
     
-    log(`Akun ${coa.kode} dihapus`, 'ok');
+    if (!success) {
+      log('Gagal menghapus akun: ' + coa.kode, 'err');
+      showToast('Gagal menghapus akun. Coba lagi.', 'error');
+      return;
+    }
+    
+    log(`Akun ${coa.kode} - ${coa.nama} dihapus`, 'ok');
     showToast(`Akun ${coa.kode} berhasil dihapus`, 'success');
-  } else {
-    showToast('Gagal menghapus akun', 'error');
+  } catch (err) {
+    console.error('Error hapusCoa:', err);
+    showToast('Gagal menghapus: ' + err.message, 'error');
+    log('Error hapusCoa: ' + err.message, 'err');
+  } finally {
+    hideLoading();
   }
 };
 
-window.initDefaultCoa = async () => {
+window.resetCoa = async () => {
   if(!await showModal('Reset COA','Hapus semua akun & gunakan standar default?')) return;
-  const existing = await storage.getAll('coa');
-  await storage.deleteBatch('coa', existing.map(x => x.id));
-  await storage.addBatch('coa', defaultCoa);
-  S.coa = [...defaultCoa];
-  renderCoa();
-  populateAssetAccountDropdowns();
-  log('COA direset ke default','ok');
-  showToast('COA direset ke default', 'success');
+  
+  showLoading('Mereset COA...');
+  
+  try {
+    const existing = await storage.getAll('coa');
+    await storage.deleteBatch('coa', existing.map(x => x.id));
+    await storage.addBatch('coa', defaultCoa);
+    
+    log('COA direset ke default','ok');
+    showToast('COA direset ke default', 'success');
+  } catch (err) {
+    console.error('Error resetCoa:', err);
+    showToast('Gagal reset COA: ' + err.message, 'error');
+    log('Error resetCoa: ' + err.message, 'err');
+  } finally {
+    hideLoading();
+  }
 };
+
+// Hapus fungsi initDefaultCoa yang duplikat
+// window.initDefaultCoa sudah dihapus, gunakan resetCoa saja
 
 function getNextJournalNumber(tipe) {
   const prefix = tipe === 'closing' ? 'JU2-' : tipe === 'depreciation' ? 'JU3-' : 'JU1-';
@@ -1237,7 +1341,7 @@ function renderJournalLines() {
       <td><select class="form-select" onchange="updateLineDK(${idx}, this.value)" style="font-weight:700"><option value="D" ${line.dk === 'D' ? 'selected' : ''}>D</option><option value="K" ${line.dk === 'K' ? 'selected' : ''}>K</option></select></td>
       <td><input type="text" class="form-input" value="${nominalFormatted}" placeholder="0" oninput="formatNominalInput(this)" onblur="updateLineNominal(${idx}, this.value, this)" style="text-align:right"></td>
       <td><input type="text" class="form-input" value="${line.ket || ''}" placeholder="Ket." onchange="updateLineValue(${idx}, 'ket', this.value)"></td>
-      <td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris">🗑</button></td>
+      <td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris"></button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -1291,10 +1395,10 @@ function updateBalanceIndicator() {
   const diffEl = document.getElementById('balanceDiff');
   const btnSave = document.getElementById('btnSaveJournal');
   if (!hasValidLines) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Minimal 2 baris'; diffEl.textContent = ''; btnSave.disabled = true; }
-  else if (!allLinesHaveAccount) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Pilih akun semua baris'; diffEl.textContent = ''; btnSave.disabled = true; }
+  else if (!allLinesHaveAccount) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '️'; text.textContent = 'Pilih akun semua baris'; diffEl.textContent = ''; btnSave.disabled = true; }
   else if (!allLinesHaveNominal) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Isi nominal > 0'; diffEl.textContent = ''; btnSave.disabled = true; }
   else if (isBalanced) { indicator.className = 'balance-indicator balanced'; icon.textContent = '✅'; text.textContent = 'BALANCE'; diffEl.textContent = `D: ${fmt(totalDebet)} = K: ${fmt(totalKredit)}`; btnSave.disabled = false; }
-  else { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'TIDAK BALANCE'; diffEl.textContent = `Selisih: ${fmt(diff)}`; btnSave.disabled = true; }
+  else { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '❌'; text.textContent = 'TIDAK BALANCE'; diffEl.textContent = `Selisih: ${fmt(diff)}`; btnSave.disabled = true; }
 }
 
 window.simpanJurnal = async () => {
@@ -1321,24 +1425,29 @@ window.simpanJurnal = async () => {
   isSaving = true;
   const btnSave = document.getElementById('btnSaveJournal');
   if (btnSave) { btnSave.disabled = true; btnSave.textContent = '⏳...'; }
+  
+  showLoading('Menyimpan jurnal...');
+  
   try {
     if (editingJournalId) {
+      const existing = S.jurnal.find(j => j.id === editingJournalId);
+      if (!existing) { showToast('Jurnal sudah dihapus', 'error'); resetJournalForm(); return; }
       await storage.update('jurnal', editingJournalId, journalData);
-      const idx = S.jurnal.findIndex(j => j.id === editingJournalId);
-      if (idx !== -1) S.jurnal[idx] = journalData;
       editingJournalId = null;
       showToast(`Jurnal ${nomorBukti} diupdate!`, 'success');
       log(`Update ${nomorBukti}`, 'ok');
     } else {
       await storage.add('jurnal', journalData);
-      S.jurnal.push(journalData);
       showToast(`Jurnal ${nomorBukti} disimpan!`, 'success');
       log(`Simpan ${nomorBukti}`, 'ok');
     }
-    renderDaftarTransaksi();
     resetJournalForm();
   } catch (e) { log('Error: ' + e.message, 'err'); showToast('Gagal: ' + e.message, 'error'); }
-  finally { isSaving = false; if (btnSave) { btnSave.disabled = false; btnSave.textContent = '💾 Simpan Jurnal'; } }
+  finally { 
+    isSaving = false; 
+    if (btnSave) { btnSave.disabled = false; btnSave.textContent = '💾 Simpan Jurnal'; }
+    hideLoading();
+  }
 };
 
 window.resetJournalForm = function() {
@@ -1386,18 +1495,37 @@ window.cancelEdit = function() {
 window.hapusJurnal = async function(id) {
   const jurnal = S.jurnal.find(j => j.id === id); if (!jurnal) return;
   if (!await showModal('Hapus Jurnal', `Yakin hapus ${jurnal.nomor_bukti}?\n"${jurnal.keterangan}"\nData tidak bisa dikembalikan.`)) return;
-
-  const ok = await storage.delete('jurnal', id);
-  if (ok) {
-    S.jurnal = S.jurnal.filter(j => j.id !== id);
-    renderDaftarTransaksi();
-    log(`Jurnal ${jurnal.nomor_bukti} dihapus`, 'ok');
-    showToast(`Jurnal ${jurnal.nomor_bukti} berhasil dihapus`, 'success');
-  } else {
-    showToast('Gagal menghapus jurnal', 'error');
-  }
   
-  if (editingJournalId === id) resetJournalForm();
+  showLoading('Menghapus jurnal...');
+  
+  try {
+    const relatedAssets = [];
+    for (const aset of S.aset) {
+      const hasRelated = jurnal.lines.some(line => line.akun_id === aset.akun_aset_id || line.akun_id === aset.akun_akumulasi_id || line.akun_id === aset.akun_biaya_id);
+      if (hasRelated) relatedAssets.push(aset);
+    }
+    
+    await storage.delete('jurnal', id);
+    log('Jurnal dihapus', 'ok');
+    
+    if (relatedAssets.length > 0) {
+      showToast(`${relatedAssets.length} aset terkait dihapus`, 'warn');
+      for (const aset of relatedAssets) {
+        await storage.delete('coa', aset.akun_aset_id);
+        await storage.delete('coa', aset.akun_akumulasi_id);
+        await storage.delete('coa', aset.akun_biaya_id);
+        await storage.delete('aset', aset.id);
+      }
+    }
+    
+    if (editingJournalId === id) { showToast('Jurnal diedit dihapus', 'warn'); resetJournalForm(); }
+  } catch (err) {
+    console.error('Error hapusJurnal:', err);
+    showToast('Gagal menghapus: ' + err.message, 'error');
+    log('Error hapusJurnal: ' + err.message, 'err');
+  } finally {
+    hideLoading();
+  }
 };
 
 window.toggleJournalLines = function(id) { const el = document.getElementById('lines-' + id); if (el) el.classList.toggle('show'); };
@@ -1426,7 +1554,7 @@ window.renderDaftarTransaksi = function() {
     const numberClass = isClosing ? 'journal-number closing' : isDepreciation ? 'journal-number depreciation' : 'journal-number';
     const prefixIcon = isClosing ? '🔒' : isDepreciation ? '📉' : '📄';
     const editBtn = (isClosing || isDepreciation) ? '' : `<button class="btn sm" onclick="editJurnal('${j.id}')">✏️</button>`;
-    card.innerHTML = `<div class="journal-header" onclick="toggleJournalLines('${j.id}')"><span class="${numberClass}">${prefixIcon} ${j.nomor_bukti}</span><span class="journal-date">📅 ${fmtDate(j.tanggal)}</span><span class="journal-desc">${j.keterangan}</span><span class="journal-meta">${j.pihak ? '👤 ' + j.pihak + ' | ' : ''}${j.lines.length} baris | ${fmt(j.total_debet)}</span><div class="journal-actions" onclick="event.stopPropagation()">${editBtn}<button class="btn sm danger" onclick="hapusJurnal('${j.id}')">🗑</button></div></div><div class="journal-lines" id="lines-${j.id}"><table><thead><tr><th>#</th><th>Akun</th><th>D/K</th><th>Nominal</th><th>Ket</th></tr></thead><tbody>${linesHtml}<tr class="journal-total-row"><td colspan="3" style="text-align:right">TOTAL</td><td class="amount">${fmt(j.total_debet)}</td><td></td></tr></tbody></table></div>`;
+    card.innerHTML = `<div class="journal-header" onclick="toggleJournalLines('${j.id}')"><span class="${numberClass}">${prefixIcon} ${j.nomor_bukti}</span><span class="journal-date"> ${fmtDate(j.tanggal)}</span><span class="journal-desc">${j.keterangan}</span><span class="journal-meta">${j.pihak ? '👤 ' + j.pihak + ' | ' : ''}${j.lines.length} baris | ${fmt(j.total_debet)}</span><div class="journal-actions" onclick="event.stopPropagation()">${editBtn}<button class="btn sm danger" onclick="hapusJurnal('${j.id}')">🗑</button></div></div><div class="journal-lines" id="lines-${j.id}"><table><thead><tr><th>#</th><th>Akun</th><th>D/K</th><th>Nominal</th><th>Ket</th></tr></thead><tbody>${linesHtml}<tr class="journal-total-row"><td colspan="3" style="text-align:right">TOTAL</td><td class="amount">${fmt(j.total_debet)}</td><td></td></tr></tbody></table></div>`;
     container.appendChild(card);
   });
 };
@@ -1510,19 +1638,27 @@ window.simpanAset = async () => {
     akunBiayaId = c.value; akunBiayaKode = c.dataset.kode; akunBiayaNama = c.dataset.nama;
   }
   if (!nama) return log('Nama wajib', 'err'); if (cost <= 0) return log('Harga > 0', 'err'); if (!year || year < 1900) return log('Tahun tidak valid', 'err'); if (life === undefined || life === null || isNaN(life) || life < 0) return log('Masa manfaat >= 0', 'err');
-  if (editingAssetId) {
-    const existing = S.aset.find(a => a.id === editingAssetId); if (!existing) { showToast('Aset tidak ditemukan', 'error'); return; }
-    const updated = { ...existing, nama, group, cost, year, month, area, life, residual, akun_aset_id: akunAsetId, akun_aset_kode: akunAsetKode, akun_aset_nama: akunAsetNama, akun_akumulasi_id: akunAkumulasiId, akun_akumulasi_kode: akunAkumulasiKode, akun_akumulasi_nama: akunAkumulasiNama, akun_biaya_id: akunBiayaId, akun_biaya_kode: akunBiayaKode, akun_biaya_nama: akunBiayaNama };
-    await storage.update('aset', editingAssetId, updated);
-    const idx = S.aset.findIndex(a => a.id === editingAssetId);
-    if (idx !== -1) S.aset[idx] = updated;
-    showToast(`Aset ${nama} diupdate`, 'success'); log(`Aset ${nama} diupdate`, 'ok'); cancelEditAsset(); renderAssets(); renderAssetSummary(); return;
+  
+  showLoading('Menyimpan aset...');
+  
+  try {
+    if (editingAssetId) {
+      const existing = S.aset.find(a => a.id === editingAssetId); if (!existing) { showToast('Aset tidak ditemukan', 'error'); return; }
+      const updated = { ...existing, nama, group, cost, year, month, area, life, residual, akun_aset_id: akunAsetId, akun_aset_kode: akunAsetKode, akun_aset_nama: akunAsetNama, akun_akumulasi_id: akunAkumulasiId, akun_akumulasi_kode: akunAkumulasiKode, akun_akumulasi_nama: akunAkumulasiNama, akun_biaya_id: akunBiayaId, akun_biaya_kode: akunBiayaKode, akun_biaya_nama: akunBiayaNama };
+      await storage.update('aset', editingAssetId, updated);
+      showToast(`Aset ${nama} diupdate`, 'success'); log(`Aset ${nama} diupdate`, 'ok'); cancelEditAsset();
+    } else {
+      const asset = { id: genId(), nama, group, cost, year, month, area, life, residual, akun_aset_id: akunAsetId, akun_aset_kode: akunAsetKode, akun_aset_nama: akunAsetNama, akun_akumulasi_id: akunAkumulasiId, akun_akumulasi_kode: akunAkumulasiKode, akun_akumulasi_nama: akunAkumulasiNama, akun_biaya_id: akunBiayaId, akun_biaya_kode: akunBiayaKode, akun_biaya_nama: akunBiayaNama, status: 'aktif', created_at: new Date().toISOString(), input_method: assetInputMethod };
+      await storage.add('aset', asset);
+      showToast(`Aset ${nama} ditambahkan`, 'success'); log(`Aset ${nama} (${akunAsetKode}) ditambahkan`, 'ok'); resetAssetForm();
+    }
+  } catch (err) {
+    console.error('Error simpanAset:', err);
+    showToast('Gagal menyimpan: ' + err.message, 'error');
+    log('Error simpanAset: ' + err.message, 'err');
+  } finally {
+    hideLoading();
   }
-  const asset = { id: genId(), nama, group, cost, year, month, area, life, residual, akun_aset_id: akunAsetId, akun_aset_kode: akunAsetKode, akun_aset_nama: akunAsetNama, akun_akumulasi_id: akunAkumulasiId, akun_akumulasi_kode: akunAkumulasiKode, akun_akumulasi_nama: akunAkumulasiNama, akun_biaya_id: akunBiayaId, akun_biaya_kode: akunBiayaKode, akun_biaya_nama: akunBiayaNama, status: 'aktif', created_at: new Date().toISOString(), input_method: assetInputMethod };
-  await storage.add('aset', asset);
-  S.aset.push(asset);
-  renderAssets(); renderAssetSummary();
-  showToast(`Aset ${nama} ditambahkan`, 'success'); log(`Aset ${nama} (${akunAsetKode}) ditambahkan`, 'ok'); resetAssetForm();
 };
 
 window.resetAssetForm = function() {
@@ -1560,13 +1696,20 @@ window.editAsset = function(id) {
 
 window.hapusAset = async function(id) {
   const aset = S.aset.find(a => a.id === id); if (!aset) return;
-  if (!await showModal('Hapus Aset', `Yakin hapus "${aset.nama}"?\n⚠️ Akun COA TIDAK dihapus otomatis.`)) return;
-  const ok = await storage.delete('aset', id);
-  if (ok) {
-    S.aset = S.aset.filter(a => a.id !== id);
-    renderAssets(); renderAssetSummary();
+  if (!await showModal('Hapus Aset', `Yakin hapus "${aset.nama}"?\n️ Akun COA TIDAK dihapus otomatis.`)) return;
+  
+  showLoading('Menghapus aset...');
+  
+  try {
+    await storage.delete('aset', id);
     log(`Aset ${aset.nama} dihapus`, 'ok');
     showToast(`Aset ${aset.nama} dihapus`, 'success');
+  } catch (err) {
+    console.error('Error hapusAset:', err);
+    showToast('Gagal menghapus: ' + err.message, 'error');
+    log('Error hapusAset: ' + err.message, 'err');
+  } finally {
+    hideLoading();
   }
 };
 
@@ -1629,7 +1772,7 @@ function renderAssetSummary() {
   let groupDetails = '';
   const allGroups = new Set([...Object.keys(summary.master.byGroup), ...Object.keys(summary.coa.byGroup)]);
   if (allGroups.size > 0) {
-    groupDetails = '<div class="summary-divider"></div><div class="summary-item-title" style="margin-top:6px"> Detail Per Grup</div>';
+    groupDetails = '<div class="summary-divider"></div><div class="summary-item-title" style="margin-top:6px">📊 Detail Per Grup</div>';
     Array.from(allGroups).sort().forEach(group => {
       const m = summary.master.byGroup[group] || { cost: 0, accumulated: 0, count: 0 };
       const c = summary.coa.byGroup[group] || { cost: 0, accumulated: 0 };
@@ -1651,7 +1794,7 @@ function renderAssets() {
     grouped[group].forEach(aset => {
       const dep = calculateDepreciation(aset, new Date().getFullYear(), new Date().getMonth() + 1);
       const card = document.createElement('div'); card.className = 'asset-card';
-      card.innerHTML = `<div class="asset-header"><div><div class="asset-name">${aset.nama}</div><div class="asset-code">${aset.akun_aset_kode} • ${aset.akun_aset_nama}</div></div><span class="badge firebase" style="font-size:10px">${aset.status.toUpperCase()}</span></div><div class="asset-details"><div><div class="label">Perolehan</div><div class="value">${fmt(aset.cost)}</div></div><div><div class="label">Tahun/Bulan</div><div class="value">${aset.year}/${aset.month}</div></div><div><div class="label">Masa Manfaat</div><div class="value">${aset.life === 0 ? '∞ (Tanah)' : aset.life + ' th'}</div></div><div><div class="label">Luas/Unit</div><div class="value">${aset.area || '-'}</div></div><div><div class="label">Peny. Bulanan</div><div class="value">${fmt(dep.monthlyDep)}</div></div><div><div class="label">Akm Penyusutan</div><div class="value">${fmt(dep.accumulatedDep)}</div></div><div><div class="label">Nilai Buku</div><div class="value">${fmt(dep.bookValue)}</div></div><div><div class="label">Akun Akm</div><div class="value" style="font-size:10px">${aset.akun_akumulasi_kode}</div></div></div><div class="asset-actions"><button class="btn sm" onclick="editAsset('${aset.id}')">✏️ Edit</button><button class="btn sm danger" onclick="hapusAset('${aset.id}')">Hapus</button></div>`;
+      card.innerHTML = `<div class="asset-header"><div><div class="asset-name">${aset.nama}</div><div class="asset-code">${aset.akun_aset_kode} • ${aset.akun_aset_nama}</div></div><span class="badge firebase" style="font-size:10px">${aset.status.toUpperCase()}</span></div><div class="asset-details"><div><div class="label">Perolehan</div><div class="value">${fmt(aset.cost)}</div></div><div><div class="label">Tahun/Bulan</div><div class="value">${aset.year}/${aset.month}</div></div><div><div class="label">Masa Manfaat</div><div class="value">${aset.life === 0 ? '∞ (Tanah)' : aset.life + ' th'}</div></div><div><div class="label">Luas/Unit</div><div class="value">${aset.area || '-'}</div></div><div><div class="label">Peny. Bulanan</div><div class="value">${fmt(dep.monthlyDep)}</div></div><div><div class="label">Akm Penyusutan</div><div class="value">${fmt(dep.accumulatedDep)}</div></div><div><div class="label">Nilai Buku</div><div class="value">${fmt(dep.bookValue)}</div></div><div><div class="label">Akun Akm</div><div class="value" style="font-size:10px">${aset.akun_akumulasi_kode}</div></div></div><div class="asset-actions"><button class="btn sm" onclick="editAsset('${aset.id}')">✏️ Edit</button><button class="btn sm danger" onclick="hapusAset('${aset.id}')"> Hapus</button></div>`;
       container.appendChild(card);
     });
   });
@@ -1700,8 +1843,8 @@ window.previewClosingJournal = function() {
   const { pendapatanTotals, biayaTotals, totalPendapatan, totalBiaya, labaRugi } = calculateYearEndBalances(year);
   const previewEl = document.getElementById('closingPreview'); if (previewEl) previewEl.style.display = 'block';
   let preview = `PREVIEW JURNAL PENUTUP TAHUN ${year}\nTanggal: ${fmtDate(closingDate)}\n\n`;
-  if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) { preview += `⚠️ Tidak ada Pendapatan/Biaya di tahun ${year}.`; if (previewEl) previewEl.textContent = preview; return; }
-  if (S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(year)))) preview += `⚠️ Sudah ada jurnal penutup untuk ${year}!\n\n`;
+  if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) { preview += `️ Tidak ada Pendapatan/Biaya di tahun ${year}.`; if (previewEl) previewEl.textContent = preview; return; }
+  if (S.jurnal.some(j => j.tipe === 'closing' && j.tanggal.startsWith(String(year)))) preview += `️ Sudah ada jurnal penutup untuk ${year}!\n\n`;
   preview += `TOTAL PENDAPATAN: ${fmt(totalPendapatan)}\nTOTAL BIAYA: ${fmt(totalBiaya)}\n`;
   preview += labaRugi >= 0 ? `LABA: ${fmt(labaRugi)} → Laba Ditahan (K)\n` : `RUGI: ${fmt(Math.abs(labaRugi))} → Laba Ditahan (D)\n`;
   preview += `\nSTRUKTUR:\n`;
@@ -1729,13 +1872,16 @@ window.generateClosingJournal = async function() {
   if (Math.abs(totalD - totalK) > 0.01) { log('Tidak balance!', 'err'); return; }
   const nomorBukti = getNextJournalNumber('closing');
   if (!await showModal('Konfirmasi', `Tahun: ${year}\nNo: ${nomorBukti}\nD: ${fmt(totalD)}\nK: ${fmt(totalK)}\n\nProses?`)) return;
+  
+  showLoading('Membuat jurnal penutup...');
+  
   try {
-    const newDoc = { id: genId(), nomor_bukti: nomorBukti, tanggal: closingDate, keterangan: `Jurnal Penutup ${year}`, pihak: '', lines, total_debet: totalD, total_kredit: totalK, tipe: 'closing', tahun_ditutup: year };
-    await storage.add('jurnal', newDoc);
-    S.jurnal.push(newDoc);
-    renderDaftarTransaksi();
-    log(`✅ JU2 ${nomorBukti} dibuat`, 'ok'); document.getElementById('closingPreview').style.display = 'none'; populateClosingYearSelect();
-  } catch (e) { log('Error: ' + e.message, 'err'); }
+    await storage.add('jurnal', { id: genId(), nomor_bukti: nomorBukti, tanggal: closingDate, keterangan: `Jurnal Penutup ${year}`, pihak: '', lines, total_debet: totalD, total_kredit: totalK, tipe: 'closing', tahun_ditutup: year });
+    log(`✅ JU2 ${nomorBukti} dibuat`, 'ok');
+    document.getElementById('closingPreview').style.display = 'none';
+    populateClosingYearSelect();
+  } catch (e) { log('Error: ' + e.message, 'err'); showToast('Gagal: ' + e.message, 'error'); }
+  finally { hideLoading(); }
 };
 
 window.previewDepreciation = function() {
@@ -1775,13 +1921,16 @@ window.generateDepreciation = async function() {
   const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
   const tanggal = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
   if (!await showModal('Konfirmasi', `Periode: ${month}/${year}\nNo: ${nomorBukti}\nAset: ${activeAssets.length}\nTotal: ${fmt(totalDepreciation)}\n\nProses?`)) return;
+  
+  showLoading('Membuat jurnal penyusutan...');
+  
   try {
-    const newDoc = { id: genId(), nomor_bukti: nomorBukti, tanggal, keterangan: `Penyusutan ${month}/${year}`, pihak: '', lines, total_debet: totalD, total_kredit: totalK, tipe: 'depreciation', periode: depKey };
-    await storage.add('jurnal', newDoc);
-    S.jurnal.push(newDoc);
-    renderDaftarTransaksi();
-    log(`✅ JU3 ${nomorBukti} dibuat`, 'ok'); showToast(`Penyusutan ${nomorBukti} disimpan!`, 'success'); document.getElementById('depPreview').style.display = 'none';
-  } catch (e) { log('Error: ' + e.message, 'err'); }
+    await storage.add('jurnal', { id: genId(), nomor_bukti: nomorBukti, tanggal, keterangan: `Penyusutan ${month}/${year}`, pihak: '', lines, total_debet: totalD, total_kredit: totalK, tipe: 'depreciation', periode: depKey });
+    log(`✅ JU3 ${nomorBukti} dibuat`, 'ok');
+    showToast(`Penyusutan ${nomorBukti} disimpan!`, 'success');
+    document.getElementById('depPreview').style.display = 'none';
+  } catch (e) { log('Error: ' + e.message, 'err'); showToast('Gagal: ' + e.message, 'error'); }
+  finally { hideLoading(); }
 };
 
 function updateDashboard(){
@@ -1890,10 +2039,12 @@ window.exportToExcel = function() {
 window.importFromExcel = async function(e) {
   const f = e.target.files[0]; if(!f) return;
   if(!await showModal('Import', 'SEMUA data akan ditimpa. Lanjutkan?')) { e.target.value = ''; return; }
+  
+  showLoading('Mengimpor data...');
+  
   const reader = new FileReader();
   reader.onload = async (ev) => {
     try {
-      showToast('Mengimpor data...', 'info');
       const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array', cellDates: true });
       const importedData = { coa: [], jurnal: [], aset: [], saldo_awal: [] }; const kodeToIdMap = {};
       if(wb.Sheets['COA']) { for(const row of XLSX.utils.sheet_to_json(wb.Sheets['COA'])) { const id = genId(); kodeToIdMap[row['Kode']] = id; importedData.coa.push({ id, kode: row['Kode'], nama: row['Nama'], tipe: row['Tipe'] }); } }
@@ -1924,20 +2075,32 @@ window.importFromExcel = async function(e) {
         }
       }
       if(wb.Sheets['Saldo Awal']) {
-        const seenCodes = new Set();
-        for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal'])) { const kode = row['Kode']; if(!kode || seenCodes.has(kode)) continue; seenCodes.add(kode); let tgl = row['Tanggal']; if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0]; importedData.saldo_awal.push({ id: genId(), tanggal: tgl || new Date().toISOString().split('T')[0], akunKode: kode, akunNama: row['Nama'], tipe: row['Tipe'], debet: Number(row['Debet']) || 0, kredit: Number(row['Kredit']) || 0 }); }
+        const seenCodes = new Set(), duplicateCodes = new Set();
+        for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal'])) { const kode = row['Kode']; if(!kode) continue; if(seenCodes.has(kode)) { duplicateCodes.add(kode); continue; } seenCodes.add(kode); let tgl = row['Tanggal']; if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0]; importedData.saldo_awal.push({ id: genId(), tanggal: tgl || new Date().toISOString().split('T')[0], akunKode: kode, akunNama: row['Nama'], tipe: row['Tipe'], debet: Number(row['Debet']) || 0, kredit: Number(row['Kredit']) || 0 }); }
+        if(duplicateCodes.size > 0) { showModal('Gagal', `Kode duplikat:\n${Array.from(duplicateCodes).join('\n')}`); e.target.value = ''; hideLoading(); return; }
       }
-
+      
+      // Import dengan batch operations
       const collections = ['coa', 'jurnal', 'aset', 'saldo_awal'];
       for (const c of collections) {
         const existing = await storage.getAll(c);
-        await storage.deleteBatch(c, existing.map(item => item.id));
-        await storage.addBatch(c, importedData[c]);
+        if (existing.length > 0) {
+          await storage.deleteBatch(c, existing.map(item => item.id));
+        }
+        if (importedData[c].length > 0) {
+          await storage.addBatch(c, importedData[c]);
+        }
       }
-
-      log('Import berhasil', 'ok'); showToast('Import berhasil', 'success');
+      
+      log('Import berhasil', 'ok');
+      showToast('Import berhasil', 'success');
       await refreshData();
-    } catch(err) { log('Error: ' + err.message, 'err'); showToast('Error: ' + err.message, 'error'); }
+    } catch(err) {
+      log('Error: ' + err.message, 'err');
+      showToast('Error: ' + err.message, 'error');
+    } finally {
+      hideLoading();
+    }
   };
   reader.readAsArrayBuffer(f); e.target.value = '';
 };
@@ -1963,17 +2126,18 @@ window.exportSaldoAwal = function() { if(S.saldo_awal.length === 0) { showModal(
 window.importSaldoAwal = async function(e) {
   const f = e.target.files[0]; if(!f) return;
   if(!await showModal('Import', 'Import saldo awal baru? Data lama akan digantikan.')) { e.target.value = ''; return; }
+  
+  showLoading('Mengimpor saldo awal...');
+  
   const reader = new FileReader();
   reader.onload = async (ev) => {
     try {
       const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array', cellDates: true });
-      if(!wb.Sheets['Saldo Awal']) { log('Sheet tidak ada', 'err'); e.target.value = ''; return; }
+      if(!wb.Sheets['Saldo Awal']) { log('Sheet tidak ada', 'err'); e.target.value = ''; hideLoading(); return; }
       const raw = XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal']);
-      if(raw.length === 0) { log('Tidak ada data', 'warn'); e.target.value = ''; return; }
-      
+      if(raw.length === 0) { log('Tidak ada data', 'warn'); e.target.value = ''; hideLoading(); return; }
       const kodeMap = {}; S.coa.forEach(a => kodeMap[a.kode] = a);
       let totalDebet = 0, totalKredit = 0; const validRows = [];
-      
       for(const row of raw) {
         const kode = row['Kode']; if(!kode || !kodeMap[kode]) continue;
         const acc = kodeMap[kode];
@@ -1984,69 +2148,65 @@ window.importSaldoAwal = async function(e) {
         totalDebet += debet; totalKredit += kredit;
         validRows.push({ id: genId(), tanggal: tgl, akunKode: kode, akunNama: acc.nama, tipe: acc.tipe, debet, kredit });
       }
-
       if(Math.abs(totalDebet - totalKredit) > 0.01) {
         await showModal('Gagal', `TIDAK BALANCE!\nDebet: ${fmt(totalDebet)}\nKredit: ${fmt(totalKredit)}`);
-        e.target.value = ''; return;
+        e.target.value = ''; hideLoading(); return;
       }
-
       const existing = await storage.getAll('saldo_awal');
       await storage.deleteBatch('saldo_awal', existing.map(x => x.id));
       await storage.addBatch('saldo_awal', validRows);
-      
-      S.saldo_awal = [...validRows];
-      updateSaldoAwalInfo();
-      log(`${validRows.length} akun saldo awal diimport`, 'ok');
+      log(`${validRows.length} akun diimport ✓`, 'ok');
       showToast('Import saldo awal berhasil', 'success');
-      await refreshData();
     } catch(err) { log('Error: ' + err.message, 'err'); }
+    finally { hideLoading(); }
   };
   reader.readAsArrayBuffer(f); e.target.value = '';
 };
 
-window.lihatSaldoAwal = function() { if(S.saldo_awal.length === 0) { showModal('Saldo Awal', 'Belum ada data.'); return; } let msg = `Tanggal: ${fmtDate(S.saldo_awal[0].tanggal)}\nJumlah: ${S.saldo_awal.length} akun\n\n`; msg += `Kode         Nama                Debet        Kredit\n${'─'.repeat(50)}\n`; let totD = 0, totK = 0; S.saldo_awal.sort((a,b) => a.akunKode.localeCompare(b.akunKode)).forEach(sa => { msg += `${sa.akunKode.padEnd(12)}${sa.akunNama.padEnd(20)}${fmt(sa.debet).padStart(12)}  ${fmt(sa.kredit).padStart(12)}\n`; totD += sa.debet || 0; totK += sa.kredit || 0; }); msg += `${'─'.repeat(50)}\nTOTAL                   ${fmt(totD).padStart(12)}  ${fmt(totK).padStart(12)}`; showModal('Saldo Awal', msg); };
+window.lihatSaldoAwal = function() { if(S.saldo_awal.length === 0) { showModal('Saldo Awal', 'Belum ada data.'); return; } let msg = `Tanggal: ${fmtDate(S.saldo_awal[0].tanggal)}\nJumlah: ${S.saldo_awal.length} akun\n\n`; msg += `Kode        Nama                Debet       Kredit\n${'─'.repeat(50)}\n`; let totD = 0, totK = 0; S.saldo_awal.sort((a,b) => a.akunKode.localeCompare(b.akunKode)).forEach(sa => { msg += `${sa.akunKode.padEnd(12)}${sa.akunNama.padEnd(20)}${fmt(sa.debet).padStart(12)}  ${fmt(sa.kredit).padStart(12)}\n`; totD += sa.debet || 0; totK += sa.kredit || 0; }); msg += `${'─'.repeat(50)}\nTOTAL                   ${fmt(totD).padStart(12)}  ${fmt(totK).padStart(12)}`; showModal('Saldo Awal', msg); };
 
 window.hapusSaldoAwal = async function() {
   if(S.saldo_awal.length === 0) { log('Tidak ada', 'warn'); return; }
-  if(!await showModal('Hapus', `Yakin hapus ${S.saldo_awal.length} akun saldo awal?`)) return;
-  const existing = await storage.getAll('saldo_awal');
-  await storage.deleteBatch('saldo_awal', existing.map(item => item.id));
-  S.saldo_awal = [];
-  updateSaldoAwalInfo();
-  log('Saldo awal dihapus', 'ok');
-  showToast('Saldo awal berhasil dihapus', 'success');
+  if(!await showModal('Hapus', `Yakin hapus ${S.saldo_awal.length} akun?`)) return;
+  
+  showLoading('Menghapus saldo awal...');
+  
+  try {
+    const existing = await storage.getAll('saldo_awal');
+    await storage.deleteBatch('saldo_awal', existing.map(item => item.id));
+    log('Saldo awal dihapus', 'ok');
+    showToast('Saldo awal dihapus', 'success');
+  } catch (err) {
+    console.error('Error hapusSaldoAwal:', err);
+    showToast('Gagal menghapus: ' + err.message, 'error');
+  } finally {
+    hideLoading();
+  }
 };
 
 window.checkFirebase = function() { if(storage.mode === 'firebase') showModal('Firebase', '✅ Terhubung ke pam-sawit'); else showModal('Firebase', '❌ Fallback'); };
 
 window.resetSemuaData = async function() {
-  if(!await showModal('⚠️ PERINGATAN', 'HAPUS SEMUA DATA?\nTidak bisa dikembalikan!')) return;
-  const collections = ['coa','jurnal','aset','saldo_awal'];
-  for(const c of collections) {
-    const items = await storage.getAll(c);
-    await storage.deleteBatch(c, items.map(x => x.id));
-    S[c] = [];
+  if(!await showModal('️ PERINGATAN', 'HAPUS SEMUA DATA?\nTidak bisa dikembalikan!')) return;
+  
+  showLoading('Menghapus semua data...');
+  
+  try {
+    const collections = ['coa','jurnal','aset','saldo_awal'];
+    for(const c of collections) {
+      const items = await storage.getAll(c);
+      if (items.length > 0) {
+        await storage.deleteBatch(c, items.map(x => x.id));
+      }
+    }
+    log('Semua data dihapus', 'ok');
+    showToast('Data dihapus', 'success');
+  } catch (err) {
+    console.error('Error resetSemuaData:', err);
+    showToast('Gagal menghapus: ' + err.message, 'error');
+  } finally {
+    hideLoading();
   }
-  renderCoa();
-  renderDaftarTransaksi();
-  renderAssets();
-  renderAssetSummary();
-  updateDashboard();
-  updateUI();
-  log('Semua data dihapus', 'ok');
-  showToast('Semua data berhasil dihapus', 'success');
-};
-
-window.resetCoa = async function() {
-  if(!await showModal('Reset COA', 'Hapus semua akun & gunakan standar default?')) return;
-  const existing = await storage.getAll('coa');
-  await storage.deleteBatch('coa', existing.map(item => item.id));
-  await storage.addBatch('coa', defaultCoa);
-  S.coa = [...defaultCoa];
-  renderCoa();
-  populateAssetAccountDropdowns();
-  log('COA direset ke default','ok');
-  showToast('COA direset ke default', 'success');
 };
 
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
@@ -2065,31 +2225,16 @@ populateReportYears(); populateDepreciationYearSelect();
 });
 
 async function boot(){
-  if(!firebaseReady) { console.error('Firebase tidak siap'); return; }
+  if(!firebaseReady) { console.error('Firebase not ready'); return; }
   updateUI();
   try {
-    const collections = ['coa','jurnal','aset','saldo_awal'];
-    const results = await Promise.all(collections.map(c => storage.getAll(c)));
-    collections.forEach((c, idx) => { S[c] = results[idx]; });
-
-    if(S.coa.length === 0){
-      log('Load COA default...','info');
-      await storage.addBatch('coa', defaultCoa);
-      S.coa = [...defaultCoa];
-    }
+    for(const c of ['coa','jurnal','aset','saldo_awal']){ const d = await storage.getAll(c); S[c] = d; }
+    if(S.coa.length === 0){ log('Load COA default...','info'); await storage.addBatch('coa', defaultCoa); }
     resetJournalForm(); populateClosingYearSelect(); populateDepreciationYearSelect();
     populateAssetAccountDropdowns(); populateJournalDropdown();
-    renderCoa(); renderDaftarTransaksi(); renderAssets(); renderAssetSummary();
-    updateUI(); log('V4.2 siap - Fix Sync & Delete COA','ok');
-  } catch(err) {
-    console.error('Boot error:', err);
-    const errorBanner = document.getElementById('errorBanner');
-    const errorMessage = document.getElementById('errorMessage');
-    if(errorBanner && errorMessage){
-      errorMessage.textContent = 'Gagal load data: ' + err.message;
-      errorBanner.classList.add('show');
-    }
-  }
+    renderDaftarTransaksi(); renderAssets(); renderAssetSummary();
+    updateUI(); log('V4.3 siap - Fix Sync & Delete COA','ok');
+  } catch(err) { console.error('Boot error:', err); const errorBanner = document.getElementById('errorBanner'); const errorMessage = document.getElementById('errorMessage'); if(errorBanner && errorMessage){ errorMessage.textContent = 'Gagal load data: ' + err.message; errorBanner.classList.add('show'); } }
 }
 
 if(sessionStorage.getItem('pam_auth') === 'true') { boot(); }
