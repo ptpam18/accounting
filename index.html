@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>PT Prima Anugerah Makmur - V5.0</title>
+<title>PT Prima Anugerah Makmur - V5.1</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -66,7 +66,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-group{display:flex;flex-direction:column;gap:5px}
 .form-group.full{grid-column:1/-1}
-.form-group.third{grid-column:span 1}
 .form-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
 .form-input,.form-select{background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;padding:10px 12px;border-radius:var(--radius-sm);outline:none;width:100%;min-height:44px}
 .form-input:focus,.form-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
@@ -96,28 +95,6 @@ td{padding:10px;border-bottom:1px solid var(--border);color:var(--text)}
 tr:hover td{background:var(--accent-glow)}
 tr:last-child td{border-bottom:none}
 tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
-
-/* COA Grouping Styles */
-.coa-group-header{background:var(--bg3);padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);transition:var(--transition);user-select:none}
-.coa-group-header:hover{background:var(--bg4)}
-.coa-group-header .toggle-icon{font-size:14px;width:20px;text-align:center;transition:transform .2s}
-.coa-group-header .toggle-icon.collapsed{transform:rotate(-90deg)}
-.coa-group-header .group-name{flex:1;font-weight:700;font-size:13px;color:var(--text)}
-.coa-group-header .group-count{font-size:11px;color:var(--text3);background:var(--bg2);padding:4px 10px;border-radius:12px}
-.coa-subgroup-header{background:var(--bg2);padding:10px 16px 10px 40px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);transition:var(--transition);user-select:none}
-.coa-subgroup-header:hover{background:var(--surface)}
-.coa-subgroup-header .toggle-icon{font-size:12px;width:20px;text-align:center;transition:transform .2s}
-.coa-subgroup-header .toggle-icon.collapsed{transform:rotate(-90deg)}
-.coa-subgroup-header .group-name{flex:1;font-weight:600;font-size:12px;color:var(--text2)}
-.coa-subgroup-header .group-count{font-size:10px;color:var(--text3);background:var(--bg3);padding:3px 8px;border-radius:10px}
-.coa-item{padding:10px 16px 10px 60px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);font-size:12px}
-.coa-item:hover{background:var(--accent-glow)}
-.coa-item .coa-code{font-weight:700;color:var(--accent2);min-width:100px;font-family:'Courier New',monospace}
-.coa-item .coa-name{flex:1;color:var(--text)}
-.coa-item .coa-type{font-size:10px;padding:3px 8px;border-radius:10px;background:var(--green-bg);color:var(--green);font-weight:600}
-.coa-item .coa-actions{display:flex;gap:4px}
-.coa-item.duplicate{background:rgba(239,68,68,.05)}
-.coa-item.duplicate .coa-code{color:var(--red)}
 
 .log-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-size:11px;font-family:'Courier New',monospace;max-height:180px;overflow-y:auto;margin-top:10px}
 .log-line{padding:2px 0;display:flex;gap:6px}
@@ -240,6 +217,28 @@ tr.duplicate td{background:rgba(239,68,68,.1);border-left:3px solid var(--red)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{color:var(--text);font-size:14px}
 
+/* COA Grouping */
+.coa-group-header{background:var(--bg3);padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);transition:var(--transition);user-select:none}
+.coa-group-header:hover{background:var(--bg4)}
+.coa-group-header .toggle-icon{font-size:14px;width:20px;text-align:center;transition:transform .2s}
+.coa-group-header .toggle-icon.collapsed{transform:rotate(-90deg)}
+.coa-group-header .group-name{flex:1;font-weight:700;font-size:13px;color:var(--text)}
+.coa-group-header .group-count{font-size:11px;color:var(--text3);background:var(--bg2);padding:4px 10px;border-radius:12px}
+.coa-subgroup-header{background:var(--bg2);padding:10px 16px 10px 40px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);transition:var(--transition);user-select:none}
+.coa-subgroup-header:hover{background:var(--surface)}
+.coa-subgroup-header .toggle-icon{font-size:12px;width:20px;text-align:center;transition:transform .2s}
+.coa-subgroup-header .toggle-icon.collapsed{transform:rotate(-90deg)}
+.coa-subgroup-header .group-name{flex:1;font-weight:600;font-size:12px;color:var(--text2)}
+.coa-subgroup-header .group-count{font-size:10px;color:var(--text3);background:var(--bg3);padding:3px 8px;border-radius:10px}
+.coa-item{padding:10px 16px 10px 60px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);font-size:12px}
+.coa-item:hover{background:var(--accent-glow)}
+.coa-item .coa-code{font-weight:700;color:var(--accent2);min-width:100px;font-family:'Courier New',monospace}
+.coa-item .coa-name{flex:1;color:var(--text)}
+.coa-item .coa-type{font-size:10px;padding:3px 8px;border-radius:10px;background:var(--green-bg);color:var(--green);font-weight:600}
+.coa-item .coa-actions{display:flex;gap:4px}
+.coa-item.duplicate{background:rgba(239,68,68,.05)}
+.coa-item.duplicate .coa-code{color:var(--red)}
+
 @media(max-width:768px){
 .container{padding:12px}
 .header{padding:14px;flex-direction:column;align-items:flex-start}
@@ -311,7 +310,7 @@ td button{min-height:36px;min-width:36px}
 <div id="loginScreen" class="login-overlay">
 <div class="login-box">
 <h2>PT Prima Anugerah Makmur</h2>
-<p>Sistem Akuntansi Perkebunan Kelapa Sawit — V5.0</p>
+<p>Sistem Akuntansi Perkebunan Kelapa Sawit — V5.1</p>
 <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
 <input type="password" id="loginPass" placeholder="Password">
 <button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
@@ -323,7 +322,7 @@ td button{min-height:36px;min-width:36px}
 <div class="header">
 <div class="header-left">
 <h1>PT Prima Anugerah Makmur</h1>
-<div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V5.0</div>
+<div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V5.1</div>
 </div>
 <div class="header-right">
 <span class="badge firebase" id="modeBadge"><span class="dot"></span> <span id="modeText">FIREBASE</span></span>
@@ -370,8 +369,16 @@ td button{min-height:36px;min-width:36px}
 <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account (COA)</div>
 <div class="info-box">ℹ️ Format kode: <strong>XXX.XX.XXX</strong> (3 digit kepala.2 digit kelompok.3 digit urut). Kode tidak boleh duplikat!</div>
 
-<!-- COA Input dengan Grouping -->
-<div class="form-grid" style="margin-bottom:16px">
+<div id="duplicateWarning" class="duplicate-warning">
+<span>⚠️</span>
+<div style="flex:1">
+<strong>Ditemukan <span id="duplicateCount">0</span> akun duplikat!</strong>
+<span id="duplicateList" style="display:block;margin-top:4px;font-size:11px"></span>
+</div>
+<button class="btn sm danger" onclick="cleanDuplicates()">🧹 Bersihkan</button>
+</div>
+
+<div class="form-grid">
 <div class="form-group">
 <label class="form-label">Kepala Akun *</label>
 <select class="form-select" id="coaKepala" onchange="onKepalaChange()">
@@ -416,7 +423,7 @@ td button{min-height:36px;min-width:36px}
 <button class="btn" onclick="batalEditCoa()">↻ Batal</button>
 <button class="btn danger" onclick="resetCoa()">🔄 Reset Default</button>
 <button class="btn sm" onclick="expandAllGroups()">📂 Expand All</button>
-<button class="btn sm" onclick="collapseAllGroups()"> Collapse All</button>
+<button class="btn sm" onclick="collapseAllGroups()">📁 Collapse All</button>
 </div>
 </div>
 
@@ -511,8 +518,8 @@ Daftar Akun
 </div>
 </div>
 <div class="btn-group">
-<button class="btn primary" id="btnSaveAsset" onclick="simpanAset()"> Simpan Aset</button>
-<button class="btn" onclick="resetAssetForm()">↻ Reset</button>
+<button class="btn primary" id="btnSaveAsset" onclick="simpanAset()">💾 Simpan Aset</button>
+<button class="btn" onclick="resetAssetForm()"> Reset</button>
 </div>
 </div>
 <div class="asset-summary">
@@ -552,7 +559,7 @@ Daftar Akun
 </div>
 <div class="btn-group" style="margin-top:14px">
 <button class="btn" onclick="previewDepreciation()">👁️ Preview</button>
-<button class="btn primary" onclick="generateDepreciation()">📉 Generate</button>
+<button class="btn primary" onclick="generateDepreciation()"> Generate</button>
 </div>
 <div id="depPreview" class="closing-preview" style="display:none"></div>
 </div>
@@ -584,7 +591,7 @@ Daftar Akun
 <div class="card">
 <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span>Pengaturan & Data</div>
 <div class="setting-section">
-<div class="setting-section-title">🔥 Status Koneksi Database</div>
+<div class="setting-section-title"> Status Koneksi Database</div>
 <div class="setting-desc">Informasi koneksi database saat ini</div>
 <div class="setting-status" id="connectionStatus">
 <strong>Mode:</strong> <span id="settingMode">-</span><br>
@@ -593,18 +600,18 @@ Daftar Akun
 </div>
 <div class="setting-actions" style="margin-top:12px">
 <button class="btn success" onclick="checkFirebase()">🔍 Cek Koneksi</button>
-<button class="btn" onclick="forceRefreshData()">🔄 Force Refresh</button>
-<button class="btn danger" onclick="cleanDuplicates()"> Bersihkan Duplikat</button>
+<button class="btn" onclick="forceRefreshData()"> Force Refresh</button>
+<button class="btn danger" onclick="cleanDuplicates()">🧹 Bersihkan Duplikat</button>
 </div>
 </div>
 <div class="setting-section">
-<div class="setting-section-title"> Saldo Awal</div>
+<div class="setting-section-title">📊 Saldo Awal</div>
 <div class="setting-desc">Saldo awal untuk tahun buku baru. Total Debet = Total Kredit.</div>
 <div id="saldoAwalInfo" style="color:var(--text3);font-size:12px;margin-bottom:12px;padding:10px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"></div>
 <div class="setting-actions">
 <button class="btn success" onclick="exportSaldoAwal()">📤 Export</button>
-<button class="btn amber" onclick="document.getElementById('importSaldoFile').click()"> Import</button>
-<button class="btn primary" onclick="downloadTemplateSaldoAwal()"> Template</button>
+<button class="btn amber" onclick="document.getElementById('importSaldoFile').click()">📥 Import</button>
+<button class="btn primary" onclick="downloadTemplateSaldoAwal()">📄 Template</button>
 <button class="btn" onclick="lihatSaldoAwal()">👁 Lihat</button>
 <button class="btn danger" onclick="hapusSaldoAwal()">🗑 Hapus</button>
 <input type="file" id="importSaldoFile" accept=".xlsx,.xls" style="display:none" onchange="importSaldoAwal(event)">
@@ -614,8 +621,8 @@ Daftar Akun
 <div class="setting-section-title">💾 Backup & Restore</div>
 <div class="setting-desc">Export/Import semua data dalam format Excel.</div>
 <div class="setting-actions">
-<button class="btn success" onclick="exportToExcel()"> Export Excel</button>
-<button class="btn amber" onclick="document.getElementById('importFile').click()"> Import Excel</button>
+<button class="btn success" onclick="exportToExcel()">📤 Export Excel</button>
+<button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import Excel</button>
 <button class="btn primary" onclick="downloadExcelTemplate()">📄 Template</button>
 <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none" onchange="importFromExcel(event)">
 </div>
@@ -631,7 +638,7 @@ Daftar Akun
 </div>
 </div>
 
-<div class="footer">PT Prima Anugerah Makmur — V5.0 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
+<div class="footer">PT Prima Anugerah Makmur — V5.1 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
@@ -803,7 +810,7 @@ const unsub = this.sdk.onSnapshot(
 this.sdk.collection(this.db, c),
 (snapshot) => {
 const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-console.log(` Snapshot ${c}: ${data.length} docs`);
+console.log(`📡 Snapshot ${c}: ${data.length} docs`);
 cb(data);
 },
 (error) => {
@@ -873,22 +880,49 @@ const genId = () => 'id_' + Date.now() + '_' + Math.random().toString(36).substr
 const formatNominal = (val) => { if (!val) return ''; const num = String(val).replace(/[^0-9]/g, ''); if (!num) return ''; return parseInt(num).toLocaleString('id-ID'); };
 const parseNominal = (val) => { if (!val) return 0; return parseFloat(String(val).replace(/[^0-9]/g, '')) || 0; };
 
+// ✅ HEAD & KELOMPOK NAMES - DINAMIS BERDASARKAN DATA
 const kepalaNames = {
 '100': 'ASET',
 '200': 'LIABILITAS',
 '300': 'EKUITAS',
 '400': 'PENDAPATAN',
 '500': 'BIAYA',
-'600': 'LAINNYA'
-};
-
-const kelompokNames = {
-'100': {'10': 'Kas & Bank', '11': 'Persediaan', '12': 'Aset Tetap', '31': 'Tanah & Perkebunan', '32': 'Bangunan', '33': 'Kendaraan', '34': 'Mesin', '35': 'Lainnya'},
-'200': {'10': 'Pajak', '20': 'Hutang Usaha', '21': 'Hutang Gaji'},
-'300': {'30': 'Modal & Laba'},
-'400': {'40': 'Penjualan'},
-'500': {'50': 'Biaya Operasional', '51': 'Biaya Penyusutan'},
-'600': {'60': 'Lainnya'}
+'600': 'LAINNYA',
+'110': 'ASET LAIN',
+'131': 'PIUTANG USAHA',
+'133': 'PIUTANG KARYAWAN STAFF',
+'134': 'PIUTANG KARYAWAN NON STAFF',
+'135': 'PIUTANG LAIN-LAIN',
+'137': 'BAHAN PEMBUAT & PELENGKAP',
+'138': 'LAIN-LAIN',
+'142': 'UANG MUKA',
+'150': 'TANAMAN BARU',
+'152': 'TANAMAN MENGHASILKAN',
+'153': 'BANGUNAN RUMAH TINGGAL',
+'154': 'BANGUNAN PERUSAHAAN',
+'155': 'MESIN & PERLENGKAPAN PABRIK',
+'157': 'ALAT ANGKUT & PERTANIAN',
+'158': 'ALAT & PERLENGKAPAN PERTANIAN',
+'160': 'BANGUNAN LAIN',
+'170': 'PENYUSUTAN TM',
+'173': 'PENYUSUTAN RUMAH',
+'174': 'PENYUSUTAN BANGUNAN',
+'175': 'PENYUSUTAN MESIN',
+'177': 'PENYUSUTAN ALAT ANGKUT',
+'178': 'PENYUSUTAN ALAT PERTANIAN',
+'210': 'REKENING KORAN AFILIASI',
+'220': 'HUTANG LAIN',
+'250': 'HUTANG GAJI',
+'260': 'HUTANG JANGKA PANJANG',
+'330': 'LABA DITAHAN',
+'340': 'LABA/RUGI',
+'510': 'BIAYA PEMELIHARAAN TBM',
+'520': 'BIAYA PANEN TM',
+'540': 'BIAYA UMUM',
+'610': 'BIAYA KANTOR PUSAT',
+'700': 'PAJAK',
+'710': 'PENDAPATAN LAIN',
+'900': 'BIAYA YANG DIBEBANKAN'
 };
 
 function showLoading(text = 'Memproses...') {
@@ -956,7 +990,7 @@ const projectEl = document.getElementById('settingProject');
 const statusEl = document.getElementById('settingStatus');
 if (modeEl) modeEl.textContent = 'Firebase Firestore';
 if (projectEl) projectEl.textContent = firebaseConfig.projectId || '-';
-if (statusEl) statusEl.textContent = firebaseReady ? '✅ Terhubung' : ' Tidak Terhubung';
+if (statusEl) statusEl.textContent = firebaseReady ? '✅ Terhubung' : '❌ Tidak Terhubung';
 if (statusEl) statusEl.style.color = firebaseReady ? 'var(--green)' : 'var(--red)';
 }
 
@@ -1002,58 +1036,7 @@ const defaultCoa = [
 {id:genId(),kode:'600.60.001',nama:'Rounding',tipe:'BIAYA'}
 ];
 
-// ✅ COA GROUPING INPUT
-window.onKepalaChange = function() {
-const kepala = document.getElementById('coaKepala').value;
-const kelompokSelect = document.getElementById('coaKelompok');
-const urutInput = document.getElementById('coaUrut');
-const kodeInput = document.getElementById('coaKode');
-
-kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-urutInput.value = '';
-kodeInput.value = '';
-
-if (!kepala) {
-kelompokSelect.disabled = true;
-urutInput.disabled = true;
-return;
-}
-
-const kelompoks = kelompokNames[kepala] || {};
-Object.keys(kelompoks).sort().forEach(k => {
-kelompokSelect.innerHTML += `<option value="${k}">${k} - ${kelompoks[k]}</option>`;
-});
-
-kelompokSelect.disabled = false;
-urutInput.disabled = false;
-updateCoaKode();
-};
-
-window.onKelompokChange = function() {
-updateCoaKode();
-};
-
-window.onUrutChange = function() {
-const urut = document.getElementById('coaUrut').value;
-// Only allow numbers
-document.getElementById('coaUrut').value = urut.replace(/[^0-9]/g, '');
-updateCoaKode();
-};
-
-function updateCoaKode() {
-const kepala = document.getElementById('coaKepala').value;
-const kelompok = document.getElementById('coaKelompok').value;
-const urut = document.getElementById('coaUrut').value.padStart(3, '0');
-const kodeInput = document.getElementById('coaKode');
-
-if (kepala && kelompok && urut) {
-kodeInput.value = `${kepala}.${kelompok}.${urut}`;
-validateCoaKode();
-} else {
-kodeInput.value = '';
-}
-}
-
+// ✅ VALIDASI FORMAT SAJA - TIDAK ADA VALIDASI KELOMPOK KETAT
 function validateCoaKode() {
 const kode = document.getElementById('coaKode').value.trim().toUpperCase();
 const errorEl = document.getElementById('coaKodeError');
@@ -1066,6 +1049,7 @@ inputEl.classList.remove('error', 'valid');
 
 if (!kode) return;
 
+// ✅ Hanya validasi format XXX.XX.XXX
 const formatRegex = /^\d{3}\.\d{2}\.\d{3}$/;
 if (!formatRegex.test(kode)) {
 errorEl.textContent = '⚠️ Format harus XXX.XX.XXX (contoh: 100.10.001)';
@@ -1073,15 +1057,7 @@ inputEl.classList.add('error');
 return;
 }
 
-const parts = kode.split('.');
-const head = parts[0];
-const group = parts[1];
-if (!kelompokNames[head] || !kelompokNames[head][group]) {
-errorEl.textContent = `⚠️ Kelompok ${group} tidak valid untuk kepala ${head}`;
-inputEl.classList.add('error');
-return;
-}
-
+// ✅ Cek duplikat
 const duplicate = S.coa.find(c => c.kode.toUpperCase() === kode && String(c.id) !== String(editingCoaId));
 if (duplicate) {
 errorEl.textContent = `❌ Kode "${kode}" sudah digunakan oleh "${duplicate.nama}"`;
@@ -1093,7 +1069,130 @@ inputEl.classList.add('valid');
 }
 }
 
-// ✅ COA GROUPED RENDER WITH MINIMIZE/EXPAND
+function findDuplicates() {
+const seen = new Map();
+const duplicates = [];
+S.coa.forEach(coa => {
+const key = coa.kode.toUpperCase();
+if (seen.has(key)) {
+duplicates.push({ existing: seen.get(key), duplicate: coa });
+} else {
+seen.set(key, coa);
+}
+});
+return duplicates;
+}
+
+function showDuplicateWarning() {
+const duplicates = findDuplicates();
+const warningEl = document.getElementById('duplicateWarning');
+const countEl = document.getElementById('duplicateCount');
+const listEl = document.getElementById('duplicateList');
+
+if (!warningEl || !countEl || !listEl) return;
+
+if (duplicates.length > 0) {
+countEl.textContent = duplicates.length;
+const dupCodes = duplicates.map(d => d.duplicate.kode).join(', ');
+listEl.textContent = ` (${dupCodes})`;
+warningEl.classList.add('show');
+} else {
+warningEl.classList.remove('show');
+}
+}
+
+window.cleanDuplicates = async function() {
+const duplicates = findDuplicates();
+
+if (duplicates.length === 0) {
+showToast('Tidak ada duplikat untuk dibersihkan', 'info');
+return;
+}
+
+const idsToDelete = [];
+for (const { duplicate } of duplicates) {
+const usedByAsset = S.aset.find(a =>
+String(a.akun_aset_id) === String(duplicate.id) ||
+String(a.akun_akumulasi_id) === String(duplicate.id) ||
+String(a.akun_biaya_id) === String(duplicate.id)
+);
+if (!usedByAsset) {
+idsToDelete.push(String(duplicate.id));
+}
+}
+
+if (idsToDelete.length === 0) {
+showToast('Semua duplikat sedang digunakan oleh Fixed Asset', 'warn');
+return;
+}
+
+const confirm = await showModal(
+'Bersihkan Duplikat',
+`Ditemukan ${idsToDelete.length} akun duplikat yang dapat dihapus secara aman.
+⚠️ Akun yang PERTAMA ditemukan akan DIPERTAHANKAN.
+⚠️ Akun yang DUPLIKAT akan DIHAPUS PERMANEN.
+
+Lanjutkan?`
+);
+
+if (!confirm) {
+log('Pembersihan duplikat dibatalkan', 'warn');
+return;
+}
+
+showLoading(`Menghapus ${idsToDelete.length} duplikat...`);
+
+try {
+const ok = await storage.deleteBatch('coa', idsToDelete);
+
+if (ok) {
+showToast(`✅ ${idsToDelete.length} duplikat berhasil dihapus`, 'success');
+log(`${idsToDelete.length} duplikat COA dihapus`, 'ok');
+} else {
+showToast('Gagal menghapus beberapa duplikat', 'error');
+log('Gagal menghapus duplikat', 'err');
+}
+} catch (err) {
+console.error('Error cleanDuplicates:', err);
+showToast('Error: ' + err.message, 'error');
+log('Error cleanDuplicates: ' + err.message, 'err');
+} finally {
+hideLoading();
+}
+};
+
+async function refreshData() {
+try {
+console.log('🔄 Memuat ulang data dari Firebase...');
+showLoading('Memuat ulang data...');
+
+const collections = ['coa', 'jurnal', 'aset', 'saldo_awal'];
+const results = await Promise.all(collections.map(c => storage.getAll(c)));
+
+collections.forEach((c, i) => {
+S[c] = results[i];
+console.log(` ${c}: ${results[i].length} records`);
+});
+
+log('Data berhasil di-refresh', 'ok');
+return true;
+} catch (err) {
+console.error('❌ Error refresh:', err);
+log('Error refresh: ' + err.message, 'err');
+showToast('Gagal refresh data: ' + err.message, 'error');
+return false;
+} finally {
+hideLoading();
+}
+}
+
+window.forceRefreshData = async function() {
+showToast('Memuat ulang data...', 'info');
+await refreshData();
+showToast('Data berhasil dimuat ulang', 'success');
+};
+
+// ✅ COA GROUPING - DINAMIS BERDASARKAN DATA
 function renderCoaGrouped(){
 const container = document.getElementById('coaGroupedContainer');
 if (!container) return;
@@ -1101,7 +1200,7 @@ if (!container) return;
 const countEl = document.getElementById('coaCount');
 if (countEl) countEl.textContent = S.coa.length + ' akun';
 
-// Group by kepala and kelompok
+// Group by kepala dan kelompok - DINAMIS
 const grouped = {};
 S.coa.forEach(c => {
 const parts = c.kode.split('.');
@@ -1119,10 +1218,11 @@ kepalaKeys.forEach(kepala => {
 const kelompoks = grouped[kepala];
 const totalKepala = Object.values(kelompoks).reduce((sum, arr) => sum + arr.length, 0);
 const isExpanded = expandedGroups.has(kepala);
+const kepalaName = kepalaNames[kepala] || `KEPALA ${kepala}`;
 
 html += `<div class="coa-group-header" onclick="toggleGroup('${kepala}')">
 <span class="toggle-icon ${isExpanded ? '' : 'collapsed'}">▼</span>
-<span class="group-name">${kepala} - ${kepalaNames[kepala] || 'Lainnya'}</span>
+<span class="group-name">${kepala} - ${kepalaName}</span>
 <span class="group-count">${totalKepala} akun</span>
 </div>`;
 
@@ -1134,7 +1234,7 @@ const isSubExpanded = expandedSubgroups.has(`${kepala}.${kelompok}`);
 
 html += `<div class="coa-subgroup-header" onclick="toggleSubgroup('${kepala}','${kelompok}')">
 <span class="toggle-icon ${isSubExpanded ? '' : 'collapsed'}">▼</span>
-<span class="group-name">${kepala}.${kelompok} - ${kelompokNames[kepala][kelompok] || 'Lainnya'}</span>
+<span class="group-name">${kepala}.${kelompok}</span>
 <span class="group-count">${items.length} akun</span>
 </div>`;
 
@@ -1204,6 +1304,70 @@ expandedSubgroups.clear();
 renderCoaGrouped();
 };
 
+// ✅ INPUT COA DENGAN GROUPING
+window.onKepalaChange = function() {
+const kepala = document.getElementById('coaKepala').value;
+const kelompokSelect = document.getElementById('coaKelompok');
+const urutInput = document.getElementById('coaUrut');
+const kodeInput = document.getElementById('coaKode');
+
+kelompokSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+urutInput.value = '';
+kodeInput.value = '';
+
+if (!kepala) {
+kelompokSelect.disabled = true;
+urutInput.disabled = true;
+return;
+}
+
+// ✅ Ambil kelompok yang sudah ada dari data COA
+const existingKelompok = new Set();
+S.coa.forEach(c => {
+const parts = c.kode.split('.');
+if (parts[0] === kepala) {
+existingKelompok.add(parts[1]);
+}
+});
+
+// ✅ Tambahkan kelompok default yang umum
+const defaultKelompok = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '90', '99'];
+defaultKelompok.forEach(k => existingKelompok.add(k));
+
+// ✅ Urutkan dan tampilkan
+Array.from(existingKelompok).sort().forEach(k => {
+kelompokSelect.innerHTML += `<option value="${k}">${k}</option>`;
+});
+
+kelompokSelect.disabled = false;
+urutInput.disabled = false;
+updateCoaKode();
+};
+
+window.onKelompokChange = function() {
+updateCoaKode();
+};
+
+window.onUrutChange = function() {
+const urut = document.getElementById('coaUrut').value;
+document.getElementById('coaUrut').value = urut.replace(/[^0-9]/g, '');
+updateCoaKode();
+};
+
+function updateCoaKode() {
+const kepala = document.getElementById('coaKepala').value;
+const kelompok = document.getElementById('coaKelompok').value;
+const urut = document.getElementById('coaUrut').value.padStart(3, '0');
+const kodeInput = document.getElementById('coaKode');
+
+if (kepala && kelompok && urut) {
+kodeInput.value = `${kepala}.${kelompok}.${urut}`;
+validateCoaKode();
+} else {
+kodeInput.value = '';
+}
+}
+
 window.editCoa = function(id) {
 const targetId = String(id);
 const coa = S.coa.find(c => String(c.id) === targetId); if (!coa) return;
@@ -1233,7 +1397,7 @@ document.getElementById('coaUrut').disabled = true;
 document.getElementById('coaKode').value = '';
 document.getElementById('coaNama').value = '';
 document.getElementById('coaTipe').value = 'ASET';
-document.getElementById('btnSaveCoa').textContent = '💾 Simpan Akun';
+document.getElementById('btnSaveCoa').textContent = ' Simpan Akun';
 document.getElementById('coaKodeError').textContent = '';
 document.getElementById('coaKode').classList.remove('error', 'valid');
 };
@@ -1319,7 +1483,7 @@ return;
 
 const usedInJournal = S.jurnal.some(j => j.lines.some(l => String(l.akun_id) === targetId));
 let warningMsg = `Yakin hapus akun "${coa.kode} - ${coa.nama}"?\n\n`;
-if (usedInJournal) warningMsg += `️ Akun ini digunakan dalam beberapa jurnal.\n\n`;
+if (usedInJournal) warningMsg += `⚠️ Akun ini digunakan dalam beberapa jurnal.\n\n`;
 warningMsg += 'Data tidak dapat dikembalikan.';
 
 if(!await showModal('Hapus Akun', warningMsg)) return;
@@ -1415,7 +1579,7 @@ tr.innerHTML = `
 <td><select class="form-select" onchange="updateLineDK(${idx}, this.value)" style="font-weight:700"><option value="D" ${line.dk === 'D' ? 'selected' : ''}>D</option><option value="K" ${line.dk === 'K' ? 'selected' : ''}>K</option></select></td>
 <td><input type="text" class="form-input" value="${nominalFormatted}" placeholder="0" oninput="formatNominalInput(this)" onblur="updateLineNominal(${idx}, this.value, this)" style="text-align:right"></td>
 <td><input type="text" class="form-input" value="${line.ket || ''}" placeholder="Ket." onchange="updateLineValue(${idx}, 'ket', this.value)"></td>
-<td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris">🗑</button></td>
+<td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris"></button></td>
 `;
 tbody.appendChild(tr);
 });
@@ -1973,7 +2137,7 @@ const activeAssets = S.aset.filter(a => a.status === 'aktif');
 if (activeAssets.length === 0) { document.getElementById('depPreview').style.display = 'block'; document.getElementById('depPreview').textContent = '⚠️ Tidak ada aset aktif.'; return; }
 const depKey = `${year}-${month}`; const alreadyDepreciated = S.jurnal.some(j => j.tipe === 'depreciation' && j.periode === depKey);
 let preview = `TABEL PENYUSUTAN ${month}/${year}\n\n`;
-if (alreadyDepreciated) preview += `⚠️ Bulan ini SUDAH DISUSUTKAN!\n\n`;
+if (alreadyDepreciated) preview += `️ Bulan ini SUDAH DISUSUTKAN!\n\n`;
 preview += `${'Aset'.padEnd(20)} ${'Perolehan'.padStart(12)} ${'Akm'.padStart(12)} ${'Buku'.padStart(12)} ${'Bulanan'.padStart(12)}\n`;
 let total = 0;
 activeAssets.forEach(aset => { const dep = calculateDepreciation(aset, year, month); total += dep.monthlyDep; preview += `${aset.nama.padEnd(20)} ${fmt(aset.cost).padStart(12)} ${fmt(dep.accumulatedDep).padStart(12)} ${fmt(dep.bookValue).padStart(12)} ${fmt(dep.monthlyDep).padStart(12)}\n`; });
@@ -2194,6 +2358,7 @@ const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.js
 
 window.exportSaldoAwal = function() { if(S.saldo_awal.length === 0) { showModal('Export', 'Belum ada data.'); return; } const data = S.saldo_awal.map(sa => ({ 'Tanggal': sa.tanggal, 'Kode': sa.akunKode, 'Nama': sa.akunNama, 'Tipe': sa.tipe, 'Debet': sa.debet || 0, 'Kredit': sa.kredit || 0 })); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Saldo Awal"); XLSX.writeFile(wb, `PAM-SaldoAwal-${new Date().toISOString().split('T')[0]}.xlsx`); log('Export saldo awal', 'ok'); };
 
+// ✅ IMPORT SALDO AWAL - TANPA VALIDASI KELOMPOK
 window.importSaldoAwal = async function(e) {
 const f = e.target.files[0]; if(!f) return;
 if(!await showModal('Import', 'Import saldo awal baru? Data lama akan digantikan.')) { e.target.value = ''; return; }
@@ -2207,7 +2372,32 @@ const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type
 if(!wb.Sheets['Saldo Awal']) { log('Sheet tidak ada', 'err'); e.target.value = ''; hideLoading(); return; }
 const raw = XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal']);
 if(raw.length === 0) { log('Tidak ada data', 'warn'); e.target.value = ''; hideLoading(); return; }
-const kodeMap = {}; S.coa.forEach(a => kodeMap[a.kode] = a);
+
+// ✅ Buat map COA dari data yang ada
+const kodeMap = {};
+S.coa.forEach(a => kodeMap[a.kode] = a);
+
+// ✅ Tambahkan COA yang belum ada dari Excel
+let newCoaCount = 0;
+for(const row of raw) {
+const kode = row['Kode'];
+if(!kode) continue;
+if(!kodeMap[kode]) {
+// ✅ Auto-create COA dari Excel
+const tipe = row['Tipe'] || 'ASET';
+const nama = row['Nama'] || kode;
+const newCoa = { id: genId(), kode, nama, tipe };
+await storage.add('coa', newCoa);
+kodeMap[kode] = newCoa;
+newCoaCount++;
+}
+}
+
+if (newCoaCount > 0) {
+log(`${newCoaCount} akun COA baru dibuat dari Excel`, 'ok');
+showToast(`${newCoaCount} akun COA baru dibuat`, 'info');
+}
+
 let totalDebet = 0, totalKredit = 0; const validRows = [];
 for(const row of raw) {
 const kode = row['Kode']; if(!kode || !kodeMap[kode]) continue;
@@ -2219,16 +2409,22 @@ else if(typeof tgl !== 'string') tgl = new Date().toISOString().split('T')[0];
 totalDebet += debet; totalKredit += kredit;
 validRows.push({ id: genId(), tanggal: tgl, akunKode: kode, akunNama: acc.nama, tipe: acc.tipe, debet, kredit });
 }
+
 if(Math.abs(totalDebet - totalKredit) > 0.01) {
-await showModal('Gagal', `TIDAK BALANCE!\nDebet: ${fmt(totalDebet)}\nKredit: ${fmt(totalKredit)}`);
+await showModal('Gagal', `TIDAK BALANCE!\nDebet: ${fmt(totalDebet)}\nKredit: ${fmt(totalKredit)}\nSelisih: ${fmt(Math.abs(totalDebet - totalKredit))}`);
 e.target.value = ''; hideLoading(); return;
 }
+
 const existing = await storage.getAll('saldo_awal');
 await storage.deleteBatch('saldo_awal', existing.map(x => String(x.id)));
 await storage.addBatch('saldo_awal', validRows);
-log(`${validRows.length} akun diimport ✓`, 'ok');
-showToast('Import saldo awal berhasil', 'success');
-} catch(err) { log('Error: ' + err.message, 'err'); }
+
+log(`${validRows.length} akun saldo awal diimport ✓`, 'ok');
+showToast(`✅ ${validRows.length} akun saldo awal berhasil diimport`, 'success');
+} catch(err) {
+log('Error: ' + err.message, 'err');
+showToast('Error: ' + err.message, 'error');
+}
 finally { hideLoading(); }
 };
 reader.readAsArrayBuffer(f); e.target.value = '';
@@ -2278,106 +2474,6 @@ hideLoading();
 }
 };
 
-async function refreshData() {
-try {
-console.log('🔄 Memuat ulang data dari Firebase...');
-showLoading('Memuat ulang data...');
-
-const collections = ['coa', 'jurnal', 'aset', 'saldo_awal'];
-const results = await Promise.all(collections.map(c => storage.getAll(c)));
-
-collections.forEach((c, i) => {
-S[c] = results[i];
-console.log(`📦 ${c}: ${results[i].length} records`);
-});
-
-log('Data berhasil di-refresh', 'ok');
-return true;
-} catch (err) {
-console.error('❌ Error refresh:', err);
-log('Error refresh: ' + err.message, 'err');
-showToast('Gagal refresh data: ' + err.message, 'error');
-return false;
-} finally {
-hideLoading();
-}
-}
-
-window.forceRefreshData = async function() {
-showToast('Memuat ulang data...', 'info');
-await refreshData();
-showToast('Data berhasil dimuat ulang', 'success');
-};
-
-window.cleanDuplicates = async function() {
-const seen = new Map();
-const duplicates = [];
-S.coa.forEach(coa => {
-const key = coa.kode.toUpperCase();
-if (seen.has(key)) {
-duplicates.push({ existing: seen.get(key), duplicate: coa });
-} else {
-seen.set(key, coa);
-}
-});
-
-if (duplicates.length === 0) {
-showToast('Tidak ada duplikat untuk dibersihkan', 'info');
-return;
-}
-
-const idsToDelete = [];
-for (const { duplicate } of duplicates) {
-const usedByAsset = S.aset.find(a =>
-String(a.akun_aset_id) === String(duplicate.id) ||
-String(a.akun_akumulasi_id) === String(duplicate.id) ||
-String(a.akun_biaya_id) === String(duplicate.id)
-);
-if (!usedByAsset) {
-idsToDelete.push(String(duplicate.id));
-}
-}
-
-if (idsToDelete.length === 0) {
-showToast('Semua duplikat sedang digunakan oleh Fixed Asset', 'warn');
-return;
-}
-
-const confirm = await showModal(
-'Bersihkan Duplikat',
-`Ditemukan ${idsToDelete.length} akun duplikat yang dapat dihapus secara aman.
-⚠️ Akun yang PERTAMA ditemukan akan DIPERTAHANKAN.
-⚠️ Akun yang DUPLIKAT akan DIHAPUS PERMANEN.
-
-Lanjutkan?`
-);
-
-if (!confirm) {
-log('Pembersihan duplikat dibatalkan', 'warn');
-return;
-}
-
-showLoading(`Menghapus ${idsToDelete.length} duplikat...`);
-
-try {
-const ok = await storage.deleteBatch('coa', idsToDelete);
-
-if (ok) {
-showToast(`✅ ${idsToDelete.length} duplikat berhasil dihapus`, 'success');
-log(`${idsToDelete.length} duplikat COA dihapus`, 'ok');
-} else {
-showToast('Gagal menghapus beberapa duplikat', 'error');
-log('Gagal menghapus duplikat', 'err');
-}
-} catch (err) {
-console.error('Error cleanDuplicates:', err);
-showToast('Error: ' + err.message, 'error');
-log('Error cleanDuplicates: ' + err.message, 'err');
-} finally {
-hideLoading();
-}
-};
-
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 const cd = document.getElementById('closingDate'); if (cd) cd.value = new Date().toISOString().split('T')[0];
 populateReportYears(); populateDepreciationYearSelect();
@@ -2405,7 +2501,7 @@ await storage.addBatch('coa', defaultCoa);
 resetJournalForm(); populateClosingYearSelect(); populateDepreciationYearSelect();
 populateAssetAccountDropdowns(); populateJournalDropdown();
 renderCoaGrouped(); renderDaftarTransaksi(); renderAssets(); renderAssetSummary();
-updateUI(); log('V5.0 siap - COA Grouping & Minimize/Expand','ok');
+updateUI(); log('V5.1 siap - Fix Import Saldo Awal','ok');
 } catch(err) {
 console.error('Boot error:', err);
 const errorBanner = document.getElementById('errorBanner');
