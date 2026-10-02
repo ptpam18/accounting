@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>PT Prima Anugerah Makmur - V5.5</title>
+<title>PT Prima Anugerah Makmur - V5.6</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -216,7 +216,7 @@ tr:last-child td{border-bottom:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{color:var(--text);font-size:14px}
 
-/* COA Tree - 3 Level Structure */
+/* COA Tree - 3 Level */
 .coa-tree{margin-top:12px}
 .coa-tipe{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;cursor:pointer;transition:var(--transition)}
 .coa-tipe:hover{background:var(--bg4);border-color:var(--border2)}
@@ -336,10 +336,10 @@ td button{min-height:36px;min-width:36px}
 <div id="loginScreen" class="login-overlay">
 <div class="login-box">
 <h2>PT Prima Anugerah Makmur</h2>
-<p>Sistem Akuntansi Perkebunan Kelapa Sawit — V5.5</p>
+<p>Sistem Akuntansi Perkebunan Kelapa Sawit — V5.6</p>
 <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
 <input type="password" id="loginPass" placeholder="Password">
-<button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()">🔐 Masuk Sistem</button>
+<button class="btn primary" style="width:100%;justify-content:center" onclick="doLogin()"> Masuk Sistem</button>
 <div id="loginError" class="login-error"></div>
 </div>
 </div>
@@ -348,7 +348,7 @@ td button{min-height:36px;min-width:36px}
 <div class="header">
 <div class="header-left">
 <h1>PT Prima Anugerah Makmur</h1>
-<div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V5.5</div>
+<div class="ver">Sistem Akuntansi Perkebunan Kelapa Sawit — V5.6</div>
 </div>
 <div class="header-right">
 <span class="badge firebase" id="modeBadge"><span class="dot"></span> <span id="modeText">FIREBASE</span></span>
@@ -363,7 +363,7 @@ td button{min-height:36px;min-width:36px}
 <button class="nav-btn" data-view="jurnal"><span>📝</span> Input Jurnal</button>
 <button class="nav-btn" data-view="daftar"><span>📄</span> Transaksi</button>
 <button class="nav-btn" data-view="aset"><span>🏭</span> Fixed Asset</button>
-<button class="nav-btn" data-view="penyesuaian"><span>🔄</span> Penyesuaian</button>
+<button class="nav-btn" data-view="penyesuaian"><span></span> Penyesuaian</button>
 <button class="nav-btn" data-view="laporan"><span>📑</span> Laporan</button>
 <button class="nav-btn" data-view="settings"><span>⚙️</span> Setting</button>
 </div>
@@ -393,7 +393,7 @@ td button{min-height:36px;min-width:36px}
 <div id="view-coa" class="view">
 <div class="card">
 <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📋</span> Chart of Account (COA)</div>
-<div class="info-box">ℹ️ Format kode: <strong>XXX.XX.XXX</strong> (Kepala 001-999. Kelompok 00-99. Urut 001-999). Semua kode valid diterima!</div>
+<div class="info-box">ℹ️ Format kode: <strong>XXX.XX.XXX</strong> (Kepala 001-999. Kelompok 00-99. Urut 001-999). Nama akun otomatis UPPERCASE!</div>
 
 <div id="duplicateWarning" class="duplicate-warning">
 <span>⚠️</span>
@@ -427,7 +427,7 @@ td button{min-height:36px;min-width:36px}
 <input type="text" class="form-input" id="coaKode" readonly style="background:var(--bg);color:var(--accent2);font-weight:700;font-family:'Courier New',monospace">
 <div class="validation-msg" id="coaKodeError"></div>
 </div>
-<div class="form-group"><label class="form-label">Nama Akun *</label><input type="text" class="form-input" id="coaNama" placeholder="Kas"></div>
+<div class="form-group"><label class="form-label">Nama Akun *</label><input type="text" class="form-input" id="coaNama" placeholder="KAS" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
 <div class="form-group"><label class="form-label">Tipe *</label>
 <select class="form-select" id="coaTipe">
 <option value="ASET">ASET</option>
@@ -445,7 +445,7 @@ td button{min-height:36px;min-width:36px}
 
 <div class="btn-group">
 <button class="btn primary" id="btnSaveCoa" onclick="simpanCoa()">💾 Simpan Akun</button>
-<button class="btn" onclick="batalEditCoa()">↻ Batal</button>
+<button class="btn" onclick="batalEditCoa()"> Batal</button>
 <button class="btn sm" onclick="expandAllGroups()">📂 Expand All</button>
 <button class="btn sm" onclick="collapseAllGroups()">📁 Collapse All</button>
 </div>
@@ -463,9 +463,9 @@ Daftar Akun
 
 <div id="view-jurnal" class="view">
 <div class="card">
-<div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">📝</span><span id="journalFormTitle">Input Jurnal Baru</span></div>
+<div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)"></span><span id="journalFormTitle">Input Jurnal Baru</span></div>
 <div id="editModeIndicator" class="edit-mode-indicator" style="display:none">✏️ MODE EDIT: <span id="editingJournalNumber"></span><button class="btn sm danger" onclick="cancelEdit()" style="margin-left:auto">Batal</button></div>
-<div id="assetNotification" class="warning-box" style="display:none"><span>️</span><div style="flex:1"><strong>Anda memilih akun Fixed Asset!</strong> Pastikan aset sudah didaftarkan di menu Fixed Asset.<a href="#" onclick="document.querySelector('[data-view=aset]').click();return false;" style="color:var(--amber);text-decoration:underline;margin-left:6px">Buka →</a></div></div>
+<div id="assetNotification" class="warning-box" style="display:none"><span>⚠️</span><div style="flex:1"><strong>Anda memilih akun Fixed Asset!</strong> Pastikan aset sudah didaftarkan di menu Fixed Asset.<a href="#" onclick="document.querySelector('[data-view=aset]').click();return false;" style="color:var(--amber);text-decoration:underline;margin-left:6px">Buka →</a></div></div>
 <div class="form-grid">
 <div class="form-group"><label class="form-label">No. Jurnal</label><input type="text" class="form-input" id="jurnalNomor" readonly style="background:var(--bg);color:var(--accent2);font-weight:700"></div>
 <div class="form-group"><label class="form-label">Tanggal *</label><input type="date" class="form-input" id="jurnalTanggal"></div>
@@ -486,8 +486,8 @@ Daftar Akun
 </div>
 <div id="balanceIndicator" class="balance-indicator unbalanced"><span id="balanceIcon">⚠️</span><span id="balanceText">Jurnal belum balance</span><span class="diff" id="balanceDiff">Selisih: Rp 0</span></div>
 <div class="btn-group">
-<button class="btn primary" id="btnSaveJournal" onclick="simpanJurnal()" disabled> Simpan Jurnal</button>
-<button class="btn" onclick="resetJournalForm()">↻ Reset</button>
+<button class="btn primary" id="btnSaveJournal" onclick="simpanJurnal()" disabled>💾 Simpan Jurnal</button>
+<button class="btn" onclick="resetJournalForm()"> Reset</button>
 </div>
 </div>
 </div>
@@ -504,7 +504,7 @@ Daftar Akun
 <div class="card">
 <div class="card-title"><span class="icon" style="background:var(--purple-bg);color:var(--purple)">🏭</span><span id="assetFormTitle">Tambah Fixed Asset</span></div>
 <div id="editAssetIndicator" class="edit-mode-indicator" style="display:none">✏️ EDIT ASET: <span id="editingAssetName"></span><button class="btn sm danger" onclick="cancelEditAsset()" style="margin-left:auto">Batal</button></div>
-<div class="info-box">ℹ️ Pilih akun COA yang sudah ada. Atau pilih dari jurnal yang sudah tercatat.</div>
+<div class="info-box">️ Pilih akun COA yang sudah ada. Atau pilih dari jurnal yang sudah tercatat.</div>
 <div class="asset-input-tabs">
 <button class="asset-input-tab active" data-method="manual" onclick="switchAssetInputMethod('manual', event)">✏️ Manual</button>
 <button class="asset-input-tab" data-method="journal" onclick="switchAssetInputMethod('journal', event)">📄 Dari Jurnal</button>
@@ -576,14 +576,14 @@ Daftar Akun
 <div id="closingPreview" class="closing-preview" style="display:none"></div>
 </div>
 <div id="subtab-penyusutan" style="display:none">
-<div class="info-box" style="background:var(--cyan-bg);border-color:rgba(6,182,212,.2);color:var(--cyan)">️ Jurnal Penyusutan otomatis bulanan. Prefix: JU3-XXXXX. Metode: Garis Lurus.</div>
+<div class="info-box" style="background:var(--cyan-bg);border-color:rgba(6,182,212,.2);color:var(--cyan)">ℹ️ Jurnal Penyusutan otomatis bulanan. Prefix: JU3-XXXXX. Metode: Garis Lurus.</div>
 <div class="form-grid">
 <div class="form-group"><label class="form-label">Bulan *</label><select class="form-select" id="depMonth"><option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div>
 <div class="form-group"><label class="form-label">Tahun *</label><select class="form-select" id="depYear"></select></div>
 </div>
 <div class="btn-group" style="margin-top:14px">
 <button class="btn" onclick="previewDepreciation()">👁️ Preview</button>
-<button class="btn primary" onclick="generateDepreciation()"> Generate</button>
+<button class="btn primary" onclick="generateDepreciation()">📉 Generate</button>
 </div>
 <div id="depPreview" class="closing-preview" style="display:none"></div>
 </div>
@@ -597,12 +597,12 @@ Daftar Akun
 <div class="form-group"><label class="form-label">Tahun</label><select class="form-select" id="reportYear"></select></div>
 <div class="form-group"><label class="form-label">Bulan</label><select class="form-select" id="reportMonth"><option value="all">Semua</option><option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div>
 <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:8px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text2)"><input type="checkbox" id="compareYoY" style="width:auto"> YoY</label></div>
-<div class="form-group" style="display:flex;align-items:flex-end"><button class="btn primary sm" onclick="applyReportFilters()">🔄 Terapkan</button></div>
+<div class="form-group" style="display:flex;align-items:flex-end"><button class="btn primary sm" onclick="applyReportFilters()"> Terapkan</button></div>
 </div>
 <div class="report-tabs">
 <button class="btn primary sm" onclick="setReportType('lr', event)">📊 Laba Rugi</button>
 <button class="btn sm" onclick="setReportType('neraca', event)">🏦 Neraca</button>
-<button class="btn sm" onclick="setReportType('bb', event)"> Buku Besar</button>
+<button class="btn sm" onclick="setReportType('bb', event)">📖 Buku Besar</button>
 <button class="btn sm" onclick="setReportType('bbhutang', event)">📕 BB Hutang</button>
 <button class="btn sm" onclick="setReportType('bbpiutang', event)">📗 BB Piutang</button>
 <button class="btn sm" onclick="setReportType('bbmodal', event)">📘 BB Modal</button>
@@ -613,7 +613,7 @@ Daftar Akun
 
 <div id="view-settings" class="view">
 <div class="card">
-<div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">⚙️</span>Pengaturan & Data</div>
+<div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">️</span>Pengaturan & Data</div>
 <div class="setting-section">
 <div class="setting-section-title">🔥 Status Koneksi Database</div>
 <div class="setting-desc">Informasi koneksi database saat ini</div>
@@ -623,7 +623,7 @@ Daftar Akun
 <strong>Status:</strong> <span id="settingStatus">-</span>
 </div>
 <div class="setting-actions" style="margin-top:12px">
-<button class="btn success" onclick="checkFirebase()">🔍 Cek Koneksi</button>
+<button class="btn success" onclick="checkFirebase()"> Cek Koneksi</button>
 <button class="btn" onclick="forceRefreshData()">🔄 Force Refresh</button>
 <button class="btn danger" onclick="cleanCorruptData()">🧹 Bersihkan Data Corrupt</button>
 <button class="btn danger" onclick="cleanDuplicates()">🧹 Bersihkan Duplikat</button>
@@ -635,10 +635,10 @@ Daftar Akun
 <div id="saldoAwalInfo" style="color:var(--text3);font-size:12px;margin-bottom:12px;padding:10px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"></div>
 <div class="setting-actions">
 <button class="btn success" onclick="exportSaldoAwal()">📤 Export</button>
-<button class="btn amber" onclick="document.getElementById('importSaldoFile').click()">📥 Import</button>
-<button class="btn primary" onclick="downloadTemplateSaldoAwal()">📄 Template</button>
+<button class="btn amber" onclick="document.getElementById('importSaldoFile').click()"> Import</button>
+<button class="btn primary" onclick="downloadTemplateSaldoAwal()"> Template</button>
 <button class="btn" onclick="lihatSaldoAwal()">👁 Lihat</button>
-<button class="btn danger" onclick="hapusSaldoAwal()"> Hapus</button>
+<button class="btn danger" onclick="hapusSaldoAwal()">🗑 Hapus</button>
 <input type="file" id="importSaldoFile" accept=".xlsx,.xls" style="display:none" onchange="importSaldoAwal(event)">
 </div>
 </div>
@@ -648,12 +648,12 @@ Daftar Akun
 <div class="setting-actions">
 <button class="btn success" onclick="exportToExcel()">📤 Export Excel</button>
 <button class="btn amber" onclick="document.getElementById('importFile').click()">📥 Import Excel</button>
-<button class="btn primary" onclick="downloadExcelTemplate()"> Template</button>
+<button class="btn primary" onclick="downloadExcelTemplate()">📄 Template</button>
 <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none" onchange="importFromExcel(event)">
 </div>
 </div>
 <div class="setting-section" style="border-color:var(--red)">
-<div class="setting-section-title" style="color:var(--red)">⚠️ Zona Bahaya</div>
+<div class="setting-section-title" style="color:var(--red)">️ Zona Bahaya</div>
 <div class="setting-desc" style="color:var(--red)">Operasi ini tidak dapat dibatalkan!</div>
 <div class="setting-actions">
 <button class="btn danger" onclick="resetCoa()">🔄 Reset COA</button>
@@ -663,7 +663,7 @@ Daftar Akun
 </div>
 </div>
 
-<div class="footer">PT Prima Anugerah Makmur — V5.5 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
+<div class="footer">PT Prima Anugerah Makmur — V5.6 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
@@ -684,6 +684,19 @@ projectId: "pam-sawit",
 storageBucket: "pam-sawit.firebasestorage.app",
 messagingSenderId: "687283196681",
 appId: "1:687283196681:web:9c03bb909afa838a59f9d8"
+};
+
+// ✅ URUTAN TIPE COA YANG BENAR
+const tipeOrder = {
+'ASET': 1,
+'LIABILITAS': 2,
+'EKUITAS': 3,
+'PENDAPATAN': 4,
+'BIAYA PRODUKSI': 5,
+'BIAYA UMUM': 6,
+'PENDAPATAN LAIN': 7,
+'JASA GIRO': 8,
+'AYAT SILANG': 9
 };
 
 window.doLogin = () => {
@@ -946,7 +959,7 @@ window.showModal = showModal;
 
 function showToast(message, type = 'success') {
 const container = document.getElementById('toastContainer'); if (!container) return;
-const icons = { success: '✅', error: '❌', warn: '⚠️', info: 'ℹ️' };
+const icons = { success: '✅', error: '❌', warn: '️', info: 'ℹ️' };
 const toast = document.createElement('div'); toast.className = `toast ${type}`;
 toast.innerHTML = `<span class="toast-icon">${icons[type] || '✅'}</span><span class="toast-msg">${message}</span>`;
 container.appendChild(toast);
@@ -988,7 +1001,7 @@ else {
 const tanggal = S.saldo_awal[0].tanggal || '-';
 const totalD = S.saldo_awal.reduce((s, x) => s + (Number(x.debet) || 0), 0);
 const totalK = S.saldo_awal.reduce((s, x) => s + (Number(x.kredit) || 0), 0);
-el.innerHTML = `✅ <strong>${S.saldo_awal.length} akun</strong> | ${fmtDate(tanggal)}<br>Debet: ${fmt(totalD)} | Kredit: ${fmt(totalK)} | ${totalD === totalK ? '<span style="color:var(--green)">✓ BALANCE</span>' : '<span style="color:var(--red)"> TIDAK BALANCE</span>'}`;
+el.innerHTML = `✅ <strong>${S.saldo_awal.length} akun</strong> | ${fmtDate(tanggal)}<br>Debet: ${fmt(totalD)} | Kredit: ${fmt(totalK)} | ${totalD === totalK ? '<span style="color:var(--green)">✓ BALANCE</span>' : '<span style="color:var(--red)">✗ TIDAK BALANCE</span>'}`;
 }
 }
 
@@ -1001,26 +1014,26 @@ if (b.dataset.view === 'coa') { renderCoaTree(); }
 }));
 
 const defaultCoa = [
-{id:genId(),kode:'100.00.001',nama:'Kas',tipe:'ASET'},
-{id:genId(),kode:'100.00.002',nama:'Bank',tipe:'ASET'},
-{id:genId(),kode:'100.00.003',nama:'Piutang Usaha',tipe:'ASET'},
-{id:genId(),kode:'100.01.001',nama:'Persediaan Pupuk',tipe:'ASET'},
-{id:genId(),kode:'100.02.001',nama:'Aset Tetap - Kebun',tipe:'ASET'},
-{id:genId(),kode:'200.00.001',nama:'Hutang Usaha',tipe:'LIABILITAS'},
-{id:genId(),kode:'200.00.002',nama:'Hutang Supplier',tipe:'LIABILITAS'},
-{id:genId(),kode:'200.01.003',nama:'PPN Keluaran',tipe:'LIABILITAS'},
-{id:genId(),kode:'200.02.001',nama:'Hutang Gaji',tipe:'LIABILITAS'},
-{id:genId(),kode:'300.00.001',nama:'Modal Disetor',tipe:'EKUITAS'},
-{id:genId(),kode:'300.00.002',nama:'Laba Ditahan',tipe:'EKUITAS'},
-{id:genId(),kode:'400.00.001',nama:'Penjualan TBS',tipe:'PENDAPATAN'},
-{id:genId(),kode:'400.00.002',nama:'Penjualan CPO',tipe:'PENDAPATAN'},
-{id:genId(),kode:'500.00.001',nama:'Biaya Pupuk',tipe:'BIAYA PRODUKSI'},
-{id:genId(),kode:'500.00.002',nama:'Biaya Tenaga Kerja',tipe:'BIAYA PRODUKSI'},
-{id:genId(),kode:'500.01.003',nama:'Biaya Transport',tipe:'BIAYA UMUM'},
-{id:genId(),kode:'500.01.004',nama:'Biaya Pemeliharaan',tipe:'BIAYA UMUM'},
-{id:genId(),kode:'500.00.005',nama:'Biaya Pemeliharaan TBM',tipe:'BIAYA PRODUKSI'},
-{id:genId(),kode:'500.00.006',nama:'Biaya Panen TM',tipe:'BIAYA PRODUKSI'},
-{id:genId(),kode:'600.00.001',nama:'Rounding',tipe:'AYAT SILANG'}
+{id:genId(),kode:'100.00.001',nama:'KAS',tipe:'ASET'},
+{id:genId(),kode:'100.00.002',nama:'BANK',tipe:'ASET'},
+{id:genId(),kode:'100.00.003',nama:'PIUTANG USAHA',tipe:'ASET'},
+{id:genId(),kode:'100.01.001',nama:'PERSEDIAAN PUPUK',tipe:'ASET'},
+{id:genId(),kode:'100.02.001',nama:'ASET TETAP - KEBUN',tipe:'ASET'},
+{id:genId(),kode:'200.00.001',nama:'HUTANG USAHA',tipe:'LIABILITAS'},
+{id:genId(),kode:'200.00.002',nama:'HUTANG SUPPLIER',tipe:'LIABILITAS'},
+{id:genId(),kode:'200.01.003',nama:'PPN KELUARAN',tipe:'LIABILITAS'},
+{id:genId(),kode:'200.02.001',nama:'HUTANG GAJI',tipe:'LIABILITAS'},
+{id:genId(),kode:'300.00.001',nama:'MODAL DISETOR',tipe:'EKUITAS'},
+{id:genId(),kode:'300.00.002',nama:'LABA DITAHAN',tipe:'EKUITAS'},
+{id:genId(),kode:'400.00.001',nama:'PENJUALAN TBS',tipe:'PENDAPATAN'},
+{id:genId(),kode:'400.00.002',nama:'PENJUALAN CPO',tipe:'PENDAPATAN'},
+{id:genId(),kode:'500.00.001',nama:'BIAYA PUPUK',tipe:'BIAYA PRODUKSI'},
+{id:genId(),kode:'500.00.002',nama:'BIAYA TENAGA KERJA',tipe:'BIAYA PRODUKSI'},
+{id:genId(),kode:'500.01.003',nama:'BIAYA TRANSPORT',tipe:'BIAYA UMUM'},
+{id:genId(),kode:'500.01.004',nama:'BIAYA PEMELIHARAAN',tipe:'BIAYA UMUM'},
+{id:genId(),kode:'500.00.005',nama:'BIAYA PEMELIHARAAN TBM',tipe:'BIAYA PRODUKSI'},
+{id:genId(),kode:'500.00.006',nama:'BIAYA PANEN TM',tipe:'BIAYA PRODUKSI'},
+{id:genId(),kode:'600.00.001',nama:'ROUNDING',tipe:'AYAT SILANG'}
 ];
 
 function computeSaldoCache() {
@@ -1059,8 +1072,6 @@ return cache[String(accountId)] || 0;
 
 function getSaldoByTipe(tipe, saldo) {
 const t = (tipe || '').toUpperCase();
-// Aset & Biaya: saldo normal debit (positif = debit)
-// Liabilitas, Ekuitas, Pendapatan: saldo normal kredit (positif = kredit, jadi dibalik)
 if (t === 'ASET' || t === 'BIAYA PRODUKSI' || t === 'BIAYA UMUM' || t === 'AYAT SILANG') {
 return saldo;
 } else {
@@ -1073,7 +1084,7 @@ saldoCache = {};
 saldoCacheTime = 0;
 }
 
-// ✅ COA TREE - GROUP BY TIPE → KELOMPOK → AKUN
+// ✅ RENDER COA TREE DENGAN URUTAN YANG BENAR
 function renderCoaTree(){
 const tree = document.getElementById('coaTree');
 const countEl = document.getElementById('coaCount');
@@ -1098,7 +1109,13 @@ grouped[tipe][kelompokKey].push(acc);
 });
 
 const fragment = document.createDocumentFragment();
-const tipeKeys = Object.keys(grouped).sort();
+
+// ✅ SORT TIPE BERDASARKAN tipeOrder
+const tipeKeys = Object.keys(grouped).sort((a, b) => {
+const orderA = tipeOrder[a] || 999;
+const orderB = tipeOrder[b] || 999;
+return orderA - orderB;
+});
 
 tipeKeys.forEach(tipe => {
 const kelompoks = grouped[tipe];
@@ -1132,6 +1149,7 @@ fragment.appendChild(tipeDiv);
 const kelompokContainer = document.createElement('div');
 kelompokContainer.className = 'coa-kelompok-container';
 
+// ✅ SORT KELOMPOK BERDASARKAN KODE
 const kelompokKeys = Object.keys(kelompoks).sort();
 kelompokKeys.forEach(kelompokKey => {
 const accounts = kelompoks[kelompokKey];
@@ -1159,6 +1177,7 @@ kelompokDiv.innerHTML = `
 `;
 
 const akunListDiv = kelompokDiv.querySelector('.coa-akun-list');
+// ✅ SORT AKUN BERDASARKAN KODE
 accounts.sort((a, b) => safeCompare(a.kode, b.kode)).forEach(acc => {
 const saldo = cache[String(acc.id)] || 0;
 const displaySaldo = getSaldoByTipe(tipe, saldo);
@@ -1166,7 +1185,7 @@ const saldoClass = displaySaldo > 0 ? 'positive' : displaySaldo < 0 ? 'negative'
 const targetId = String(acc.id);
 const isUsedByAsset = S.aset.some(ast => String(ast.akun_aset_id) === targetId || String(ast.akun_akumulasi_id) === targetId || String(ast.akun_biaya_id) === targetId);
 const deleteBtn = isUsedByAsset
-? `<button class="btn sm" disabled title="Digunakan oleh aset" style="opacity:0.4;cursor:not-allowed;font-size:10px">🔒</button>`
+? `<button class="btn sm" disabled title="Digunakan oleh aset" style="opacity:0.4;cursor:not-allowed;font-size:10px"></button>`
 : `<button class="btn danger sm" onclick="event.stopPropagation(); hapusCoa('${targetId}')" title="Hapus" style="font-size:11px">Hapus</button>`;
 
 const akunDiv = document.createElement('div');
@@ -1176,7 +1195,7 @@ akunDiv.innerHTML = `
 <div class="coa-akun-name">${acc.nama || '(tanpa nama)'}</div>
 <div class="coa-akun-saldo ${saldoClass}">${fmt(displaySaldo)}</div>
 <div class="coa-akun-actions">
-<button class="btn sm" onclick="event.stopPropagation(); editCoa('${targetId}')" title="Edit">️</button>
+<button class="btn sm" onclick="event.stopPropagation(); editCoa('${targetId}')" title="Edit">✏️</button>
 ${deleteBtn}
 </div>
 `;
@@ -1405,7 +1424,7 @@ return;
 const confirm = await showModal(
 'Bersihkan Duplikat',
 `Ditemukan ${idsToDelete.length} akun duplikat yang dapat dihapus secara aman.
-️ Akun yang PERTAMA ditemukan akan DIPERTAHANKAN.
+⚠️ Akun yang PERTAMA ditemukan akan DIPERTAHANKAN.
 ⚠️ Akun yang DUPLIKAT akan DIHAPUS PERMANEN.
 
 Lanjutkan?`
@@ -1527,7 +1546,8 @@ document.getElementById('coaKode').classList.remove('error', 'valid');
 
 window.simpanCoa = async () => {
 const kode = document.getElementById('coaKode').value.trim().toUpperCase();
-const nama = document.getElementById('coaNama').value.trim();
+// ✅ AUTO UPPERCASE NAMA
+const nama = document.getElementById('coaNama').value.trim().toUpperCase();
 const tipe = document.getElementById('coaTipe').value;
 const errorEl = document.getElementById('coaKodeError');
 const inputEl = document.getElementById('coaKode');
@@ -1666,8 +1686,14 @@ function updateJournalLineDropdowns() {
 document.querySelectorAll('.line-akun-select').forEach(select => {
 const currentVal = select.value;
 select.innerHTML = '<option value="">-- Pilih --</option>';
+// ✅ SORT BERDASARKAN TIPE ORDER LALU KODE
 S.coa.filter(a => a && a.kode && typeof a.kode === 'string')
-.sort((a,b) => safeCompare(a.kode, b.kode))
+.sort((a, b) => {
+const tipeA = tipeOrder[a.tipe] || 999;
+const tipeB = tipeOrder[b.tipe] || 999;
+if (tipeA !== tipeB) return tipeA - tipeB;
+return safeCompare(a.kode, b.kode);
+})
 .forEach(a => {
 select.innerHTML += `<option value="${a.id}" data-kode="${a.kode}" data-nama="${a.nama || ''}">${a.kode} - ${a.nama || '(tanpa nama)'}</option>`;
 });
@@ -1706,7 +1732,7 @@ tr.innerHTML = `
 <td><select class="form-select" onchange="updateLineDK(${idx}, this.value)" style="font-weight:700;min-height:40px"><option value="D" ${line.dk === 'D' ? 'selected' : ''}>D</option><option value="K" ${line.dk === 'K' ? 'selected' : ''}>K</option></select></td>
 <td><input type="text" class="form-input" value="${nominalFormatted}" placeholder="0" oninput="formatNominalInput(this)" onblur="updateLineNominal(${idx}, this.value, this)" style="text-align:right"></td>
 <td><input type="text" class="form-input" value="${line.ket || ''}" placeholder="Ket." onchange="updateLineValue(${idx}, 'ket', this.value)"></td>
-<td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris"></button></td>
+<td style="text-align:center"><button class="btn icon-btn danger" onclick="removeJournalLine(${idx})" title="Hapus baris">🗑</button></td>
 `;
 tbody.appendChild(tr);
 });
@@ -1716,7 +1742,13 @@ updateBalanceIndicator();
 window.showAccountDropdown = function(lineIndex) {
 const dropdown = document.getElementById(`accountDropdown-${lineIndex}`);
 if (!dropdown) return;
-const sortedCoa = S.coa.filter(a => a && a.kode && typeof a.kode === 'string').sort((a, b) => safeCompare(a.kode, b.kode));
+// ✅ SORT BERDASARKAN TIPE ORDER LALU KODE
+const sortedCoa = S.coa.filter(a => a && a.kode && typeof a.kode === 'string').sort((a, b) => {
+const tipeA = tipeOrder[a.tipe] || 999;
+const tipeB = tipeOrder[b.tipe] || 999;
+if (tipeA !== tipeB) return tipeA - tipeB;
+return safeCompare(a.kode, b.kode);
+});
 dropdown.innerHTML = sortedCoa.map(acc => `
 <div class="searchable-select-option" onmousedown="selectAccount(${lineIndex}, '${acc.id}', '${safeString(acc.kode).replace(/'/g, "\\'")}', '${safeString(acc.nama || '').replace(/'/g, "\\'")}', '${safeString(acc.tipe || '').replace(/'/g, "\\'")}')">
 <span class="searchable-select-option-code">${acc.kode}</span>
@@ -1738,7 +1770,12 @@ return;
 const filtered = S.coa.filter(acc => {
 if (!acc || !acc.kode) return false;
 return safeString(acc.kode).toLowerCase().includes(q) || safeString(acc.nama || '').toLowerCase().includes(q);
-}).sort((a, b) => safeCompare(a.kode, b.kode));
+}).sort((a, b) => {
+const tipeA = tipeOrder[a.tipe] || 999;
+const tipeB = tipeOrder[b.tipe] || 999;
+if (tipeA !== tipeB) return tipeA - tipeB;
+return safeCompare(a.kode, b.kode);
+});
 dropdown.innerHTML = filtered.map(acc => `
 <div class="searchable-select-option" onmousedown="selectAccount(${lineIndex}, '${acc.id}', '${safeString(acc.kode).replace(/'/g, "\\'")}', '${safeString(acc.nama || '').replace(/'/g, "\\'")}', '${safeString(acc.tipe || '').replace(/'/g, "\\'")}')">
 <span class="searchable-select-option-code">${acc.kode}</span>
@@ -1808,7 +1845,7 @@ const text = document.getElementById('balanceText');
 const diffEl = document.getElementById('balanceDiff');
 const btnSave = document.getElementById('btnSaveJournal');
 if (!hasValidLines) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Minimal 2 baris'; diffEl.textContent = ''; btnSave.disabled = true; }
-else if (!allLinesHaveAccount) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '️'; text.textContent = 'Pilih akun semua baris'; diffEl.textContent = ''; btnSave.disabled = true; }
+else if (!allLinesHaveAccount) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Pilih akun semua baris'; diffEl.textContent = ''; btnSave.disabled = true; }
 else if (!allLinesHaveNominal) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Isi nominal > 0'; diffEl.textContent = ''; btnSave.disabled = true; }
 else if (isBalanced) { indicator.className = 'balance-indicator balanced'; icon.textContent = '✅'; text.textContent = 'BALANCE'; diffEl.textContent = `D: ${fmt(totalDebet)} = K: ${fmt(totalKredit)}`; btnSave.disabled = false; }
 else { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '❌'; text.textContent = 'TIDAK BALANCE'; diffEl.textContent = `Selisih: ${fmt(diff)}`; btnSave.disabled = true; }
@@ -2208,7 +2245,7 @@ const costD = m.cost - (c.cost || 0); const accumD = m.accumulated - (c.accumula
 groupDetails += `<div style="font-size:10px;color:var(--text3);margin-top:6px;font-weight:600">Grup ${group} - ${assetGroupNames[group] || ''} (${m.count})</div><div class="summary-row"><span class="label">Perolehan</span><span class="value">${fmt(m.cost)} vs ${fmt(c.cost||0)} ${Math.abs(costD)<0.01?'<span style="color:var(--green)">✓</span>':`<span style="color:var(--red)">(${fmt(costD)})</span>`}</span></div><div class="summary-row"><span class="label">Akumulasi</span><span class="value">${fmt(m.accumulated)} vs ${fmt(c.accumulated||0)} ${Math.abs(accumD)<0.01?'<span style="color:var(--green)">✓</span>':`<span style="color:var(--red)">(${fmt(accumD)})</span>`}</span></div>`;
 });
 }
-grid.innerHTML = `<div class="summary-item"><div class="summary-item-title">💰 Harga Perolehan</div><div class="summary-row"><span class="label">Master (${summary.master.count})</span><span class="value">${fmt(summary.master.totalCost)}</span></div><div class="summary-row"><span class="label">COA (100.3X)</span><span class="value">${fmt(summary.coa.totalCost)}</span></div><div class="summary-row diff ${costClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.cost)}</span></div></div><div class="summary-item"><div class="summary-item-title">📉 Akumulasi</div><div class="summary-row"><span class="label">Master</span><span class="value">${fmt(summary.master.totalAccumulated)}</span></div><div class="summary-row"><span class="label">COA (100.33)</span><span class="value">${fmt(summary.coa.totalAccumulated)}</span></div><div class="summary-row diff ${accumClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.accumulated)}</span></div></div><div class="summary-item"><div class="summary-item-title"> Nilai Buku</div><div class="summary-row"><span class="label">Master</span><span class="value">${fmt(summary.master.totalBookValue)}</span></div><div class="summary-row"><span class="label">COA Netto</span><span class="value">${fmt(summary.coa.totalBookValue)}</span></div><div class="summary-row diff ${bookClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.bookValue)}</span></div></div><div class="summary-item"><div class="summary-item-title">📅 Penyusutan YTD</div><div class="summary-row"><span class="label">Master</span><span class="value">${fmt(summary.master.totalYtdDepreciation)}</span></div><div class="summary-row"><span class="label">COA (500.51)</span><span class="value">${fmt(summary.coa.totalYtdDepreciation)}</span></div><div class="summary-row diff ${ytdClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.ytd)}</span></div></div>${groupDetails}`;
+grid.innerHTML = `<div class="summary-item"><div class="summary-item-title">💰 Harga Perolehan</div><div class="summary-row"><span class="label">Master (${summary.master.count})</span><span class="value">${fmt(summary.master.totalCost)}</span></div><div class="summary-row"><span class="label">COA (100.3X)</span><span class="value">${fmt(summary.coa.totalCost)}</span></div><div class="summary-row diff ${costClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.cost)}</span></div></div><div class="summary-item"><div class="summary-item-title">📉 Akumulasi</div><div class="summary-row"><span class="label">Master</span><span class="value">${fmt(summary.master.totalAccumulated)}</span></div><div class="summary-row"><span class="label">COA (100.33)</span><span class="value">${fmt(summary.coa.totalAccumulated)}</span></div><div class="summary-row diff ${accumClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.accumulated)}</span></div></div><div class="summary-item"><div class="summary-item-title">📊 Nilai Buku</div><div class="summary-row"><span class="label">Master</span><span class="value">${fmt(summary.master.totalBookValue)}</span></div><div class="summary-row"><span class="label">COA Netto</span><span class="value">${fmt(summary.coa.totalBookValue)}</span></div><div class="summary-row diff ${bookClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.bookValue)}</span></div></div><div class="summary-item"><div class="summary-item-title">📅 Penyusutan YTD</div><div class="summary-row"><span class="label">Master</span><span class="value">${fmt(summary.master.totalYtdDepreciation)}</span></div><div class="summary-row"><span class="label">COA (500.51)</span><span class="value">${fmt(summary.coa.totalYtdDepreciation)}</span></div><div class="summary-row diff ${ytdClass}"><span class="label">Selisih</span><span class="value">${formatDiff(summary.diff.ytd)}</span></div></div>${groupDetails}`;
 }
 
 function renderAssets() {
@@ -2433,7 +2470,12 @@ o += `PT PRIMA ANUGERAH MAKMUR\nBUKU BESAR\nPeriode: ${periodStr}\n${'═'.repea
 if(S.saldo_awal.length > 0) o += `* Saldo Awal per ${fmtDate(S.saldo_awal[0].tanggal)}\n\n`;
 o += `${'Kode'.padEnd(12)}${'Nama'.padEnd(25)}${'Debet'.padStart(15)}  ${'Kredit'.padStart(15)}\n${'─'.repeat(60)}\n`;
 let totD=0, totK=0;
-S.coa.filter(a => a && a.kode && typeof a.kode === 'string').sort((a,b)=>safeCompare(a.kode, b.kode)).forEach(a => { const s = sal[a.kode] || 0; if(!s) return; if(s > 0) { o += `${a.kode.padEnd(12)}${a.nama.padEnd(25)}${fmt(s).padStart(15)}  ${''.padStart(15)}\n`; totD += s; } else { o += `${a.kode.padEnd(12)}${a.nama.padEnd(25)}${''.padStart(15)}  ${fmt(Math.abs(s)).padStart(15)}\n`; totK += Math.abs(s); } });
+S.coa.filter(a => a && a.kode && typeof a.kode === 'string').sort((a,b)=>{
+const tipeA = tipeOrder[a.tipe] || 999;
+const tipeB = tipeOrder[b.tipe] || 999;
+if (tipeA !== tipeB) return tipeA - tipeB;
+return safeCompare(a.kode, b.kode);
+}).forEach(a => { const s = sal[a.kode] || 0; if(!s) return; if(s > 0) { o += `${a.kode.padEnd(12)}${a.nama.padEnd(25)}${fmt(s).padStart(15)}  ${''.padStart(15)}\n`; totD += s; } else { o += `${a.kode.padEnd(12)}${a.nama.padEnd(25)}${''.padStart(15)}  ${fmt(Math.abs(s)).padStart(15)}\n`; totK += Math.abs(s); } });
 o += `${'─'.repeat(60)}\n${'TOTAL'.padEnd(37)}${fmt(totD).padStart(15)}  ${fmt(totK).padStart(15)}`;
 } else if (currentReportType === 'bbhutang') {
 const hutangAccounts = S.coa.filter(a => a.tipe === 'LIABILITAS'); const hutangIds = hutangAccounts.map(a => String(a.id)); const byPihak = {};
@@ -2471,6 +2513,7 @@ XLSX.writeFile(wb, `PAM-Backup-${new Date().toISOString().split('T')[0]}.xlsx`);
 log('Export Excel berhasil', 'ok'); showToast('Export berhasil', 'success');
 };
 
+// ✅ IMPORT EXCEL DENGAN AUTO UPPERCASE
 window.importFromExcel = async function(e) {
 const f = e.target.files[0]; if(!f) return;
 if(!await showModal('Import', 'SEMUA data akan ditimpa. Lanjutkan?')) { e.target.value = ''; return; }
@@ -2482,17 +2525,28 @@ reader.onload = async (ev) => {
 try {
 const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array', cellDates: true });
 const importedData = { coa: [], jurnal: [], aset: [], saldo_awal: [] }; const kodeToIdMap = {};
-if(wb.Sheets['COA']) { for(const row of XLSX.utils.sheet_to_json(wb.Sheets['COA'])) { const id = genId(); kodeToIdMap[row['Kode']] = id; importedData.coa.push({ id, kode: row['Kode'], nama: row['Nama'], tipe: row['Tipe'] }); } }
+if(wb.Sheets['COA']) { 
+for(const row of XLSX.utils.sheet_to_json(wb.Sheets['COA'])) { 
+const id = genId(); 
+// ✅ AUTO UPPERCASE KODE DAN NAMA
+const kode = safeString(row['Kode']).toUpperCase();
+const nama = safeString(row['Nama']).toUpperCase();
+const tipe = safeString(row['Tipe']).toUpperCase();
+kodeToIdMap[kode] = id; 
+importedData.coa.push({ id, kode, nama, tipe }); 
+} 
+}
 if(wb.Sheets['Jurnal']) {
 const grouped = {};
 for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Jurnal'])) {
 const noJurnal = row['No. Jurnal'] || 'AUTO'; if(!grouped[noJurnal]) grouped[noJurnal] = { header: null, lines: [], tipe: row['Tipe'] || 'Biasa' };
 let tgl = row['Tanggal']; if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0];
 if(!grouped[noJurnal].header) grouped[noJurnal].header = { nomor_bukti: noJurnal, tanggal: tgl || new Date().toISOString().split('T')[0], keterangan: row['Keterangan'] || '', pihak: row['Pihak'] || '' };
-const kodeAkun = row['Kode Akun']; const accId = kodeToIdMap[kodeAkun];
+const kodeAkun = safeString(row['Kode Akun']).toUpperCase(); 
+const accId = kodeToIdMap[kodeAkun];
 if(!accId) { continue; }
 const acc = importedData.coa.find(a => String(a.id) === String(accId)); const dk = (row['D/K'] || 'D').toString().toUpperCase(); const nominal = Number(row['Nominal']) || 0;
-grouped[noJurnal].lines.push({ id: genId(), akun_id: accId, kode: kodeAkun, nama: row['Nama Akun'] || (acc ? acc.nama : ''), debet: dk === 'D' ? nominal : 0, kredit: dk === 'K' ? nominal : 0, ket: row['Ket'] || '' });
+grouped[noJurnal].lines.push({ id: genId(), akun_id: accId, kode: kodeAkun, nama: acc ? acc.nama : safeString(row['Nama Akun']).toUpperCase(), debet: dk === 'D' ? nominal : 0, kredit: dk === 'K' ? nominal : 0, ket: row['Ket'] || '' });
 }
 for(const [noJurnal, group] of Object.entries(grouped)) {
 if(group.lines.length < 2) continue; const totalD = group.lines.reduce((s,l) => s + l.debet, 0); const totalK = group.lines.reduce((s,l) => s + l.kredit, 0);
@@ -2503,15 +2557,37 @@ importedData.jurnal.push({ id: genId(), nomor_bukti: group.header.nomor_bukti, t
 }
 if(wb.Sheets['Fixed Asset']) {
 for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Fixed Asset'])) {
-let assetAccId = kodeToIdMap[row['Kode Aset']]; if (!assetAccId) { assetAccId = genId(); importedData.coa.push({ id: assetAccId, kode: row['Kode Aset'], nama: row['Nama Aset COA'] || `Aset - ${row['Nama']}`, tipe: 'ASET' }); kodeToIdMap[row['Kode Aset']] = assetAccId; }
-let accumAccId = kodeToIdMap[row['Kode Akumulasi']]; if (!accumAccId) { accumAccId = genId(); importedData.coa.push({ id: accumAccId, kode: row['Kode Akumulasi'], nama: row['Nama Akumulasi'] || `Akm - ${row['Nama']}`, tipe: 'ASET' }); kodeToIdMap[row['Kode Akumulasi']] = accumAccId; }
-let depAccId = kodeToIdMap[row['Kode Biaya']]; if (!depAccId) { depAccId = genId(); importedData.coa.push({ id: depAccId, kode: row['Kode Biaya'], nama: row['Nama Biaya'] || `Biaya - ${row['Nama']}`, tipe: 'BIAYA PRODUKSI' }); kodeToIdMap[row['Kode Biaya']] = depAccId; }
-importedData.aset.push({ id: genId(), nama: row['Nama'], group: row['Grup'] || '31', cost: Number(row['Perolehan']) || 0, year: Number(row['Tahun']) || new Date().getFullYear(), month: row['Bulan'] || '01', area: row['Luas'] || '', life: Number(row['Masa Manfaat']) || 10, residual: Number(row['Nilai Sisa']) || 0, akun_aset_id: assetAccId, akun_aset_kode: row['Kode Aset'], akun_aset_nama: row['Nama Aset COA'], akun_akumulasi_id: accumAccId, akun_akumulasi_kode: row['Kode Akumulasi'], akun_akumulasi_nama: row['Nama Akumulasi'], akun_biaya_id: depAccId, akun_biaya_kode: row['Kode Biaya'], akun_biaya_nama: row['Nama Biaya'], status: row['Status'] || 'aktif', created_at: new Date().toISOString() });
+let assetAccId = kodeToIdMap[safeString(row['Kode Aset']).toUpperCase()]; 
+if (!assetAccId) { 
+assetAccId = genId(); 
+importedData.coa.push({ id: assetAccId, kode: safeString(row['Kode Aset']).toUpperCase(), nama: safeString(row['Nama Aset COA'] || `Aset - ${row['Nama']}`).toUpperCase(), tipe: 'ASET' }); 
+kodeToIdMap[safeString(row['Kode Aset']).toUpperCase()] = assetAccId; 
+}
+let accumAccId = kodeToIdMap[safeString(row['Kode Akumulasi']).toUpperCase()]; 
+if (!accumAccId) { 
+accumAccId = genId(); 
+importedData.coa.push({ id: accumAccId, kode: safeString(row['Kode Akumulasi']).toUpperCase(), nama: safeString(row['Nama Akumulasi'] || `Akm - ${row['Nama']}`).toUpperCase(), tipe: 'ASET' }); 
+kodeToIdMap[safeString(row['Kode Akumulasi']).toUpperCase()] = accumAccId; 
+}
+let depAccId = kodeToIdMap[safeString(row['Kode Biaya']).toUpperCase()]; 
+if (!depAccId) { 
+depAccId = genId(); 
+importedData.coa.push({ id: depAccId, kode: safeString(row['Kode Biaya']).toUpperCase(), nama: safeString(row['Nama Biaya'] || `Biaya - ${row['Nama']}`).toUpperCase(), tipe: 'BIAYA PRODUKSI' }); 
+kodeToIdMap[safeString(row['Kode Biaya']).toUpperCase()] = depAccId; 
+}
+importedData.aset.push({ id: genId(), nama: safeString(row['Nama']).toUpperCase(), group: row['Grup'] || '31', cost: Number(row['Perolehan']) || 0, year: Number(row['Tahun']) || new Date().getFullYear(), month: row['Bulan'] || '01', area: row['Luas'] || '', life: Number(row['Masa Manfaat']) || 10, residual: Number(row['Nilai Sisa']) || 0, akun_aset_id: assetAccId, akun_aset_kode: safeString(row['Kode Aset']).toUpperCase(), akun_aset_nama: safeString(row['Nama Aset COA']).toUpperCase(), akun_akumulasi_id: accumAccId, akun_akumulasi_kode: safeString(row['Kode Akumulasi']).toUpperCase(), akun_akumulasi_nama: safeString(row['Nama Akumulasi']).toUpperCase(), akun_biaya_id: depAccId, akun_biaya_kode: safeString(row['Kode Biaya']).toUpperCase(), akun_biaya_nama: safeString(row['Nama Biaya']).toUpperCase(), status: row['Status'] || 'aktif', created_at: new Date().toISOString() });
 }
 }
 if(wb.Sheets['Saldo Awal']) {
 const seenCodes = new Set(), duplicateCodes = new Set();
-for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal'])) { const kode = row['Kode']; if(!kode) continue; if(seenCodes.has(kode)) { duplicateCodes.add(kode); continue; } seenCodes.add(kode); let tgl = row['Tanggal']; if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0]; importedData.saldo_awal.push({ id: genId(), tanggal: tgl || new Date().toISOString().split('T')[0], akunKode: kode, akunNama: row['Nama'], tipe: row['Tipe'], debet: Number(row['Debet']) || 0, kredit: Number(row['Kredit']) || 0 }); }
+for(const row of XLSX.utils.sheet_to_json(wb.Sheets['Saldo Awal'])) { 
+const kode = safeString(row['Kode']).toUpperCase(); 
+if(!kode) continue; 
+if(seenCodes.has(kode)) { duplicateCodes.add(kode); continue; } 
+seenCodes.add(kode); 
+let tgl = row['Tanggal']; if(tgl instanceof Date) tgl = tgl.toISOString().split('T')[0]; 
+importedData.saldo_awal.push({ id: genId(), tanggal: tgl || new Date().toISOString().split('T')[0], akunKode: kode, akunNama: safeString(row['Nama']).toUpperCase(), tipe: safeString(row['Tipe']).toUpperCase(), debet: Number(row['Debet']) || 0, kredit: Number(row['Kredit']) || 0 }); 
+}
 if(duplicateCodes.size > 0) { showModal('Gagal', `Kode duplikat:\n${Array.from(duplicateCodes).join('\n')}`); e.target.value = ''; hideLoading(); return; }
 }
 
@@ -2533,21 +2609,22 @@ reader.readAsArrayBuffer(f); e.target.value = '';
 window.downloadExcelTemplate = function() {
 const templateData = {
 "COA": defaultCoa.map(a => ({ 'Kode': a.kode, 'Nama': a.nama, 'Tipe': a.tipe })),
-"Jurnal": [{ 'No. Jurnal': 'JU1-00001', 'Tipe': 'Biasa', 'Tanggal': '2024-01-05', 'Keterangan': 'Modal awal', 'Pihak': 'Owner', 'Kode Akun': '100.00.001', 'Nama Akun': 'Kas', 'D/K': 'D', 'Nominal': 100000000, 'Ket': '' },{ 'No. Jurnal': 'JU1-00001', 'Tipe': 'Biasa', 'Tanggal': '2024-01-05', 'Keterangan': 'Modal awal', 'Pihak': 'Owner', 'Kode Akun': '300.00.001', 'Nama Akun': 'Modal Disetor', 'D/K': 'K', 'Nominal': 100000000, 'Ket': '' }],
-"Fixed Asset": [{ 'Nama': 'Traktor', 'Grup': '33', 'Kode Aset': '100.33.001', 'Nama Aset COA': 'Aset - Traktor', 'Kode Akumulasi': '100.33.002', 'Nama Akumulasi': 'Akm - Traktor', 'Kode Biaya': '500.51.001', 'Nama Biaya': 'Biaya - Traktor', 'Perolehan': 1000000000, 'Tahun': 2024, 'Bulan': '01', 'Luas': '1 Unit', 'Masa Manfaat': 8, 'Nilai Sisa': 100000000, 'Status': 'aktif' }],
-"Saldo Awal": [{ 'Tanggal': '2024-01-01', 'Kode': '100.00.001', 'Nama': 'Kas', 'Tipe': 'ASET', 'Debet': 100000000, 'Kredit': 0 }]
+"Jurnal": [{ 'No. Jurnal': 'JU1-00001', 'Tipe': 'Biasa', 'Tanggal': '2024-01-05', 'Keterangan': 'Modal awal', 'Pihak': 'Owner', 'Kode Akun': '100.00.001', 'Nama Akun': 'KAS', 'D/K': 'D', 'Nominal': 100000000, 'Ket': '' },{ 'No. Jurnal': 'JU1-00001', 'Tipe': 'Biasa', 'Tanggal': '2024-01-05', 'Keterangan': 'Modal awal', 'Pihak': 'Owner', 'Kode Akun': '300.00.001', 'Nama Akun': 'MODAL DISETOR', 'D/K': 'K', 'Nominal': 100000000, 'Ket': '' }],
+"Fixed Asset": [{ 'Nama': 'Traktor', 'Grup': '33', 'Kode Aset': '100.33.001', 'Nama Aset COA': 'ASET - TRAKTOR', 'Kode Akumulasi': '100.33.002', 'Nama Akumulasi': 'AKM - TRAKTOR', 'Kode Biaya': '500.51.001', 'Nama Biaya': 'BIAYA - TRAKTOR', 'Perolehan': 1000000000, 'Tahun': 2024, 'Bulan': '01', 'Luas': '1 Unit', 'Masa Manfaat': 8, 'Nilai Sisa': 100000000, 'Status': 'aktif' }],
+"Saldo Awal": [{ 'Tanggal': '2024-01-01', 'Kode': '100.00.001', 'Nama': 'KAS', 'Tipe': 'ASET', 'Debet': 100000000, 'Kredit': 0 }]
 };
 const wb = XLSX.utils.book_new(); Object.keys(templateData).forEach(sheet => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(templateData[sheet]), sheet));
 XLSX.writeFile(wb, "PAM-Template.xlsx"); log('Template didownload', 'ok');
 };
 
 window.downloadTemplateSaldoAwal = function() {
-const data = [{ 'Tanggal': '2024-01-01', 'Kode': '100.00.001', 'Nama': 'Kas', 'Tipe': 'ASET', 'Debet': 100000000, 'Kredit': 0 },{ 'Tanggal': '2024-01-01', 'Kode': '300.00.001', 'Nama': 'Modal', 'Tipe': 'EKUITAS', 'Debet': 0, 'Kredit': 100000000 }];
+const data = [{ 'Tanggal': '2024-01-01', 'Kode': '100.00.001', 'Nama': 'KAS', 'Tipe': 'ASET', 'Debet': 100000000, 'Kredit': 0 },{ 'Tanggal': '2024-01-01', 'Kode': '300.00.001', 'Nama': 'MODAL', 'Tipe': 'EKUITAS', 'Debet': 0, 'Kredit': 100000000 }];
 const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Saldo Awal"); XLSX.writeFile(wb, "PAM-SaldoAwal.xlsx"); log('Template didownload', 'ok');
 };
 
 window.exportSaldoAwal = function() { if(S.saldo_awal.length === 0) { showModal('Export', 'Belum ada data.'); return; } const data = S.saldo_awal.map(sa => ({ 'Tanggal': sa.tanggal, 'Kode': sa.akunKode, 'Nama': sa.akunNama, 'Tipe': sa.tipe, 'Debet': sa.debet || 0, 'Kredit': sa.kredit || 0 })); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Saldo Awal"); XLSX.writeFile(wb, `PAM-SaldoAwal-${new Date().toISOString().split('T')[0]}.xlsx`); log('Export saldo awal', 'ok'); };
 
+// ✅ IMPORT SALDO AWAL DENGAN AUTO UPPERCASE
 window.importSaldoAwal = async function(e) {
 const f = e.target.files[0]; if(!f) return;
 if(!await showModal('Import', 'Import saldo awal baru? Data lama akan digantikan.')) { e.target.value = ''; return; }
@@ -2567,11 +2644,11 @@ S.coa.forEach(a => { if (a && a.kode) kodeMap[a.kode] = a; });
 
 let newCoaCount = 0;
 for(const row of raw) {
-const kode = row['Kode'];
+const kode = safeString(row['Kode']).toUpperCase();
 if(!kode) continue;
 if(!kodeMap[kode]) {
-const tipe = row['Tipe'] || 'ASET';
-const nama = row['Nama'] || kode;
+const tipe = safeString(row['Tipe']).toUpperCase() || 'ASET';
+const nama = safeString(row['Nama']).toUpperCase() || kode;
 const newCoa = { id: genId(), kode, nama, tipe };
 await storage.add('coa', newCoa);
 kodeMap[kode] = newCoa;
@@ -2586,7 +2663,8 @@ showToast(`${newCoaCount} akun COA baru dibuat`, 'info');
 
 let totalDebet = 0, totalKredit = 0; const validRows = [];
 for(const row of raw) {
-const kode = row['Kode']; if(!kode || !kodeMap[kode]) continue;
+const kode = safeString(row['Kode']).toUpperCase(); 
+if(!kode || !kodeMap[kode]) continue;
 const acc = kodeMap[kode];
 const debet = Number(row['Debet']) || 0, kredit = Number(row['Kredit']) || 0;
 let tgl = row['Tanggal'];
@@ -2725,7 +2803,7 @@ invalidateSaldoCache();
 resetJournalForm(); populateClosingYearSelect(); populateDepreciationYearSelect();
 populateAssetAccountDropdowns(); populateJournalDropdown();
 renderCoaTree(); renderDaftarTransaksi(); renderAssets(); renderAssetSummary();
-updateUI(); log('V5.5 siap - COA Tree: Tipe → Kelompok → Akun','ok');
+updateUI(); log('V5.6 siap - Fix Urutan COA & Auto Uppercase','ok');
 } catch(err) {
 console.error('Boot error:', err);
 const errorBanner = document.getElementById('errorBanner');
