@@ -356,15 +356,15 @@ td button{min-height:36px;min-width:36px}
 <span class="badge year" id="yearBadge">📅 <span id="activeYear">-</span></span>
 <span class="badge firebase" id="modeBadge"><span class="dot"></span> <span id="modeText">FIREBASE</span></span>
 <span class="date-badge" id="currentDate"></span>
-<button class="btn sm" onclick="showYearSelector()"> Ganti Tahun</button>
-<button class="btn sm danger" onclick="doLogout()">🚪 Logout</button>
+<button class="btn sm" onclick="showYearSelector()">📅 Ganti Tahun</button>
+<button class="btn sm danger" onclick="doLogout()"> Logout</button>
 </div>
 </div>
 
 <div class="nav">
-<button class="nav-btn active" data-view="dashboard"><span>📊</span> Dashboard</button>
-<button class="nav-btn" data-view="coa"><span>📋</span> COA</button>
-<button class="nav-btn" data-view="saldo-awal"><span></span> Saldo Awal</button>
+<button class="nav-btn active" data-view="dashboard"><span></span> Dashboard</button>
+<button class="nav-btn" data-view="coa"><span></span> COA</button>
+<button class="nav-btn" data-view="saldo-awal"><span>📊</span> Saldo Awal</button>
 <button class="nav-btn" data-view="jurnal"><span>📝</span> Input Jurnal</button>
 <button class="nav-btn" data-view="daftar"><span>📄</span> Transaksi</button>
 <button class="nav-btn" data-view="aset"><span>🏭</span> Fixed Asset</button>
@@ -379,7 +379,7 @@ td button{min-height:36px;min-width:36px}
 <strong>Koneksi Firebase Gagal!</strong><br>
 <span id="errorMessage" style="font-size:11px"></span>
 </div>
-<button class="btn" onclick="location.reload()"> Retry</button>
+<button class="btn" onclick="location.reload()">🔄 Retry</button>
 </div>
 
 <div id="view-dashboard" class="view active">
@@ -390,7 +390,7 @@ td button{min-height:36px;min-width:36px}
 <div class="stat-card"><div class="label">Total Fixed Asset</div><div class="value accent" id="statAsetTetap">Rp 0</div></div>
 </div>
 <div class="card">
-<div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📝</span> Log Aktivitas</div>
+<div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)"></span> Log Aktivitas</div>
 <div class="log-box" id="activityLog"></div>
 </div>
 </div>
@@ -420,7 +420,7 @@ td button{min-height:36px;min-width:36px}
 <button class="btn primary" id="btnSaveCoa" onclick="simpanCoa()">💾 Simpan Akun</button>
 <button class="btn" onclick="batalEditCoa()">↻ Batal</button>
 <button class="btn sm" onclick="expandAllCoaGroups()">📂 Expand All</button>
-<button class="btn sm" onclick="collapseAllCoaGroups()">📁 Collapse All</button>
+<button class="btn sm" onclick="collapseAllCoaGroups()"> Collapse All</button>
 </div>
 </div>
 <div class="card">
@@ -432,9 +432,9 @@ td button{min-height:36px;min-width:36px}
 <div id="view-saldo-awal" class="view">
 <div class="card">
 <div class="card-title"><span class="icon" style="background:var(--cyan-bg);color:var(--cyan)">📊</span> Saldo Awal <span id="saldoSaveStatus" style="margin-left:auto;font-size:11px;color:var(--green);font-weight:600">✅ Tersimpan</span></div>
-<div class="info-box">ℹ️ Pilih akun COA dari dropdown, isi nominal Debet/Kredit. Nama & Tipe otomatis terisi. <strong>Format nominal: 1,153,296.00 atau 1153296</strong>. Jika kode COA belum ada, akan otomatis dibuat saat Import.</div>
+<div class="info-box">️ Pilih akun COA dari dropdown, isi nominal Debet/Kredit. Nama & Tipe otomatis terisi. <strong>Format nominal: 1,153,296.00 atau 1153296</strong>. Jika kode COA belum ada, akan otomatis dibuat saat Import.</div>
 <div class="btn-group" style="margin-top:0;margin-bottom:16px">
-<button class="btn success" onclick="addSaldoAwalRow()">➕ Tambah Baris</button>
+<button class="btn success" onclick="addSaldoAwalRow()"> Tambah Baris</button>
 <button class="btn primary" onclick="saveAllSaldoAwalChanges()" id="btnSaveSaldoAwal" style="display:none">💾 Simpan Perubahan</button>
 <button class="btn" onclick="exportSaldoAwal()">📤 Export</button>
 <button class="btn amber" onclick="document.getElementById('importSaldoFile').click()">📥 Import</button>
@@ -477,7 +477,7 @@ td button{min-height:36px;min-width:36px}
 <div class="card">
 <div class="card-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">📝</span><span id="journalFormTitle">Input Jurnal Baru</span></div>
 <div id="editModeIndicator" class="edit-mode-indicator" style="display:none">✏️ MODE EDIT: <span id="editingJournalNumber"></span><button class="btn sm danger" onclick="cancelEdit()" style="margin-left:auto">Batal</button></div>
-<div id="assetNotification" class="warning-box" style="display:none"><span>️</span><div style="flex:1"><strong>Anda memilih akun Fixed Asset!</strong> Pastikan aset sudah didaftarkan di menu Fixed Asset.<a href="#" onclick="document.querySelector('[data-view=aset]').click();return false;" style="color:var(--amber);text-decoration:underline;margin-left:6px">Buka →</a></div></div>
+<div id="assetNotification" class="warning-box" style="display:none"><span>⚠️</span><div style="flex:1"><strong>Anda memilih akun Fixed Asset!</strong> Pastikan aset sudah didaftarkan di menu Fixed Asset.<a href="#" onclick="document.querySelector('[data-view=aset]').click();return false;" style="color:var(--amber);text-decoration:underline;margin-left:6px">Buka →</a></div></div>
 <div class="form-grid">
 <div class="form-group"><label class="form-label">No. Jurnal</label><input type="text" class="form-input" id="jurnalNomor" readonly style="background:var(--bg);color:var(--accent2);font-weight:700"></div>
 <div class="form-group"><label class="form-label">Tanggal *</label><input type="date" class="form-input" id="jurnalTanggal"></div>
@@ -507,7 +507,7 @@ td button{min-height:36px;min-width:36px}
 <div id="view-daftar" class="view">
 <div class="card">
 <div class="card-title"><span class="icon" style="background:var(--accent-glow);color:var(--accent2)">📄</span>Daftar Transaksi<span style="margin-left:auto;font-size:11px;color:var(--text3)" id="daftarCount">0 jurnal</span></div>
-<div class="search-bar"><span>🔍</span><input type="text" id="searchInput" placeholder="Cari No. Jurnal atau Keterangan..." oninput="renderDaftarTransaksi()"><span class="result-count" id="searchResultCount"></span><button class="btn sm" onclick="document.getElementById('searchInput').value='';renderDaftarTransaksi()">✕</button></div>
+<div class="search-bar"><span></span><input type="text" id="searchInput" placeholder="Cari No. Jurnal atau Keterangan..." oninput="renderDaftarTransaksi()"><span class="result-count" id="searchResultCount"></span><button class="btn sm" onclick="document.getElementById('searchInput').value='';renderDaftarTransaksi()">✕</button></div>
 <div id="daftarContainer"></div>
 </div>
 </div>
@@ -554,7 +554,7 @@ td button{min-height:36px;min-width:36px}
 </div>
 </div>
 <div class="btn-group">
-<button class="btn primary" id="btnSaveAsset" onclick="simpanAset()"> Simpan Aset</button>
+<button class="btn primary" id="btnSaveAsset" onclick="simpanAset()">💾 Simpan Aset</button>
 <button class="btn" onclick="resetAssetForm()">↻ Reset</button>
 </div>
 </div>
@@ -594,7 +594,7 @@ td button{min-height:36px;min-width:36px}
 <div class="form-group"><label class="form-label">Tahun *</label><select class="form-select" id="depYear"></select></div>
 </div>
 <div class="btn-group" style="margin-top:14px">
-<button class="btn" onclick="previewDepreciation()">️ Preview</button>
+<button class="btn" onclick="previewDepreciation()">👁️ Preview</button>
 <button class="btn primary" onclick="generateDepreciation()">📉 Generate</button>
 </div>
 <div id="depPreview" class="closing-preview" style="display:none"></div>
@@ -613,8 +613,8 @@ td button{min-height:36px;min-width:36px}
 </div>
 <div class="report-tabs">
 <button class="btn primary sm" onclick="setReportType('lr', event)">📊 Laba Rugi</button>
-<button class="btn sm" onclick="setReportType('neraca', event)">🏦 Neraca</button>
-<button class="btn sm" onclick="setReportType('bb', event)">📖 Buku Besar</button>
+<button class="btn sm" onclick="setReportType('neraca', event)"> Neraca</button>
+<button class="btn sm" onclick="setReportType('bb', event)"> Buku Besar</button>
 <button class="btn sm" onclick="setReportType('bbhutang', event)">📕 BB Hutang</button>
 <button class="btn sm" onclick="setReportType('bbpiutang', event)">📗 BB Piutang</button>
 <button class="btn sm" onclick="setReportType('bbmodal', event)">📘 BB Modal</button>
@@ -650,7 +650,7 @@ td button{min-height:36px;min-width:36px}
 </div>
 </div>
 <div class="setting-section" style="border-color:var(--red)">
-<div class="setting-section-title" style="color:var(--red)">️ Zona Bahaya</div>
+<div class="setting-section-title" style="color:var(--red)">⚠️ Zona Bahaya</div>
 <div class="setting-desc" style="color:var(--red)">Operasi ini tidak dapat dibatalkan!</div>
 <div class="setting-actions">
 <button class="btn danger" onclick="resetSemuaData()">💣 Hapus SEMUA Data</button>
@@ -659,7 +659,7 @@ td button{min-height:36px;min-width:36px}
 </div>
 </div>
 
-<div class="footer">PT Prima Anugerah Makmur — V6.9.5 &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
+<div class="footer">PT Prima Anugerah Makmur — V6.9.5 &nbsp;|&nbsp; Tahun: <span id="footerYear" style="color:var(--accent2);font-weight:700">-</span> &nbsp;|&nbsp; <span id="footerMode">Firebase</span> &nbsp;|&nbsp; <span id="dataCount">0</span> records</div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
@@ -673,7 +673,7 @@ td button{min-height:36px;min-width:36px}
 
 <script type="module">
 // ============================================
-// V6.9.5 - FIX TOTAL: Year Selector & Import
+// V6.9.5 - FINAL FIX: Year Selector & Saldo Awal
 // ============================================
 
 const firebaseConfig = {
@@ -802,7 +802,7 @@ window.log = log;
 
 function showToast(message, type = 'success') {
 const container = document.getElementById('toastContainer'); if (!container) return;
-const icons = { success: '✅', error: '❌', warn: '⚠️', info: '️' };
+const icons = { success: '✅', error: '❌', warn: '⚠️', info: 'ℹ️' };
 const toast = document.createElement('div'); toast.className = `toast ${type}`;
 toast.innerHTML = `<span class="toast-icon">${icons[type] || '✅'}</span><span class="toast-msg">${message}</span>`;
 container.appendChild(toast);
@@ -819,6 +819,149 @@ const close = v => {document.getElementById('modalConfirm').classList.remove('sh
 ok.onclick = () => close(true); no.onclick = () => close(false);
 })}
 window.showModal = showModal;
+
+// ============================================
+// LOGIN & YEAR SELECTION
+// ============================================
+
+window.doLogin = () => {
+console.log('🔐 doLogin called');
+const u = document.getElementById('loginUser').value.trim().toLowerCase();
+const p = document.getElementById('loginPass').value.trim();
+if (u === 'ptpam' && p === '945766') {
+sessionStorage.setItem('pam_auth', 'true');
+document.getElementById('loginScreen').classList.add('hidden');
+console.log('✅ Login berhasil, memanggil showYearSelector');
+showYearSelector();
+} else {
+document.getElementById('loginError').textContent = 'Username/Password salah!';
+document.getElementById('loginPass').value = '';
+}
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+const loginPass = document.getElementById('loginPass');
+const loginUser = document.getElementById('loginUser');
+if (loginPass) loginPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doLogin(); } });
+if (loginUser) loginUser.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginPass.focus(); } });
+});
+
+window.doLogout = async () => {
+if(await showModal('Logout', 'Yakin keluar?')) { 
+sessionStorage.removeItem('pam_auth');
+sessionStorage.removeItem('pam_current_year');
+currentYear = null;
+location.reload(); 
+}
+};
+
+// Restore session
+if (sessionStorage.getItem('pam_auth') === 'true') {
+const savedYear = sessionStorage.getItem('pam_current_year');
+if (savedYear) currentYear = parseInt(savedYear);
+document.getElementById('loginScreen').classList.add('hidden');
+if (currentYear) {
+document.getElementById('mainApp').style.display = 'block';
+// ✅ FIX: Null check untuk semua element
+const activeYearEl = document.getElementById('activeYear');
+const footerYearEl = document.getElementById('footerYear');
+if (activeYearEl) activeYearEl.textContent = currentYear;
+if (footerYearEl) footerYearEl.textContent = currentYear;
+console.log('🔄 Restore session, booting tahun:', currentYear);
+boot();
+} else {
+console.log('📅 Tidak ada tahun tersimpan, menampilkan year selector');
+showYearSelector();
+}
+}
+
+function getAvailableYears() {
+const cy = new Date().getFullYear();
+const years = [];
+for (let y = 2020; y <= cy + 1; y++) years.push(y);
+try {
+const customYears = JSON.parse(localStorage.getItem('pam_custom_years') || '[]');
+customYears.forEach(y => { if (!years.includes(y)) years.push(y); });
+} catch(e) {}
+return years.sort((a, b) => b - a);
+}
+
+// ✅ SIMPLIFIED: Klik tahun langsung load (tidak perlu tombol konfirmasi)
+window.selectYear = async function(year) {
+console.log('📅 selectYear called with year:', year);
+if (!firebaseReady) {
+showToast('Firebase belum siap', 'error');
+return;
+}
+
+currentYear = year;
+sessionStorage.setItem('pam_current_year', String(year));
+
+// ✅ FIX: Null check untuk semua element
+const activeYearEl = document.getElementById('activeYear');
+const footerYearEl = document.getElementById('footerYear');
+if (activeYearEl) activeYearEl.textContent = year;
+if (footerYearEl) footerYearEl.textContent = year;
+
+closeYearSelector();
+document.getElementById('mainApp').style.display = 'block';
+
+log(`Database Tahun ${year} dimuat`, 'ok');
+await boot();
+};
+
+window.showYearSelector = async function() {
+console.log('📅 showYearSelector called');
+const overlay = document.getElementById('yearSelectorOverlay');
+const grid = document.getElementById('yearGrid');
+grid.innerHTML = '';
+
+const years = getAvailableYears();
+
+for (const year of years) {
+const btn = document.createElement('button');
+btn.className = 'year-btn';
+btn.dataset.year = year;
+// ✅ FIX: Langsung panggil selectYear saat klik
+btn.onclick = () => {
+console.log('🖱️ Klik tahun:', year);
+selectYear(year);
+};
+
+if (year === currentYear) btn.classList.add('selected');
+const isFutureYear = year > new Date().getFullYear();
+if (isFutureYear) btn.classList.add('new-year');
+
+btn.innerHTML = `${year}<div class="year-status" id="yearStatus${year}">Memuat...</div>`;
+grid.appendChild(btn);
+}
+
+overlay.classList.add('show');
+
+// Load status untuk setiap tahun
+for (const year of years) {
+const statusEl = document.getElementById(`yearStatus${year}`);
+if (statusEl) {
+try {
+const coaCount = await storage.getAllForYear('coa', year);
+const jurnalCount = await storage.getAllForYear('jurnal', year);
+if (coaCount.length === 0 && jurnalCount.length === 0) {
+const isFuture = year > new Date().getFullYear();
+statusEl.textContent = isFuture ? '🆕 Tahun Baru' : '📭 Kosong';
+} else {
+statusEl.textContent = `✅ ${coaCount.length} COA | ${jurnalCount.length} Jurnal`;
+}
+} catch(e) {
+console.warn(`Error checking year ${year}:`, e);
+statusEl.textContent = '📭 Kosong';
+}
+}
+}
+};
+
+window.closeYearSelector = function() {
+document.getElementById('yearSelectorOverlay').classList.remove('show');
+};
 
 // ============================================
 // FIREBASE ADAPTER
@@ -994,143 +1137,6 @@ if(loading) loading.classList.remove('show');
 await initFirebase();
 
 // ============================================
-// LOGIN & YEAR SELECTION
-// ============================================
-
-window.doLogin = () => {
-console.log(' doLogin called');
-const u = document.getElementById('loginUser').value.trim().toLowerCase();
-const p = document.getElementById('loginPass').value.trim();
-if (u === 'ptpam' && p === '945766') {
-sessionStorage.setItem('pam_auth', 'true');
-document.getElementById('loginScreen').classList.add('hidden');
-console.log('✅ Login berhasil, memanggil showYearSelector');
-showYearSelector();
-} else {
-document.getElementById('loginError').textContent = 'Username/Password salah!';
-document.getElementById('loginPass').value = '';
-}
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-const loginPass = document.getElementById('loginPass');
-const loginUser = document.getElementById('loginUser');
-if (loginPass) loginPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doLogin(); } });
-if (loginUser) loginUser.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginPass.focus(); } });
-});
-
-window.doLogout = async () => {
-if(await showModal('Logout', 'Yakin keluar?')) { 
-sessionStorage.removeItem('pam_auth');
-sessionStorage.removeItem('pam_current_year');
-currentYear = null;
-location.reload(); 
-}
-};
-
-// Restore session
-if (sessionStorage.getItem('pam_auth') === 'true') {
-const savedYear = sessionStorage.getItem('pam_current_year');
-if (savedYear) currentYear = parseInt(savedYear);
-document.getElementById('loginScreen').classList.add('hidden');
-if (currentYear) {
-document.getElementById('mainApp').style.display = 'block';
-document.getElementById('activeYear').textContent = currentYear;
-document.getElementById('footerYear').textContent = currentYear;
-console.log('🔄 Restore session, booting tahun:', currentYear);
-boot();
-} else {
-console.log(' Tidak ada tahun tersimpan, menampilkan year selector');
-showYearSelector();
-}
-}
-
-function getAvailableYears() {
-const cy = new Date().getFullYear();
-const years = [];
-for (let y = 2020; y <= cy + 1; y++) years.push(y);
-try {
-const customYears = JSON.parse(localStorage.getItem('pam_custom_years') || '[]');
-customYears.forEach(y => { if (!years.includes(y)) years.push(y); });
-} catch(e) {}
-return years.sort((a, b) => b - a);
-}
-
-// ✅ SIMPLIFIED: Klik tahun langsung load
-window.selectYear = async function(year) {
-console.log('📅 selectYear called with year:', year);
-if (!firebaseReady) {
-showToast('Firebase belum siap', 'error');
-return;
-}
-
-currentYear = year;
-sessionStorage.setItem('pam_current_year', String(year));
-
-document.getElementById('activeYear').textContent = year;
-document.getElementById('footerYear').textContent = year;
-
-closeYearSelector();
-document.getElementById('mainApp').style.display = 'block';
-
-log(`Database Tahun ${year} dimuat`, 'ok');
-await boot();
-};
-
-window.showYearSelector = async function() {
-console.log(' showYearSelector called');
-const overlay = document.getElementById('yearSelectorOverlay');
-const grid = document.getElementById('yearGrid');
-grid.innerHTML = '';
-
-const years = getAvailableYears();
-
-for (const year of years) {
-const btn = document.createElement('button');
-btn.className = 'year-btn';
-btn.dataset.year = year;
-// ✅ FIX: Langsung panggil selectYear saat klik
-btn.onclick = () => {
-console.log('🖱️ Klik tahun:', year);
-selectYear(year);
-};
-
-if (year === currentYear) btn.classList.add('selected');
-const isFutureYear = year > new Date().getFullYear();
-if (isFutureYear) btn.classList.add('new-year');
-
-btn.innerHTML = `${year}<div class="year-status" id="yearStatus${year}">Memuat...</div>`;
-grid.appendChild(btn);
-}
-
-overlay.classList.add('show');
-
-// Load status untuk setiap tahun
-for (const year of years) {
-const statusEl = document.getElementById(`yearStatus${year}`);
-if (statusEl) {
-try {
-const coaCount = await storage.getAllForYear('coa', year);
-const jurnalCount = await storage.getAllForYear('jurnal', year);
-if (coaCount.length === 0 && jurnalCount.length === 0) {
-const isFuture = year > new Date().getFullYear();
-statusEl.textContent = isFuture ? '🆕 Tahun Baru' : ' Kosong';
-} else {
-statusEl.textContent = `✅ ${coaCount.length} COA | ${jurnalCount.length} Jurnal`;
-}
-} catch(e) {
-console.warn(`Error checking year ${year}:`, e);
-statusEl.textContent = ' Kosong';
-}
-}
-}
-};
-
-window.closeYearSelector = function() {
-document.getElementById('yearSelectorOverlay').classList.remove('show');
-};
-
-// ============================================
 // UI UPDATE
 // ============================================
 
@@ -1154,7 +1160,7 @@ const statusEl = document.getElementById('settingStatus');
 if (modeEl) modeEl.textContent = 'Firebase Firestore';
 if (projectEl) projectEl.textContent = firebaseConfig.projectId || '-';
 if (statusEl) {
-statusEl.textContent = firebaseReady ? '✅ Terhubung' : ' Tidak Terhubung';
+statusEl.textContent = firebaseReady ? '✅ Terhubung' : '❌ Tidak Terhubung';
 statusEl.style.color = firebaseReady ? 'var(--green)' : 'var(--red)';
 }
 }
@@ -1256,7 +1262,7 @@ updateDashboard();
 updateUI();
 return true;
 } catch (err) {
-console.error(' Error refresh:', err);
+console.error('❌ Error refresh:', err);
 showToast('Gagal refresh: ' + err.message, 'error');
 return false;
 }
@@ -1679,7 +1685,7 @@ if (indicatorEl) { indicatorEl.className = 'saldo-balance-indicator unbalanced';
 
 // ✅ FIXED: Import Saldo Awal dengan proper handling
 window.importSaldoAwal = async function(e) {
-console.log(' importSaldoAwal called');
+console.log('📥 importSaldoAwal called');
 const f = e.target.files[0]; if(!f) return;
 if(!await showModal('Import', 'Import saldo awal baru? Data lama akan digantikan.')) { e.target.value = ''; return; }
 showLoading('Mengimpor saldo awal...');
@@ -1690,7 +1696,7 @@ const data = new Uint8Array(ev.target.result);
 const wb = XLSX.read(data, { type: 'array', cellDates: true });
 if(!wb.Sheets['Saldo Awal']) { 
 log('Sheet "Saldo Awal" tidak ditemukan', 'err'); 
-showToast('❌ Sheet "Saldo Awal" tidak ditemukan di Excel', 'error');
+showToast(' Sheet "Saldo Awal" tidak ditemukan di Excel', 'error');
 e.target.value = ''; 
 hideLoading(); 
 return; 
@@ -1913,7 +1919,7 @@ const diffEl = document.getElementById('balanceDiff');
 const btnSave = document.getElementById('btnSaveJournal');
 if (!hasValidLines) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Minimal 2 baris'; diffEl.textContent = ''; btnSave.disabled = true; }
 else if (!allLinesHaveAccount) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Pilih akun semua baris'; diffEl.textContent = ''; btnSave.disabled = true; }
-else if (!allLinesHaveNominal) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '⚠️'; text.textContent = 'Isi nominal > 0'; diffEl.textContent = ''; btnSave.disabled = true; }
+else if (!allLinesHaveNominal) { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '️'; text.textContent = 'Isi nominal > 0'; diffEl.textContent = ''; btnSave.disabled = true; }
 else if (isBalanced) { indicator.className = 'balance-indicator balanced'; icon.textContent = '✅'; text.textContent = 'BALANCE'; diffEl.textContent = `D: ${fmt(totalDebet)} = K: ${fmt(totalKredit)}`; btnSave.disabled = false; }
 else { indicator.className = 'balance-indicator unbalanced'; icon.textContent = '❌'; text.textContent = 'TIDAK BALANCE'; diffEl.textContent = `Selisih: ${fmt(diff)}`; btnSave.disabled = true; }
 }
@@ -1961,7 +1967,7 @@ log(`Simpan ${nomorBukti}`, 'ok');
 renderDaftarTransaksi();
 resetJournalForm();
 } catch (e) { log('Error: ' + e.message, 'err'); showToast('Gagal: ' + e.message, 'error'); }
-finally { isSaving = false; if (btnSave) { btnSave.disabled = false; btnSave.textContent = ' Simpan Jurnal'; } }
+finally { isSaving = false; if (btnSave) { btnSave.disabled = false; btnSave.textContent = '💾 Simpan Jurnal'; } }
 };
 
 window.resetJournalForm = function() {
@@ -2048,7 +2054,7 @@ const isClosing = j.tipe === 'closing'; const isDepreciation = j.tipe === 'depre
 const numberClass = isClosing ? 'journal-number closing' : isDepreciation ? 'journal-number depreciation' : 'journal-number';
 const prefixIcon = isClosing ? '🔒' : isDepreciation ? '📉' : '📄';
 const editBtn = (isClosing || isDepreciation) ? '' : `<button class="btn sm" onclick="editJurnal('${targetId}')">✏️</button>`;
-card.innerHTML = `<div class="journal-header" onclick="toggleJournalLines('${targetId}')"><span class="${numberClass}">${prefixIcon} ${j.nomor_bukti}</span><span class="journal-date">📅 ${fmtDate(j.tanggal)}</span><span class="journal-desc">${j.keterangan}</span><span class="journal-meta">${j.pihak ? '👤 ' + j.pihak + ' | ' : ''}${j.lines.length} baris | ${fmt(j.total_debet)}</span><div class="journal-actions" onclick="event.stopPropagation()">${editBtn}<button class="btn sm danger" onclick="hapusJurnal('${targetId}')">🗑</button></div></div><div class="journal-lines" id="lines-${targetId}"><table><thead><tr><th>#</th><th>Akun</th><th>D/K</th><th>Nominal</th><th>Ket</th></tr></thead><tbody>${linesHtml}<tr class="journal-total-row"><td colspan="3" style="text-align:right">TOTAL</td><td class="amount">${fmt(j.total_debet)}</td><td></td></tr></tbody></table></div>`;
+card.innerHTML = `<div class="journal-header" onclick="toggleJournalLines('${targetId}')"><span class="${numberClass}">${prefixIcon} ${j.nomor_bukti}</span><span class="journal-date">📅 ${fmtDate(j.tanggal)}</span><span class="journal-desc">${j.keterangan}</span><span class="journal-meta">${j.pihak ? '👤 ' + j.pihak + ' | ' : ''}${j.lines.length} baris | ${fmt(j.total_debet)}</span><div class="journal-actions" onclick="event.stopPropagation()">${editBtn}<button class="btn sm danger" onclick="hapusJurnal('${targetId}')"></button></div></div><div class="journal-lines" id="lines-${targetId}"><table><thead><tr><th>#</th><th>Akun</th><th>D/K</th><th>Nominal</th><th>Ket</th></tr></thead><tbody>${linesHtml}<tr class="journal-total-row"><td colspan="3" style="text-align:right">TOTAL</td><td class="amount">${fmt(j.total_debet)}</td><td></td></tr></tbody></table></div>`;
 container.appendChild(card);
 });
 };
@@ -2190,7 +2196,7 @@ document.getElementById('view-aset').scrollIntoView({ behavior: 'smooth' });
 window.hapusAset = async function(id) {
 const targetId = String(id);
 const aset = S.aset.find(a => String(a.id) === targetId); if (!aset) return;
-if (!await showModal('Hapus Aset', `Yakin hapus "${aset.nama}"?\n️ Akun COA TIDAK dihapus otomatis.`)) return;
+if (!await showModal('Hapus Aset', `Yakin hapus "${aset.nama}"?\n⚠️ Akun COA TIDAK dihapus otomatis.`)) return;
 const ok = await storage.delete('aset', targetId);
 if (ok) {
 S.aset = S.aset.filter(a => String(a.id) !== targetId);
@@ -2335,7 +2341,7 @@ if (!year) { log('Pilih tahun', 'warn'); return; } if (!closingDate) { log('Pili
 const { pendapatanTotals, biayaTotals, totalPendapatan, totalBiaya, labaRugi } = calculateYearEndBalances(year);
 const previewEl = document.getElementById('closingPreview'); if (previewEl) previewEl.style.display = 'block';
 let preview = `PREVIEW JURNAL PENUTUP TAHUN ${year}\nTanggal: ${fmtDate(closingDate)}\n\n`;
-if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) { preview += `️ Tidak ada Pendapatan/Biaya di tahun ${year}.`; if (previewEl) previewEl.textContent = preview; return; }
+if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) { preview += `⚠️ Tidak ada Pendapatan/Biaya di tahun ${year}.`; if (previewEl) previewEl.textContent = preview; return; }
 if (S.jurnal.some(j => j.tipe === 'closing' && safeString(j.tanggal).startsWith(String(year)))) preview += `⚠️ Sudah ada jurnal penutup untuk ${year}!\n\n`;
 preview += `TOTAL PENDAPATAN: ${fmt(totalPendapatan)}\nTOTAL BIAYA: ${fmt(totalBiaya)}\n`;
 preview += labaRugi >= 0 ? `LABA: ${fmt(labaRugi)} → Laba Ditahan (K)\n` : `RUGI: ${fmt(Math.abs(labaRugi))} → Laba Ditahan (D)\n`;
@@ -2352,7 +2358,7 @@ const year = parseInt(document.getElementById('closingYear').value); const closi
 if (!year || !closingDate) { log('Lengkapi data', 'warn'); return; }
 const { pendapatanTotals, biayaTotals, labaRugi } = calculateYearEndBalances(year);
 if (Object.keys(pendapatanTotals).length === 0 && Object.keys(biayaTotals).length === 0) { showModal('Tidak Ada Data', `Tidak ada Pendapatan/Biaya di tahun ${year}.`); return; }
-if (S.jurnal.some(j => j.tipe === 'closing' && safeString(j.tanggal).startsWith(String(year)))) { if (!await showModal('️ Duplikasi', `Sudah ada jurnal penutup untuk ${year}! Yakin?`)) return; }
+if (S.jurnal.some(j => j.tipe === 'closing' && safeString(j.tanggal).startsWith(String(year)))) { if (!await showModal('⚠️ Duplikasi', `Sudah ada jurnal penutup untuk ${year}! Yakin?`)) return; }
 const labaDitahanAcc = S.coa.find(a => a.kode === '300.30.002' || safeString(a.nama).toLowerCase().includes('laba ditahan'));
 if (!labaDitahanAcc) { showModal('Error', 'Akun Laba Ditahan (300.30.002) tidak ada.'); return; }
 const lines = [];
@@ -2659,7 +2665,7 @@ S.coa = await storage.getAll('coa');
 resetJournalForm(); populateClosingYearSelect(); populateDepreciationYearSelect();
 populateAssetAccountDropdowns(); populateJournalDropdown();
 renderCoaTree(); renderSaldoAwalTable(); renderDaftarTransaksi(); renderAssets(); renderAssetSummary();
-updateUI(); log('V6.9.5 siap - Fix Total Year Selector','ok');
+updateUI(); log('V6.9.5 siap - Fix Total Year Selector & Saldo Awal','ok');
 } catch(err) {
 console.error('Boot error:', err);
 const errorBanner = document.getElementById('errorBanner');
@@ -2673,7 +2679,7 @@ errorBanner.classList.add('show');
 
 // Auto-boot jika sudah login dan ada tahun
 if(sessionStorage.getItem('pam_auth') === 'true' && currentYear) { 
-console.log('🔄 Auto-booting dengan tahun:', currentYear);
+console.log(' Auto-booting dengan tahun:', currentYear);
 boot(); 
 }
 </script>
